@@ -14,12 +14,5 @@ namespace Parser.Pddl.Internal
         }
     }
 
-    internal class ProblemParser
-    {
-        internal void Parse(string folderPath, Domain domain)
-        {
-        }
-    }
-
 
 }
