@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PDAI": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:/Users/theod/Documents/P5/useful-actions-dataset-main/depots\""
+    }
+  }
+}

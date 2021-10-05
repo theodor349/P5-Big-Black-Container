@@ -11,7 +11,6 @@ namespace Parser.Pddl.Internal
     {
         internal void Parser(string filePath, Domain domain)
         {
-            throw new NotImplementedException();
         }
     }
 
@@ -19,7 +18,6 @@ namespace Parser.Pddl.Internal
     {
         internal void Parse(string folderPath, Domain domain)
         {
-            throw new NotImplementedException();
         }
     }
 

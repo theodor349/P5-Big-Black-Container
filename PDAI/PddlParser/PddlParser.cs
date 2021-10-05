@@ -1,7 +1,8 @@
-﻿using Parser.Internal;
+﻿using Parser.Pddl.Internal;
 using Shared.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,16 +11,15 @@ namespace Parser.Pddl
 {
     public class PddlParser
     {
-        // C:\Users\theod\Documents\P5\useful-actions-dataset-main\depots
         public void Parse(string domainFolderPath, int maxProblems = int.MaxValue)
         {
             var domainParser = new DomainParser();
             var problemParser = new ProblemParser();
 
             var domain = new Domain();
-            domainParser.Parser("fileName.pddl", domain);
+            domainParser.Parser(domainFolderPath + "/domain.pddl", domain);
 
-            var problemsFolder = new List<string>();
+            var problemsFolder = Directory.GetDirectories(domainFolderPath + "/runs/optimal");
             foreach (var folder in problemsFolder)
             {
                 problemParser.Parse(folder, domain);

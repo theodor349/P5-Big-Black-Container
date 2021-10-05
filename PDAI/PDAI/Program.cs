@@ -7,9 +7,9 @@ namespace PDAI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-
+            string folderPath = args[0];
             var parser = new PddlParser();
+            parser.Parse(folderPath);
         }
     }
 }
