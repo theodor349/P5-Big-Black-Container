@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PddlParser.Internal
+namespace Parser.Pddl.Internal
 {
     internal class DomainParser
     {

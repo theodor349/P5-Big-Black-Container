@@ -1,4 +1,4 @@
-﻿using PddlParser.Internal;
+﻿using Parser.Internal;
 using Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -6,10 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PddlParser
+namespace Parser.Pddl
 {
-    class PddlParser
+    public class PddlParser
     {
+        // C:\Users\theod\Documents\P5\useful-actions-dataset-main\depots
         public void Parse(string domainFolderPath, int maxProblems = int.MaxValue)
         {
             var domainParser = new DomainParser();

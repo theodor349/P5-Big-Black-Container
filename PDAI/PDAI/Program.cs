@@ -1,4 +1,5 @@
 ﻿using System;
+using Parser.Pddl;
 
 namespace PDAI
 {
@@ -7,6 +8,8 @@ namespace PDAI
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+
+            var parser = new PddlParser();
         }
     }
 }
