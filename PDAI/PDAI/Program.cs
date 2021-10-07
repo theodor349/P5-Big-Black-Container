@@ -1,5 +1,6 @@
 ﻿using System;
 using Parser.Pddl;
+using Writer.Popper;
 
 namespace PDAI
 {
@@ -8,7 +9,7 @@ namespace PDAI
         static void Main(string[] args)
         {
             string folderPath = args[0];
-            var parser = new PddlParser();
+            IPddlParser parser = new PddlParser();
             parser.Parse(folderPath);
         }
     }

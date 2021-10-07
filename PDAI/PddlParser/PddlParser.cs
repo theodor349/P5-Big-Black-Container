@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Parser.Pddl
 {
-    public class PddlParser
+    public class PddlParser : IPddlParser
     {
         public void Parse(string domainFolderPath, int maxProblems = int.MaxValue)
         {
