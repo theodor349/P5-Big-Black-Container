@@ -19,6 +19,9 @@ namespace Parser.Pddl.Internal
             var goodOperators = ReadFile(folderPath + "/" + goodOperatorFile);
             var allOperators = ReadBz2File(folderPath + "/" + allOperatorFile, folderPath + "/" + tempFile);
 
+            if (goodOperators is null || allOperators is null)
+                return null;
+
             for (int i = goodOperators.Count - 1; i > 0; i--)
             {
                 if(goodOperators.Contains(allOperators[i]))  
@@ -34,6 +37,9 @@ namespace Parser.Pddl.Internal
 
         private List<ActionOperator> ReadFile(string path) 
         {
+            if (!Directory.Exists(path))
+                return null;
+
             var res = new List<ActionOperator>();
 
             var lines = File.ReadAllLines(path);
@@ -47,6 +53,9 @@ namespace Parser.Pddl.Internal
 
         private List<ActionOperator> ReadBz2File(string filePath, string tempfilePath)
         {
+            if (!Directory.Exists(filePath))
+                return null;
+
             var zipFileName = new FileInfo(filePath);
             using var fileToDecompressAsStream = zipFileName.OpenRead();
             using var decompressedStream = File.Create(tempfilePath);
