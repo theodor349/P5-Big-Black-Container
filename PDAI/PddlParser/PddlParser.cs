@@ -22,7 +22,7 @@ namespace Parser.Pddl
             var problemsFolder = Directory.GetDirectories(domainFolderPath + "/runs/optimal");
             foreach (var folder in problemsFolder)
             {
-                problemParser.Parse(folder, domain);
+                domain.Problems.Add(problemParser.Parse(folder));
             }
         }
     }

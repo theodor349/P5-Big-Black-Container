@@ -13,8 +13,9 @@ namespace Parser.Pddl.Internal
         static string goodOperatorFile { get; set; } = "good_operators";
         static string allOperatorFile { get; set; } = "all_operators.bz2";
 
-        internal void Parse(string folderPath, Domain domain)
+        internal Problem Parse(string folderPath)
         {
+            var problem = new Problem();
             var goodOperators = ReadFile(folderPath + "/" + goodOperatorFile);
             var allOperators = ReadBz2File(folderPath + "/" + allOperatorFile, folderPath + "/" + tempFile);
 
@@ -24,7 +25,11 @@ namespace Parser.Pddl.Internal
                 {
                     allOperators.RemoveAt(i);
                 }
-            } 
+            }
+
+            problem.GoodOperators = goodOperators;
+            problem.BadOperators = allOperators;
+            return problem;
         }
 
         private List<ActionOperator> ReadFile(string path) 
