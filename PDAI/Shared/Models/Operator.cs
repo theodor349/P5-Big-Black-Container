@@ -13,6 +13,7 @@ namespace Shared.Models
             .Replace('(',' ')
             .Replace(')',' ')
             .Replace(",", "")
+            .Trim()
             .Split(' ');
 
             Name = words[0];
@@ -25,7 +26,7 @@ namespace Shared.Models
 
         public override bool Equals(object obj) 
         {
-           if (obj.GetType() != typeof(Operator))
+           if (obj is not Operator)
                 return false;
 
             var other = (Operator)obj;
