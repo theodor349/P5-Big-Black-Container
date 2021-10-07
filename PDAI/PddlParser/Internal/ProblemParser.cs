@@ -8,12 +8,39 @@ using Shared.Models;
 namespace Parser.Pddl.Internal
 {
     internal class ProblemParser {
+
+        static string tempFile { get; set; } = "decompressed";
+        static string goodOperatorFile { get; set; } = "good_operators";
+        static string allOperatorFile { get; set; } = "all_operators.bz2";
+
         internal void Parse(string folderPath, Domain domain)
         {
+            var goodOperators = ReadFile(folderPath + "/" + goodOperatorFile);
+            var allOperators = ReadBz2File(folderPath + "/" + allOperatorFile, folderPath + "/" + tempFile);
 
+            for (int i = goodOperators.Count - 1; i > 0; i--)
+            {
+                if(goodOperators.Contains(allOperators[i]))  
+                {
+                    allOperators.RemoveAt(i);
+                }
+            } 
         }
 
-        private List<string> ReadBz2File(string filePath, string tempfilePath)
+        private List<ActionOperator> ReadFile(string path) 
+        {
+            var res = new List<ActionOperator>();
+
+            var lines = File.ReadAllLines(path);
+            foreach(string line in lines) 
+            {
+                res.Add(new ActionOperator(line));
+            }
+
+            return res;
+        }
+
+        private List<ActionOperator> ReadBz2File(string filePath, string tempfilePath)
         {
             var zipFileName = new FileInfo(filePath);
             using var fileToDecompressAsStream = zipFileName.OpenRead();
@@ -31,11 +58,6 @@ namespace Parser.Pddl.Internal
             var res = ReadFile(tempfilePath);
             File.Delete(tempfilePath);
             return res;
-        }
-
-        private List<string> ReadFile(string filePath)
-        {
-            return File.ReadAllLines(filePath).ToList();
         }
     }
 }
