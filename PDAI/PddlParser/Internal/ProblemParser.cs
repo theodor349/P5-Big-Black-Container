@@ -8,6 +8,11 @@ using Shared.Models;
 namespace Parser.Pddl.Internal
 {
     internal class ProblemParser {
+        class InitGoalState
+        {
+            public List<PredicateOperator> Init { get; set; }
+            public List<PredicateOperator> Goal { get; set; }
+        }
 
         static string tempFile { get; set; } = "decompressed";
         static string goodOperatorFile { get; set; } = "good_operators";
@@ -19,11 +24,21 @@ namespace Parser.Pddl.Internal
 
             problem.GoodOperators = GetGoodOperators(folderPath);
             problem.BadOperators = GetBadOperators(problem.GoodOperators, folderPath);
+            var states = GetInitAndGoalState(folderPath);
+            problem.InitalState = states.Init;
+            problem.GoalState = states.Goal;
 
             if (problem.GoodOperators is null || problem.BadOperators is null)
                 return null;
-            else 
+            else if (problem.InitalState is null || problem.GoalState is null)
+                return null;
+            else
                 return problem;
+        }
+
+        private InitGoalState GetInitAndGoalState(string folderPath)
+        {
+            return null;
         }
 
         private List<ActionOperator> GetBadOperators(List<ActionOperator> goodOperators, string folderPath)
@@ -31,16 +46,16 @@ namespace Parser.Pddl.Internal
             if (goodOperatorFile is null)
                 return null;
 
-            var allOperators = ReadBz2File(folderPath + "/" + allOperatorFile, folderPath + "/" + tempFile);
+            var allOperators = ReadActionBz2File(folderPath + "/" + allOperatorFile, folderPath + "/" + tempFile);
             return allOperators.Where(x => !goodOperators.Contains(x)).ToList();
         }
 
         private List<ActionOperator> GetGoodOperators(string folderPath)
         {
-            return ReadFile(folderPath + "/" + goodOperatorFile);
+            return ReadActionFile(folderPath + "/" + goodOperatorFile);
         }
 
-        private List<ActionOperator> ReadFile(string path) 
+        private List<ActionOperator> ReadActionFile(string path) 
         {
             if (!File.Exists(path))
                 return null;
@@ -56,7 +71,7 @@ namespace Parser.Pddl.Internal
             return res;
         }
 
-        private List<ActionOperator> ReadBz2File(string filePath, string tempfilePath)
+        private List<ActionOperator> ReadActionBz2File(string filePath, string tempfilePath)
         {
             if (!File.Exists(filePath))
                 return null;
@@ -74,7 +89,7 @@ namespace Parser.Pddl.Internal
                 Console.WriteLine(ex.Message);
             }
 
-            var res = ReadFile(tempfilePath);
+            var res = ReadActionFile(tempfilePath);
             File.Delete(tempfilePath);
             return res;
         }
