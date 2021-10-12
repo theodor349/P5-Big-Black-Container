@@ -80,6 +80,24 @@ namespace Test.Utilities
             return problems;
         }
 
+        public static List<Problem> GetProblemList(List<string> names, List<List<ActionOperator>> goodoperators, List<List<ActionOperator>> badoperators)
+        {
+            List<Problem> problems = new List<Problem>();
+
+            for (int i = 0; i < names.Count; i++)
+            {
+                Problem problem = new Problem();
+
+                problem.Name = names[i];
+                problem.GoodOperators = goodoperators[i];
+                problem.BadOperators = badoperators[i];
+
+                problems.Add(problem);
+            }
+
+            return problems;
+        }
+
         public static List<Predicate> GetPredicateList(List<string> names)
         {
             List<Predicate> predicates = new List<Predicate>();

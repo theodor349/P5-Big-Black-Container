@@ -33,12 +33,12 @@ namespace PopperWriter.Tests
             List<List<ActionOperator>> goodoperators = new List<List<ActionOperator>>() {
                 Models.GetActionOperatorList(new List<string>() { "drive truck0 depot0 distributor0", "drop hoist0 crate0 pallet0 depot0", "lift hoist0 crate2 pallet0 depot0"}),
                 Models.GetActionOperatorList(new List<string>() { "drive truck1 distributor0 depot0", "lift hoist1 crate0 pallet1 distributor0", "unload hoist0 crate0 truck0 depot0" }),
-                Models.GetActionOperatorList(new List<string>() { "drive truck0 depot0 distributor0", "drop hoist1 crate0 pallet1 distributor0", "load hoist0 crate0 truck0 depot0" }),
+                Models.GetActionOperatorList(new List<string>() { "drive truck0 depot0 distributor0", "drop hoist1 crate0 pallet1 distributor0", "load hoist0 crate0 truck0 depot0" })
             };
             List<List<ActionOperator>> badoperators = new List<List<ActionOperator>>() {
                 Models.GetActionOperatorList(new List<string>() { "drive truck0 distributor0 distributor0", "drive truck1 distributor0 distributor0", "drive truck0 depot0 depot0"}),
                 Models.GetActionOperatorList(new List<string>() { "drive truck0 depot0 depot0", "drive truck1 depot0 depot0", "drive truck0 distributor0 distributor0" }),
-                Models.GetActionOperatorList(new List<string>() { "drive truck0 depot0 depot0", "drive truck1 distributor0 depot0", "drive truck1 distributor0 distributor0"}),
+                Models.GetActionOperatorList(new List<string>() { "drive truck0 depot0 depot0", "drive truck1 distributor0 depot0", "drive truck1 distributor0 distributor0"})
             };
             List<Problem> problems = Models.GetProblemList(names, goodoperators, badoperators);
             List<string> expected = new List<string>()
