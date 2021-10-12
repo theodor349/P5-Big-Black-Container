@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Shared.ExtensionMethods;
+using System.Collections.Generic;
 
 namespace Shared.Models
 {
@@ -20,7 +21,7 @@ namespace Shared.Models
 
             for (int i = 1; i < words.Length; i++)
             {
-                Attributes.Add(words[i].ToLower());
+                Attributes.Add(words[i].FirstCharToLowerCase());
             }
         }
 

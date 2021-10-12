@@ -52,5 +52,44 @@ namespace Test.Utilities
             return problems;
         }
 
+        public static List<Predicate> GetPredicateList(List<string> names)
+        {
+            List<Predicate> predicates = new List<Predicate>();
+
+            foreach (string name in names)
+            {
+                predicates.Add(GetPredicate(name));
+            }
+
+            return predicates;
+        }
+
+        public static Predicate GetPredicate(string name)
+        {
+            Predicate predicate = new Predicate();
+            predicate.Name = name;
+            return predicate;
+        }
+
+        public static Parameter GetParameter(string type)
+        {
+            Parameter parameter = new Parameter();
+            parameter.Entity = new Entity();
+            parameter.Entity.Type = type;
+            return parameter;
+        }
+
+        public static List<Parameter> GetParameterList(List<string> types)
+        {
+            List<Parameter> parameters = new List<Parameter>();
+
+            foreach (string type in types)
+            {
+                parameters.Add(GetParameter(type));
+            }
+
+            return parameters;
+        }
+
     }
 }
