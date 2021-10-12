@@ -17,23 +17,24 @@ namespace Parser.Pddl.Internal
         {
             var problem = new Problem();
 
-            if (!GetOperators(problem, folderPath))
+            problem.GoodOperators = GetGoodOperators(folderPath);
+            problem.BadOperators = GetBadOperators(problem.GoodOperators, folderPath);
+
+            if (problem.GoodOperators is null || problem.BadOperators is null)
                 return null;
-            
-            return problem;
+            else 
+                return problem;
         }
 
-        private bool GetOperators(Problem problem, string folderPath)
+        private List<ActionOperator> GetBadOperators(List<ActionOperator> goodOperators, string folderPath)
         {
-            var goodOperators = ReadFile(folderPath + "/" + goodOperatorFile);
             var allOperators = ReadBz2File(folderPath + "/" + allOperatorFile, folderPath + "/" + tempFile);
+            return allOperators.Where(x => !goodOperators.Contains(x)).ToList();
+        }
 
-            if (goodOperators is null || allOperators is null)
-                return false;
-
-            problem.GoodOperators = goodOperators;
-            problem.BadOperators = allOperators.Where(x => !goodOperators.Contains(x)).ToList();
-            return true;
+        private List<ActionOperator> GetGoodOperators(string folderPath)
+        {
+            return ReadFile(folderPath + "/" + goodOperatorFile);
         }
 
         private List<ActionOperator> ReadFile(string path) 
