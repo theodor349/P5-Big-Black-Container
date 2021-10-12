@@ -1,22 +1,39 @@
 ﻿using Shared.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PopperWriter
 {
-    class BackgroundGenerator
+    internal class BackgroundGenerator
     {
-        public void Write(Domain domain)
+        public void Write(Domain domain, string path)
         {
-            
+            List<string> predicates = GetPredicates(domain.Problems);
+
+            File.WriteAllLinesAsync(path, predicates);
         }
 
         public List<string> GetPredicates(List<Problem> problems)
         {
-            return null;
+            List<string> predicates = new List<string>();
+
+            foreach (Problem problem in problems)
+            {
+                foreach (PredicateOperator initPred in problem.InitalState)
+                {
+                    predicates.Add(PredicateToString(initPred, problem.Name, false));
+                }
+                foreach (PredicateOperator goalPred in problem.GoalState)
+                {
+                    predicates.Add(PredicateToString(goalPred, problem.Name, true));
+                }
+            }
+
+            return predicates;
         }
 
         public string PredicateToString(PredicateOperator predicate, string problemName, bool isGoal)
