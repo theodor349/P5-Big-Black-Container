@@ -13,7 +13,7 @@ namespace PopperWriter.Tests
         [DataTestMethod]
         public void GetUsedPredicates_allPredicatesUsed_CorrectStringList()
         {
-            List<PredicateOperator> predicates = Models.GetPredicateOperatorList(new List<string>() { "" })
+            List<PredicateOperator> predicates = Models.GetPredicateOperatorList(new List<string>() { "" });
         }
     }
 }

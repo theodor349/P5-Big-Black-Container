@@ -11,7 +11,6 @@ namespace PopperWriter
     {
         public void Write(Shared.Models.Action action, List<Predicate> predicates)
         {
-            return null;
         }
 
         public List<string> GetUsedPredicates(List<PredicateOperator> predicates, List<Predicate> possiblePredicates)
