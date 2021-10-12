@@ -10,8 +10,8 @@ namespace Shared.Models
         public Operator(string line)
         {
             var words = line
-            .Replace('(',' ')
-            .Replace(')',' ')
+            .Replace("(","")
+            .Replace(")", "")
             .Replace(",", "")
             .Split(' ');
 

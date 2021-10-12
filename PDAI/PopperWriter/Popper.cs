@@ -10,12 +10,4 @@ namespace Writer.Popper
 
         }
     }
-
-    internal class BackgroundGenerator
-    {
-        public void Write(Domain domain, string folderPath)
-        {
-
-        }
-    }
 }
