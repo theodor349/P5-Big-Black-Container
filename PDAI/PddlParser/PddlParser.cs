@@ -25,6 +25,7 @@ namespace Parser.Pddl
                 var problem = problemParser.Parse(folder);
                 if(problem is not null)
                     domain.Problems.Add(problem);
+
             }
         }
     }
