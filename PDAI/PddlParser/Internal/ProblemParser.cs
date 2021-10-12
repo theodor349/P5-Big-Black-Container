@@ -28,6 +28,9 @@ namespace Parser.Pddl.Internal
 
         private List<ActionOperator> GetBadOperators(List<ActionOperator> goodOperators, string folderPath)
         {
+            if (goodOperatorFile is null)
+                return null;
+
             var allOperators = ReadBz2File(folderPath + "/" + allOperatorFile, folderPath + "/" + tempFile);
             return allOperators.Where(x => !goodOperators.Contains(x)).ToList();
         }
