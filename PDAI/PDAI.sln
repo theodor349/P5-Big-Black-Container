@@ -9,15 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PddlParser", "PddlParser\Pd
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{423BF255-1670-4AAF-8E2A-E576CD76D574}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PopperWriter", "PopperWriter\PopperWriter.csproj", "{7EB4A697-B72B-4957-9C04-4DE918CA6B31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PopperWriter", "PopperWriter\PopperWriter.csproj", "{7EB4A697-B72B-4957-9C04-4DE918CA6B31}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{BA41A750-3A65-49C2-9B4D-094CE1291C58}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit", "Unit", "{76143049-E40C-4328-A04E-C10A9529695C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PopperWriter.Tests", "Test\Unit\PopperWriter.Tests\PopperWriter.Tests.csproj", "{9BF7365E-A5D7-4468-9E32-F3C9042D0766}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PopperWriter.Tests", "Test\Unit\PopperWriter.Tests\PopperWriter.Tests.csproj", "{9BF7365E-A5D7-4468-9E32-F3C9042D0766}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Utilities", "Test\Test.Utilities\Test.Utilities.csproj", "{0E5E152F-56AF-4FD7-9FF1-CA84B2ECC45D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Utilities", "Test\Test.Utilities\Test.Utilities.csproj", "{0E5E152F-56AF-4FD7-9FF1-CA84B2ECC45D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

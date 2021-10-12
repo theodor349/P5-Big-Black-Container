@@ -11,6 +11,11 @@ namespace Test.Utilities
             return new PredicateOperator(predString);
         }
 
+        public static ActionOperator GetActionOperator(string actionString)
+        {
+            return new ActionOperator(actionString);
+        }
+
         public static List<PredicateOperator> GetPredicateOperatorList(List<string> predStrings)
         {
             List<PredicateOperator> predOperators = new List<PredicateOperator>();
@@ -23,6 +28,18 @@ namespace Test.Utilities
             return predOperators;
         }
 
+        public static List<ActionOperator> GetActionOperatorList(List<string> actionStrings)
+        {
+            List<ActionOperator> actionOperators = new List<ActionOperator>();
+
+            foreach (string actionString in actionStrings)
+            {
+                actionOperators.Add(GetActionOperator(actionString));
+            }
+
+            return actionOperators;
+        }
+
         public static Problem GetProblem(string name, List<PredicateOperator> initalState, List<PredicateOperator> goalState)
         {
             Problem problem = new Problem();
@@ -30,6 +47,17 @@ namespace Test.Utilities
             problem.Name = name;
             problem.InitalState = initalState;
             problem.GoalState = goalState;
+
+            return problem;
+        }
+
+        public static Problem GetProblem(string name, List<ActionOperator> goodOperator, List<ActionOperator> badOperator)
+        {
+            Problem problem = new Problem();
+
+            problem.Name = name;
+            problem.GoodOperators = goodOperator;
+            problem.BadOperators = badOperator;
 
             return problem;
         }
