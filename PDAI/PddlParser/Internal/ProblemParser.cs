@@ -16,24 +16,31 @@ namespace Parser.Pddl.Internal
         internal Problem Parse(string folderPath)
         {
             var problem = new Problem();
+
+            if (!GetOperators(problem, folderPath))
+                return null;
+            
+            return problem;
+        }
+
+        private bool GetOperators(Problem problem, string folderPath)
+        {
             var goodOperators = ReadFile(folderPath + "/" + goodOperatorFile);
             var allOperators = ReadBz2File(folderPath + "/" + allOperatorFile, folderPath + "/" + tempFile);
 
-            for (int i = goodOperators.Count - 1; i > 0; i--)
-            {
-                if(goodOperators.Contains(allOperators[i]))  
-                {
-                    allOperators.RemoveAt(i);
-                }
-            }
+            if (goodOperators is null || allOperators is null)
+                return false;
 
             problem.GoodOperators = goodOperators;
-            problem.BadOperators = allOperators;
-            return problem;
+            problem.BadOperators = allOperators.Where(x => !goodOperators.Contains(x)).ToList();
+            return true;
         }
 
         private List<ActionOperator> ReadFile(string path) 
         {
+            if (!File.Exists(path))
+                return null;
+
             var res = new List<ActionOperator>();
 
             var lines = File.ReadAllLines(path);
@@ -47,6 +54,9 @@ namespace Parser.Pddl.Internal
 
         private List<ActionOperator> ReadBz2File(string filePath, string tempfilePath)
         {
+            if (!File.Exists(filePath))
+                return null;
+
             var zipFileName = new FileInfo(filePath);
             using var fileToDecompressAsStream = zipFileName.OpenRead();
             using var decompressedStream = File.Create(tempfilePath);
