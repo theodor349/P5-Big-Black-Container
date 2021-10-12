@@ -350,3 +350,6 @@ MigrationBackup/
 .ionide/
 PDAI/.vscode/
 .gitignore
+
+// Mac OS directory management
+*.ds_store
