@@ -2,9 +2,7 @@
 
 namespace Shared.Models
 {
-    public class Predicate
+    public class Predicate : Clause
     {
-        public string Name { get; set; }
-        public List<Parameter> Parameters { get; set; } = new List<Parameter>();
     }
 }

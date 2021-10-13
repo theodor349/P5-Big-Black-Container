@@ -98,6 +98,23 @@ namespace Test.Utilities
             return problems;
         }
 
+        public static List<Problem> GetProblemList(List<List<PredicateOperator>> initialstates, List<List<PredicateOperator>> goalStates)
+        {
+            List<Problem> problems = new List<Problem>();
+
+            for (int i = 0; i < initialstates.Count; i++)
+            {
+                Problem problem = new Problem();
+
+                problem.InitalState = initialstates[i];
+                problem.GoalState = goalStates[i];
+
+                problems.Add(problem);
+            }
+
+            return problems;
+        }
+
         public static List<Predicate> GetPredicateList(List<string> names)
         {
             List<Predicate> predicates = new List<Predicate>();
@@ -135,6 +152,55 @@ namespace Test.Utilities
             }
 
             return parameters;
+        }
+
+        public static Shared.Models.Action GetAction(string name, List<string> paramTypes)
+        {
+            Shared.Models.Action action = new Shared.Models.Action();
+            action.Name = name;
+            action.Parameters = GetParameterList(paramTypes);
+            return action;
+        }
+
+        public static List<Predicate> GetPredicateList(List<string> names, List<List<string>> paramTypes)
+        {
+            List<Predicate> predicates = new List<Predicate>();
+            
+            for (int i = 0; i < names.Count; i++)
+            {
+                Predicate predicate = new Predicate();
+                predicate.Name = names[i];
+                predicate.Parameters = GetParameterList(paramTypes[i]);
+                predicates.Add(predicate);
+            }
+
+            return predicates;
+        }
+
+        public static List<Predicate> GetSatellitePredicates()
+        {
+            List<string> names = new List<string>() { "on_board", "supports", "pointing", "power_avail", "power_on", "calibrated", "have_image", "calibration_target" };
+            List<List<string>> paramTypes = new List<List<string>>()
+            {
+                new List<string>() { "instrument", "satellite" },
+                new List<string>() { "instrument", "mode" },
+                new List<string>() { "satellite", "direction" },
+                new List<string>() { "satellite" },
+                new List<string>() { "instrument" },
+                new List<string>() { "instrument" },
+                new List<string>() { "direction", "mode" },
+                new List<string>() { "instrument", "direction" },
+            };
+
+            return GetPredicateList(names, paramTypes);
+        }
+
+        public static Domain GetDomain(List<Problem> problems, List<Predicate> predicates)
+        {
+            Domain domain = new Domain();
+            domain.Problems = problems;
+            domain.Predicates = predicates;
+            return domain;
         }
 
     }

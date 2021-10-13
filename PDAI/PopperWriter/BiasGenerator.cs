@@ -13,19 +13,44 @@ namespace PopperWriter
         {
         }
 
-        public List<string> GetPredicateDeclarations()
+        public List<string> GetPredicateDeclarations(Shared.Models.Action action, Domain domain)
         {
-            return null;
+            List<string> predDeclStrings = new();
+            List<PredicateOperator> allInitPredicates = new();
+            List<PredicateOperator> allGoalPredicates = new();
+
+            foreach (Problem problem in domain.Problems)
+            {
+                problem.InitalState.ForEach(x => allInitPredicates.Add(x));
+                problem.GoalState.ForEach(x => allGoalPredicates.Add(x));
+            }
+
+            List<Predicate> usedInitPreds = GetUsedPredicates(domain.Predicates, allInitPredicates);
+            List<Predicate> usedGoalPreds = GetUsedPredicates(domain.Predicates, allGoalPredicates);
+
+            predDeclStrings.Add(GetClauseDecleration(action, true, true));
+
+            foreach (Predicate pred in usedInitPreds)
+            {
+                predDeclStrings.Add(GetClauseDecleration(pred, false, false));
+            }
+
+            foreach (Predicate pred in usedGoalPreds)
+            {
+                predDeclStrings.Add(GetClauseDecleration(pred, false, true));
+            }
+
+            return predDeclStrings;
         }
 
-        public string GetPredicateDecleration(Predicate predicate, bool isHeadPred, bool isGoal)
+        public string GetClauseDecleration(Clause clause, bool isHeadPred, bool isGoal)
         {
             string predDecl = (isHeadPred ? "head_pred" : "body_pred") + "(";
             if (!isHeadPred)
             {
                 predDecl += isGoal ? "goal_" : "init_";
             }
-            predDecl += predicate.Name + "," + (predicate.Parameters.Count + 1) + ").";
+            predDecl += clause.Name + "," + (clause.Parameters.Count + 1) + ").";
 
             return predDecl;
         }
