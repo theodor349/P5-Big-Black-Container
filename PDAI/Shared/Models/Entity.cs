@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Shared.Models
 {
@@ -6,6 +7,6 @@ namespace Shared.Models
     {
         public string Name { get; set; }
         public string Type { get; set; }
-        public Entity Parent { get; set; }
+        public List<Entity> Children { get; set; }
     }
 }
