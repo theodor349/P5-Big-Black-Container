@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using ICSharpCode.SharpZipLib.BZip2;
 using Shared.Models;
+using System.Text.RegularExpressions;
 
 namespace Parser.Pddl.Internal
 {
@@ -12,6 +13,12 @@ namespace Parser.Pddl.Internal
         {
             public List<PredicateOperator> Init { get; set; }
             public List<PredicateOperator> Goal { get; set; }
+
+            public InitGoalState()
+            {
+                Init = new List<PredicateOperator>();
+                Goal = new List<PredicateOperator>();
+            }
         }
 
         static string tempFile { get; set; } = "decompressed";
@@ -38,7 +45,35 @@ namespace Parser.Pddl.Internal
 
         private InitGoalState GetInitAndGoalState(string folderPath)
         {
-            return null;
+            InitGoalState res = new InitGoalState(); 
+            string problemPath = folderPath + "/problem.pddl";
+            var initReg = new Regex(@"\(:init(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
+            var goalReg = new Regex(@"\(and(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
+            var opReg = new Regex(@"\([\s\S]*?\)");
+
+            var lines = File.ReadAllLines(problemPath);
+            var line = string.Join(' ', lines).Replace("\t", "");
+
+            var initLine = initReg.Match(line).Value;
+            var goalLine = goalReg.Match(line).Value;
+
+            foreach (Match match in opReg.Matches(TrimStateLine(initLine)))
+            {
+                res.Init.Add(new PredicateOperator(match.Value));
+            }
+            foreach (Match match in opReg.Matches(TrimStateLine(goalLine)))
+            {
+                res.Goal.Add(new PredicateOperator(match.Value));
+            }
+
+            return res;
+        }
+
+        private string TrimStateLine(string line) {
+            List<string> words = line.Split().ToList();
+            words.RemoveAt(0);
+            words.RemoveAt(words.Count - 1);
+            return string.Join(' ', words);
         }
 
         private List<ActionOperator> GetBadOperators(List<ActionOperator> goodOperators, string folderPath)
