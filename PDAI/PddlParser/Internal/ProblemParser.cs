@@ -47,8 +47,8 @@ namespace Parser.Pddl.Internal
         {
             InitGoalState res = new InitGoalState(); 
             string problemPath = folderPath + "/problem.pddl";
-            var initReg = new Regex(@"\(:init(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
-            var goalReg = new Regex(@"\(and(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
+            var initReg = new Regex(@"(?i)\(:init(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
+            var goalReg = new Regex(@"(?i)\(and(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
             var opReg = new Regex(@"\([\s\S]*?\)");
 
             var lines = File.ReadAllLines(problemPath);
