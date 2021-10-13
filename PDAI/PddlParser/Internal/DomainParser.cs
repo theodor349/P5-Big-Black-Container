@@ -1,6 +1,5 @@
 ﻿using PddlParser.Internal;
 using Shared.Models;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,7 +23,7 @@ namespace Parser.Pddl.Internal
             return PredicatesParser.Parse(lines, entities);
         }
 
-        private List<Shared.Models.Action> GetActions(string filePath, List<Entity> entities)
+        private List<Action> GetActions(string filePath, List<Entity> entities)
         {
             List<string> lines = File.ReadAllLines(filePath).ToList();
             return ActionsParser.Parse(lines, entities);

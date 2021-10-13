@@ -11,7 +11,21 @@ namespace PddlParser.Internal
     {
         public static List<Entity> Parse(List<string> lines)
         {
+            var text = lines.Aggregate((x, t) => t += " " + x);
+            int start = GetStartIndex(text, ":type");
+            int end = GetEndIndex(text, start);
+
             return null;
+        }
+
+        private static int GetEndIndex(string text, int start)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static int GetStartIndex(string text, string word)
+        {
+            throw new NotImplementedException();
         }
     }
 }
