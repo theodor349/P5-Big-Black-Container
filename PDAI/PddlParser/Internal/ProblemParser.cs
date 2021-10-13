@@ -54,18 +54,17 @@ namespace Parser.Pddl.Internal
             var lines = File.ReadAllLines(problemPath);
             var line = string.Join(' ', lines).Replace("\t", "");
 
-            var initLine = initReg.Match(line).Value;
-            var goalLine = goalReg.Match(line).Value;
+            var initLine = TrimStateLine(initReg.Match(line).Value);
+            var goalLine = TrimStateLine(goalReg.Match(line).Value);
 
-            foreach (Match match in opReg.Matches(TrimStateLine(initLine)))
+            foreach (Match match in opReg.Matches(initLine))
             {
                 res.Init.Add(new PredicateOperator(match.Value));
             }
-            foreach (Match match in opReg.Matches(TrimStateLine(goalLine)))
+            foreach (Match match in opReg.Matches(goalLine))
             {
                 res.Goal.Add(new PredicateOperator(match.Value));
             }
-
             return res;
         }
 
