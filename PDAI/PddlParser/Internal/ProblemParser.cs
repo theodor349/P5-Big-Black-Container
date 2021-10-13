@@ -9,31 +9,23 @@ using System.Text.RegularExpressions;
 namespace Parser.Pddl.Internal
 {
     internal class ProblemParser {
-        class InitGoalState
-        {
-            public List<PredicateOperator> Init { get; set; }
-            public List<PredicateOperator> Goal { get; set; }
-
-            public InitGoalState()
-            {
-                Init = new List<PredicateOperator>();
-                Goal = new List<PredicateOperator>();
-            }
-        }
 
         static string tempFile { get; set; } = "decompressed";
         static string goodOperatorFile { get; set; } = "good_operators";
         static string allOperatorFile { get; set; } = "all_operators.bz2";
 
+        private Regex initReg = new Regex(@"(?i)\(:init(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
+        private Regex goalReg = new Regex(@"(?i)\(and(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
+        private Regex opReg = new Regex(@"\([\s\S]*?\)");
+        
         internal Problem Parse(string folderPath)
         {
             var problem = new Problem();
 
             problem.GoodOperators = GetGoodOperators(folderPath);
             problem.BadOperators = GetBadOperators(problem.GoodOperators, folderPath);
-            var states = GetInitAndGoalState(folderPath);
-            problem.InitalState = states.Init;
-            problem.GoalState = states.Goal;
+            problem.InitalState = GetStatePredicates(initReg, folderPath);
+            problem.GoalState = GetStatePredicates(goalReg, folderPath);
 
             if (problem.GoodOperators is null || problem.BadOperators is null)
                 return null;
@@ -43,27 +35,18 @@ namespace Parser.Pddl.Internal
                 return problem;
         }
 
-        private InitGoalState GetInitAndGoalState(string folderPath)
+        private List<PredicateOperator> GetStatePredicates(Regex regex, string folderPath)
         {
-            InitGoalState res = new InitGoalState(); 
+            List<PredicateOperator> res = new List<PredicateOperator>(); 
             string problemPath = folderPath + "/problem.pddl";
-            var initReg = new Regex(@"(?i)\(:init(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
-            var goalReg = new Regex(@"(?i)\(and(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
-            var opReg = new Regex(@"\([\s\S]*?\)");
 
             var lines = File.ReadAllLines(problemPath);
             var line = string.Join(' ', lines).Replace("\t", "");
+            var stateLine = TrimStateLine(regex.Match(line).Value);
 
-            var initLine = TrimStateLine(initReg.Match(line).Value);
-            var goalLine = TrimStateLine(goalReg.Match(line).Value);
-
-            foreach (Match match in opReg.Matches(initLine))
+            foreach (Match match in opReg.Matches(stateLine))
             {
-                res.Init.Add(new PredicateOperator(match.Value));
-            }
-            foreach (Match match in opReg.Matches(goalLine))
-            {
-                res.Goal.Add(new PredicateOperator(match.Value));
+                res.Add(new PredicateOperator(match.Value));
             }
             return res;
         }
