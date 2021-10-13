@@ -13,10 +13,8 @@ namespace PDAI
             var a = new ActionOperator(line);
             var b = new ActionOperator(line);
 
-            bool v = a.Equals(b);
-
             string folderPath = args[0];
-            IPddlParser parser = new PddlParser();
+            IPddlParser parser = new Parser.Pddl.PddlParser();
             parser.Parse(folderPath);
         }
     }
