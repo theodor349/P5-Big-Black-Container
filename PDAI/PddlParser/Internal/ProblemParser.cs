@@ -13,6 +13,7 @@ namespace Parser.Pddl.Internal
         static string tempFile { get; set; } = "decompressed";
         static string goodOperatorFile { get; set; } = "good_operators";
         static string allOperatorFile { get; set; } = "all_operators.bz2";
+        static string problemFile { get; set; } = "problem.pddl";
 
         private Regex initReg = new Regex(@"(?i)\(:init(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
         private Regex goalReg = new Regex(@"(?i)\(and(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
@@ -38,7 +39,7 @@ namespace Parser.Pddl.Internal
         private List<PredicateOperator> GetStatePredicates(Regex regex, string folderPath)
         {
             List<PredicateOperator> res = new List<PredicateOperator>(); 
-            string problemPath = folderPath + "/problem.pddl";
+            string problemPath = folderPath + "/" + problemFile;
 
             var lines = File.ReadAllLines(problemPath);
             var line = string.Join(' ', lines).Replace("\t", "");
