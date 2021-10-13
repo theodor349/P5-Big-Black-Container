@@ -46,18 +46,34 @@ namespace PopperWriter.Tests
             Predicate predicate = Models.GetPredicate(predicateName);
             predicate.Parameters = Models.GetParameterList(paramTypes.ToList());
 
-            string actual = biasGenerator.GetPredicateDecleration(predicate, isHeadPred, isGoal);
+            string actual = biasGenerator.GetClauseDecleration(predicate, isHeadPred, isGoal);
 
             Assert.AreEqual(expected, actual);
         }
 
         [DataTestMethod]
-        public void GetPredicateDeclerations_x_x()
+        public void GetPredicateDeclerations_NotAllPredicatesUsed_OnlyUsedPredicatesInResult()
         {
             BiasGenerator biasGenerator = new BiasGenerator();
+            Action action = Models.GetAction("switch_on", new List<string> { "instrument", "satellite" });
+            List<List<PredicateOperator>> initialstates = new() {
+                Models.GetPredicateOperatorList(new List<string>() { "(on_board b1 b1)", "(calibration_target instrument1 star1)", "(power_avail satellite1)" }),
+                Models.GetPredicateOperatorList(new List<string>() { "(on_board b2 b2)", "(power_avail satellite0)", "(power_avail satellite2)" }),
+                Models.GetPredicateOperatorList(new List<string>() { "(pointing b3 b3)", "(calibration_target instrument2 GroundStation3)", "(power_avail satellite3)" })
+            };
+            List<List<PredicateOperator>> goalstates = new() {
+                Models.GetPredicateOperatorList(new List<string>() { "(on_board b1 b1)", "(power_avail satellite1)" }),
+                Models.GetPredicateOperatorList(new List<string>() { "(on_board b2 b2)", "(power_avail satellite0)" }),
+                Models.GetPredicateOperatorList(new List<string>() { "(pointing b3 b3)" })
+            };
+            List<Problem> problems = Models.GetProblemList(initialstates, goalstates);
+            List<Predicate> actions = Models.GetSatellitePredicates();
+            Domain domain = Models.GetDomain(problems, actions);
+            List<string> expected = new() { "head_pred(switch_on,3).", "body_pred(init_on_board,3).", "body_pred(init_calibration_target,3).", "body_pred(init_power_avail,2).", "body_pred(init_pointing,3).", "body_pred(goal_on_board,3).", "body_pred(goal_power_avail,2).", "body_pred(goal_pointing,3)." };
 
+            List<string> actual = biasGenerator.GetPredicateDeclarations(action, domain);
 
-            var actual = biasGenerator.GetPredicateDeclarations();
+            CollectionAssert.AreEquivalent(expected, actual);
         }
     }
 }
