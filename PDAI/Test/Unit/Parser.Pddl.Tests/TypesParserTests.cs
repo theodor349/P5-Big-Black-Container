@@ -32,7 +32,7 @@ namespace Parser.Pddl.Tests
         {
             int expected = 3;
             var lines = new List<string>();
-            lines.Add("(:types");
+            lines.Add("(:types \t");
             lines.Add("parent");
             lines.Add("type1 type2 - parent");
             lines.Add(")");

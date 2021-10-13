@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PddlParser.Internal
@@ -11,21 +11,27 @@ namespace PddlParser.Internal
     {
         public static List<Entity> Parse(List<string> lines)
         {
-            var text = lines.Aggregate((x, t) => t += " " + x);
-            int start = GetStartIndex(text, ":type");
-            int end = GetEndIndex(text, start);
+            Regex reg = new Regex(@"\(:types.*\)");
+            var text = lines.Aggregate((s, y) => y = s + " " + y.Trim());
+            text = reg.Match(text).Value.Replace("(:types", "").Replace(")", "").Trim();
 
             return null;
         }
 
         private static int GetEndIndex(string text, int start)
         {
-            throw new NotImplementedException();
+            for (int i = start; i < text.Length; i++)
+            {
+                var c = text[i];
+                if (c.Equals(')'))
+                    return i;
+            }
+            throw new KeyNotFoundException("Was unable to find the end of the " + start + " section");
         }
 
         private static int GetStartIndex(string text, string word)
         {
-            throw new NotImplementedException();
+            return text.IndexOf(word);
         }
     }
 }
