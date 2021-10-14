@@ -75,5 +75,51 @@ namespace PopperWriter.Tests
 
             CollectionAssert.AreEquivalent(expected, actual);
         }
+
+        [DynamicData("GetTypeDeclerationInput")]
+        [DataTestMethod]
+        public void GetTypeDecleration_x_x(string clauseName, List<Entity> parameters, List<string> expected)
+        {
+            BiasGenerator biasGenerator = new();
+
+            List<string> actual = biasGenerator.GetTypeDecleration(clauseName, parameters, true);
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        public static IEnumerable<object[]> GetTypeDeclerationInput
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[]
+                    {
+                        "take_image",
+                        Models.GetEntityList(new List<string>() { "satellite", "direction", "instrument", "mode" }),
+                        new List<string>() { "type(take_image,(satellite,direction,instrument,mode,problem))." }
+                    },
+                    new object[]
+                    {
+                        "init_clear",
+                        Models.GetEntityList(
+                            new List<string>() { "surface" },
+                            new List<List<Entity>>()
+                            {
+                                Models.GetEntityList(new List<string>() { "pallet", "crate" })
+                            }
+                        ),
+                        new List<string>()
+                        {
+                            "type(init_clear,(pallet,problem));",
+                            "type(init_clear,(crate,problem));",
+                            "type(init_clear,(surface,problem))."
+                        }
+                    }
+                };
+            }
+        }
     }
 }
+
+
