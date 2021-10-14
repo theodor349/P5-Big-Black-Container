@@ -127,6 +127,26 @@ namespace Test.Utilities
             return predicates;
         }
 
+        public static List<Predicate> GetPredicateListFromNumOfParams(List<string> names, List<int> numOfParamsList)
+        {
+            List<Predicate> predicates = new List<Predicate>();
+
+            for (int i = 0; i < names.Count; i++)
+            {
+                Predicate pred = GetPredicate(names[i]);
+                pred.Parameters = new();
+
+                for (int j = 0; j < numOfParamsList[i]; j++)
+                {
+                    pred.Parameters.Add(new Parameter());
+                }
+
+                predicates.Add(pred);
+            }
+
+            return predicates;
+        }
+
         public static Predicate GetPredicate(string name)
         {
             Predicate predicate = new Predicate();
@@ -241,6 +261,30 @@ namespace Test.Utilities
             }
 
             return entities;
+        }
+
+        public static Clause GetClause(string name, int numOfParams)
+        {
+            Clause clause = new();
+            clause.Name = name;
+            clause.Parameters = new();
+            for (int i = 0; i < numOfParams; i++)
+            {
+                clause.Parameters.Add(new());
+            }
+            return clause;
+        }
+
+        public static List<Clause> GetClauseList(List<string> names, List<int> numOfParamsList)
+        {
+            List<Clause> clauses = new();
+
+            for (int i = 0; i < names.Count; i++)
+            {
+                clauses.Add(GetClause(names[i], numOfParamsList[i]));
+            }
+
+            return clauses;
         }
 
     }

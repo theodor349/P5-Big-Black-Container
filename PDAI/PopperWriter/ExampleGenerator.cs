@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,9 +10,9 @@ namespace PopperWriter
 {
     internal class ExampleGenerator
     {
-        public void Write()
+        public void Write(List<Problem> problems, string path)
         {
-
+            File.WriteAllLinesAsync(path, GetActions(problems));
         }
 
         public string ActionToString(ActionOperator action, string problemName, bool isPositive)

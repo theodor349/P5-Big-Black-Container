@@ -1,6 +1,7 @@
 ﻿using Shared.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,24 +10,50 @@ namespace PopperWriter
 {
     internal class BiasGenerator
     {
-        public void Write(Shared.Models.Action action, List<Predicate> predicates)
+        public void Write(Shared.Models.Action action, Domain domain, string path)
         {
+            List<string> lines = new();
+
+            List<Predicate> usedInitPreds = GetUsedPreds(domain.Problems, domain.Predicates, true);
+            List<Predicate> usedGoalPreds = GetUsedPreds(domain.Problems, domain.Predicates, false);
+
+            List<Clause> allClauses = new();
+            allClauses.Add(action);
+            allClauses.AddRange(usedInitPreds);
+            allClauses.AddRange(usedGoalPreds);
+
+            int maxVars = Math.Max(usedInitPreds.Select(x => x.Parameters.Count).Max(), usedGoalPreds.Select(x => x.Parameters.Count).Max());
+            maxVars = Math.Max(maxVars, action.Parameters.Count);
+
+            lines.AddRange(GetConstraints(maxVars));
+            lines.AddRange(GetClauseDeclarations(action, usedInitPreds, usedGoalPreds));
+            lines.AddRange(GetTypeDeclerations(allClauses));
+
+            File.WriteAllLinesAsync(path, lines);
         }
 
-        public List<string> GetPredicateDeclarations(Shared.Models.Action action, Domain domain)
+        public List<Predicate> GetUsedPreds(List<Problem> problems, List<Predicate> predicates, bool initPreds)
         {
-            List<string> predDeclStrings = new();
-            List<PredicateOperator> allInitPredicates = new();
-            List<PredicateOperator> allGoalPredicates = new();
+            List<PredicateOperator> allPredicates = new();
 
-            foreach (Problem problem in domain.Problems)
+            foreach (Problem problem in problems)
             {
-                problem.InitalState.ForEach(x => allInitPredicates.Add(x));
-                problem.GoalState.ForEach(x => allGoalPredicates.Add(x));
+                if (initPreds)
+                {
+                    problem.InitalState.ForEach(x => allPredicates.Add(x));
+                }
+                else
+                {
+                    problem.GoalState.ForEach(x => allPredicates.Add(x));
+                }
             }
 
-            List<Predicate> usedInitPreds = GetUsedPredicates(domain.Predicates, allInitPredicates);
-            List<Predicate> usedGoalPreds = GetUsedPredicates(domain.Predicates, allGoalPredicates);
+            return GetUsedPredicates(predicates, allPredicates);
+        }
+
+        public List<string> GetClauseDeclarations(Shared.Models.Action action, List<Predicate> usedInitPreds, List<Predicate> usedGoalPreds)
+        {
+            List<string> predDeclStrings = new();
 
             predDeclStrings.Add(GetClauseDecleration(action, true, true));
 
@@ -70,6 +97,18 @@ namespace PopperWriter
             return usedPredicates;
         }
 
+        public List<string> GetTypeDeclerations(List<Clause> clauses)
+        {
+            List<string> typeDecls = new();
+
+            foreach (Clause clause in clauses)
+            {
+                typeDecls.AddRange(GetTypeDecleration(clause.Name, clause.Parameters.Select(x => x.Entity).ToList(), true));
+            }
+
+            return typeDecls;
+        }
+
         public List<string> GetTypeDecleration(string clauseName, List<Entity> parameters, bool originalCall)
         {
             List<string> typeDecls = new();
@@ -96,6 +135,37 @@ namespace PopperWriter
             typeDecls.Add(decl);
 
             return typeDecls;
+        }
+
+        public string GetDirectionDecleration(Clause clause)
+        {
+            string decl = "direction(" + clause.Name + ",(";
+
+            for (int i = 0; i < clause.Parameters.Count; i++)
+            {
+                decl += "in,";
+            }
+
+            decl += "out)).";
+
+            return decl;
+        }
+
+        public List<string> GetDirectionDeclerations(List<Clause> clauses)
+        {
+            List<string> decls = new();
+
+            foreach(Clause clause in clauses)
+            {
+                decls.Add(GetDirectionDecleration(clause));
+            }
+
+            return decls;
+        }
+
+        public List<string> GetConstraints(int maxVars)
+        {
+            return new List<string>() { "max_clauses(5).", "max_body(5).", "max_vars(" + maxVars + ")." };
         }
 
         private List<Entity> CloneEntityList(List<Entity> entityList)
