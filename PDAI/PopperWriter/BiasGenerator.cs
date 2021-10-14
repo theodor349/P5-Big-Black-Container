@@ -69,5 +69,48 @@ namespace PopperWriter
 
             return usedPredicates;
         }
+
+        public List<string> GetTypeDecleration(string clauseName, List<Entity> parameters, bool originalCall)
+        {
+            List<string> typeDecls = new();
+
+            string decl = "type(" + clauseName + ",(";
+
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                decl += parameters[i].Type + ",";
+            }
+            decl += "problem";
+
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                for (int j = 0; j < parameters[i].Children.Count; j++)
+                {
+                    List<Entity> replacedParams = CloneEntityList(parameters);
+                    replacedParams.Insert(i, parameters[i].Children[j]);
+                    typeDecls.AddRange(GetTypeDecleration(clauseName, replacedParams, false));
+                }
+            }
+
+            decl += originalCall ? "))." : "));";
+            typeDecls.Add(decl);
+
+            return typeDecls;
+        }
+
+        private List<Entity> CloneEntityList(List<Entity> entityList)
+        {
+            List<Entity> newList = new();
+
+            foreach (Entity entity in entityList)
+            {
+                Entity newEntity = new();
+                newEntity.Name = entity.Name;
+                newEntity.Type = entity.Type;
+                newEntity.Children = CloneEntityList(entity.Children);
+            }
+
+            return newList;
+        }
     }
 }

@@ -203,5 +203,45 @@ namespace Test.Utilities
             return domain;
         }
 
+        public static Entity GetEntity(string type)
+        {
+            Entity entity = new();
+            entity.Type = type;
+            entity.Children = new List<Entity>();
+            return entity;
+        }
+
+        public static Entity GetEntity(string type, List<Entity> children)
+        {
+            Entity entity = new();
+            entity.Type = type;
+            entity.Children = children;
+            return entity;
+        }
+
+        public static List<Entity> GetEntityList(List<string> types, List<List<Entity>> childrenList)
+        {
+            List<Entity> entities = new();
+
+            for (int i = 0; i < types.Count; i++)
+            {
+                entities.Add(GetEntity(types[i], childrenList[i]));
+            }
+
+            return entities;
+        }
+
+        public static List<Entity> GetEntityList(List<string> types)
+        {
+            List<Entity> entities = new();
+
+            foreach (string type in types)
+            {
+                entities.Add(GetEntity(type));
+            }
+
+            return entities;
+        }
+
     }
 }
