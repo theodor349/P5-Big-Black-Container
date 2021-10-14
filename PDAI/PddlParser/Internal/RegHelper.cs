@@ -9,7 +9,7 @@ namespace PddlParser.Internal
 {
     internal static class RegHelper
     {
-        private static List<string> GetActionIndecies(List<string> lines, Regex regex)
+        public static List<string> GetActionIndecies(List<string> lines, Regex regex)
         {
             var line = string.Join(' ', lines).Replace("\t", "");
             var res = regex.Matches(line).ToList().ConvertAll(x => TrimStateLine(x.Value));
