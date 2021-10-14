@@ -5,5 +5,14 @@ namespace Shared.Models
 {
     public class Action : Clause
     {
+        public Action()
+        {
+
+        }
+
+        public Action(string text, List<Entity> entities)
+        {
+            
+        }
     }
 }
