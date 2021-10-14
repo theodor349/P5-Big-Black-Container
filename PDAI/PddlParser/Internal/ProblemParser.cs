@@ -4,29 +4,29 @@ using System.IO;
 using System.Linq;
 using ICSharpCode.SharpZipLib.BZip2;
 using Shared.Models;
+using System.Text.RegularExpressions;
 
 namespace Parser.Pddl.Internal
 {
     internal class ProblemParser {
-        class InitGoalState
-        {
-            public List<PredicateOperator> Init { get; set; }
-            public List<PredicateOperator> Goal { get; set; }
-        }
 
         static string tempFile { get; set; } = "decompressed";
         static string goodOperatorFile { get; set; } = "good_operators";
         static string allOperatorFile { get; set; } = "all_operators.bz2";
+        static string problemFile { get; set; } = "problem.pddl";
 
+        private Regex initReg = new Regex(@"(?i)\(:init(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
+        private Regex goalReg = new Regex(@"(?i)\(and(?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)");
+        private Regex opReg = new Regex(@"\([\s\S]*?\)");
+        
         internal Problem Parse(string folderPath)
         {
             var problem = new Problem();
 
             problem.GoodOperators = GetGoodOperators(folderPath);
             problem.BadOperators = GetBadOperators(problem.GoodOperators, folderPath);
-            var states = GetInitAndGoalState(folderPath);
-            problem.InitalState = states.Init;
-            problem.GoalState = states.Goal;
+            problem.InitalState = GetStatePredicates(initReg, folderPath);
+            problem.GoalState = GetStatePredicates(goalReg, folderPath);
 
             if (problem.GoodOperators is null || problem.BadOperators is null)
                 return null;
@@ -36,9 +36,27 @@ namespace Parser.Pddl.Internal
                 return problem;
         }
 
-        private InitGoalState GetInitAndGoalState(string folderPath)
+        private List<PredicateOperator> GetStatePredicates(Regex regex, string folderPath)
         {
-            return null;
+            List<PredicateOperator> res = new List<PredicateOperator>(); 
+            string problemPath = folderPath + "/" + problemFile;
+
+            var lines = File.ReadAllLines(problemPath);
+            var line = string.Join(' ', lines).Replace("\t", "");
+            var stateLine = TrimStateLine(regex.Match(line).Value);
+
+            foreach (Match match in opReg.Matches(stateLine))
+            {
+                res.Add(new PredicateOperator(match.Value));
+            }
+            return res;
+        }
+
+        private string TrimStateLine(string line) {
+            List<string> words = line.Split().ToList();
+            words.RemoveAt(0);
+            words.RemoveAt(words.Count - 1);
+            return string.Join(' ', words);
         }
 
         private List<ActionOperator> GetBadOperators(List<ActionOperator> goodOperators, string folderPath)
