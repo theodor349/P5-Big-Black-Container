@@ -8,6 +8,12 @@ namespace Shared.Models
     public class Predicate : Clause
     {
         private Regex multipleTypeReg = new Regex(@"(\?\w*.)*-.\w*");
+
+        public Predicate()
+        {
+
+        }
+
         public Predicate(string text, List<Entity> entities)
         {
             text = text.Trim('(', ')');
