@@ -7,6 +7,6 @@ namespace Shared.Models
     {
         public string Name { get; set; }
         public string Type { get; set; }
-        public List<Entity> Children { get; set; }
+        public List<Entity> Children { get; set; } = new List<Entity>();
     }
 }
