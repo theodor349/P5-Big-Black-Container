@@ -25,7 +25,7 @@ namespace Shared.Models
 
         private void HandleSingleType(string text, List<Entity> entities)
         {
-            Parameters = GetParameters(text, entities);
+            Parameters = GetParameters(text, entities.FirstOrDefault());
         }
 
         private List<Parameter> GetParameters(string text, Entity entity)
@@ -40,7 +40,7 @@ namespace Shared.Models
                 res.Add(new Parameter()
                 {
                     Name = word.Trim(),
-                    Entity = entity.FirstOrDefault(),
+                    Entity = entity,
                 });
             }
             return res;
@@ -53,8 +53,7 @@ namespace Shared.Models
                 var split = match.Value.Split("-");
                 var t = entities.Where(x => x.Type.Equals(split[1].Trim())).FirstOrDefault();
 
-                var parameters = GetParameters(split[0], );
-
+                Parameters.AddRange(GetParameters(split[0], t));
             }
         }
     }

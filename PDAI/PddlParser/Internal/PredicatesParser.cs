@@ -12,11 +12,12 @@ namespace PddlParser.Internal
         public static List<Predicate> Parse(List<string> lines, List<Entity> entities)
         {
             var res = new List<Predicate>();
-            var predicateLines = RegHelper.GetProblemSection(lines, predicateReg);
+            var predicateText = RegHelper.GetProblemSection(lines, predicateReg);
+            var predicateLines = RegHelper.GetProblemSection(predicateText, opReg);
 
             foreach (var predicateLine in predicateLines) 
             {
-                res.Add(new Predicate());
+                res.Add(new Predicate(predicateLine, entities));
             }
             return res;
         }
