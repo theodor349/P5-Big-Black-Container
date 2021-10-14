@@ -8,7 +8,7 @@ namespace Test.Utilities
 {
     public class StringGenerator
     {
-        public static List<string> GetTypesList(int amount, string type)
+        public static List<string> GetTypesListMiltiLine(int amount, string type)
         {
             var res = new List<string>();
             res.Add("(:types");
@@ -17,6 +17,19 @@ namespace Test.Utilities
                 res.Add(type);
             }
             res.Add(")");
+            return res;
+        }
+
+        public static List<string> GetTypesListSingleLine(int amount, string type)
+        {
+            var res = new List<string>();
+            var line = "(:types";
+            for (int i = 0; i < amount; i++)
+            {
+                line += " " + type;
+            }
+            line += ")";
+            res.Add(line);
             return res;
         }
     }

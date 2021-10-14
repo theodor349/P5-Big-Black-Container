@@ -13,14 +13,32 @@ namespace Parser.Pddl.Tests
         [DataRow(2)]
         [DataRow(3)]
         [TestMethod]
-        public void SingleType(int amount)
+        public void SingleTypeMultiLine(int amount)
         {
             string type = "type";
-            var lines = StringGenerator.GetTypesList(amount, type);
+            var lines = StringGenerator.GetTypesListMiltiLine(amount, type);
 
             var res =  TypesParser.Parse(lines);
 
-            Assert.AreEqual(lines.Count, res.Count);
+            Assert.AreEqual(amount, res.Count);
+            foreach (var t in res)
+            {
+                Assert.AreEqual(type, t.Type);
+            }
+        }
+
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(3)]
+        [TestMethod]
+        public void SingleTypeSingleLine(int amount)
+        {
+            string type = "type";
+            var lines = StringGenerator.GetTypesListSingleLine(amount, type);
+
+            var res = TypesParser.Parse(lines);
+
+            Assert.AreEqual(amount, res.Count);
             foreach (var t in res)
             {
                 Assert.AreEqual(type, t.Type);
