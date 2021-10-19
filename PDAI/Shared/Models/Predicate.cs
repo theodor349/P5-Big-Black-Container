@@ -8,7 +8,7 @@ namespace Shared.Models
 {
     public class Predicate : Clause
     {
-        private static Regex multipleTypeReg = new Regex(@"(\?\w*.)*-.\w*");
+        private static Regex multipleTypeReg = new Regex(@"(\?\w*.)*-\s*\w*");
 
         public Predicate()
         {
@@ -18,7 +18,7 @@ namespace Shared.Models
         public Predicate(string text, List<Entity> entities)
         {
             text = text.Trim('(', ')');
-            Name = text.Split(" ").First().Trim('?').FirstCharToLowerCase();
+            Name = text.Split(" ").First().Trim('?').Trim().FirstCharToLowerCase();
             text = text.Substring(Name.Length).Trim();
             if (entities.Count > 1)
             {

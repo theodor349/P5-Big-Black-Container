@@ -56,8 +56,8 @@ namespace Parser.Pddl.Internal
         private string TrimStateLine(string line) {
             List<string> words = line.Split().ToList();
             words.RemoveAt(0);
-            words.RemoveAt(words.Count - 1);
-            return string.Join(' ', words);
+            var res = string.Join(' ', words);
+            return res.Remove(res.Length - 1);
         }
 
         private List<ActionOperator> GetBadOperators(List<ActionOperator> goodOperators, string folderPath)
