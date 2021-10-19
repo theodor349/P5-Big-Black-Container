@@ -63,7 +63,7 @@ namespace Parser.Pddl.Tests
                 lines.Add("?var" + i);
             lines.Add(")");
             lines.Add(":precondition (and (clear ?bm) (on ?bm ?bf))");
-            lines.Add(":effect (and (not (clear ?bt)) (not (ontable ?bm))(on ?bm ?bt)))");
+            lines.Add(":effect (and (not (clear ?bt)) (not (ontable ?bm))(on ?bm ?bt))");
             lines.Add(")");
 
 

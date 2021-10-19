@@ -7,10 +7,9 @@ namespace Shared.Models
 {
     public class Action : Clause
     {
-        private Regex paramReg = new Regex(@":parameters.((\w*.)*)");
+        private Regex paramReg = new Regex(@"(?i):parameters\s*\(\s*([^)]+)\s*\)");
         private Regex parentReg = new Regex(@"\(.*\)");
         private Regex multipleTypeReg = new Regex(@"(\?\w*.)*-.\w*");
-        private Regex singleTypeParenReg = new Regex(@":parameters\s\(([^()]*)\)");
 
         public Action()
         {
@@ -35,9 +34,8 @@ namespace Shared.Models
         private void HandleSingleType(string text, List<Entity> entities)
         {
             string parameter = paramReg.Match(text).Value;
-            string parameterParentacy = singleTypeParenReg.Match(parameter).Value;
-            var matchTypes = multipleTypeReg.Matches(parameterParentacy);
-
+            string parameterParentacy = parentReg.Match(parameter).Value.Trim('(', ')');
+            Parameters.AddRange(GetParameters(parameterParentacy, entities.FirstOrDefault()));
         }
 
         private void HandleMultipleTypes(string text, List<Entity> entities)
