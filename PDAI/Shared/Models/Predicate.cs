@@ -20,7 +20,7 @@ namespace Shared.Models
             text = text.Trim('(', ')');
             Name = text.Split(" ").First().Trim('?').Trim().FirstCharToLowerCase();
             text = text.Substring(Name.Length).Trim();
-            if (entities.Count > 1)
+            if (entities.Count > 2)
             {
                 HandleMultipleTypes(text, entities);
             }

@@ -82,6 +82,7 @@ namespace Parser.Pddl.Tests
         {
             var typeName = "Type";
             var entities = new List<Entity>();
+            entities.Add(new Entity() { Type = "object" });
             for (int i = 0; i < types; i++)
                 entities.Add(new Entity() { Type = typeName + i });
 
@@ -99,6 +100,7 @@ namespace Parser.Pddl.Tests
             lines.Add(")");
 
             var res = PredicatesParser.Parse(lines, entities);
+            entities.RemoveAt(0);
 
             Assert.AreEqual(1, res.Count);
             Assert.AreEqual(types * arguments, res[0].Parameters.Count);
