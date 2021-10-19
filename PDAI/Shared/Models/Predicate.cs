@@ -7,7 +7,7 @@ namespace Shared.Models
 {
     public class Predicate : Clause
     {
-        private Regex multipleTypeReg = new Regex(@"(\?\w*.)*-.\w*");
+        private static Regex multipleTypeReg = new Regex(@"(\?\w*.)*-.\w*");
 
         public Predicate()
         {
