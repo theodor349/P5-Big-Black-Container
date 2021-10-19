@@ -19,7 +19,7 @@ namespace Shared.Models
 
         public Action(string text, List<Entity> entities)
         {
-            Name = text.Split(" ")[0].Trim().FirstCharToLowerCase();
+            Name = text.Split(" ")[0].Trim().FirstCharToLowerCase().Replace("-", "_");
 
             if (entities.Count > 2)
             {
