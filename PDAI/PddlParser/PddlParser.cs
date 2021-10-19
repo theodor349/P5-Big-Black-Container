@@ -20,11 +20,14 @@ namespace Parser.Pddl
             domainParser.Parser(domainFolderPath + "/domain.pddl", domain);
 
             var problemsFolder = Directory.GetDirectories(domainFolderPath + "/runs/optimal");
-            foreach (var folder in problemsFolder)
+            for (int i = 0; i < problemsFolder.Length; i++)
             {
-                var problem = problemParser.Parse(folder);
+                var problem = problemParser.Parse(problemsFolder[i]);
                 if(problem is not null)
+                {
                     domain.Problems.Add(problem);
+                    problem.Name = "p" + i;
+                }
             }
 
             return domain;
