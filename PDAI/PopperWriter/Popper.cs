@@ -13,7 +13,10 @@ namespace Writer.Popper
             var biasGenerator = new BiasGenerator();
             var exampleGenerator = new ExampleGenerator();
 
-            Directory.Delete(folderPath, true);
+            if (Directory.Exists(folderPath))
+            {
+                Directory.Delete(folderPath, true);
+            }
             Directory.CreateDirectory(folderPath);
 
             foreach (var a in domain.Actions)
