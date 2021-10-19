@@ -24,13 +24,14 @@ namespace Parser.Pddl.Internal
             var problem = new Problem();
 
             problem.GoodOperators = GetGoodOperators(folderPath);
+            if (problem.GoodOperators is null || problem.BadOperators is null)
+                return null;
+
             problem.BadOperators = GetBadOperators(problem.GoodOperators, folderPath);
             problem.InitalState = GetStatePredicates(initReg, folderPath);
             problem.GoalState = GetStatePredicates(goalReg, folderPath);
 
-            if (problem.GoodOperators is null || problem.BadOperators is null)
-                return null;
-            else if (problem.InitalState is null || problem.GoalState is null)
+            if (problem.InitalState is null || problem.GoalState is null)
                 return null;
             else
                 return problem;

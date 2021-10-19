@@ -13,9 +13,14 @@ namespace PDAI
             var a = new ActionOperator(line);
             var b = new ActionOperator(line);
 
-            string folderPath = args[0];
+            string inputFolderPath = args[0];
+            string outputFolderPath = args[1];
+
             IPddlParser parser = new Parser.Pddl.PddlParser();
-            parser.Parse(folderPath);
+            var domain = parser.Parse(inputFolderPath);
+
+            var writer = new Popper();
+            writer.Write(domain, outputFolderPath);
         }
     }
 }

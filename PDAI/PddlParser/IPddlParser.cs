@@ -1,7 +1,9 @@
-﻿namespace Parser.Pddl
+﻿using Shared.Models;
+
+namespace Parser.Pddl
 {
     public interface IPddlParser
     {
-        void Parse(string domainFolderPath, int maxProblems = int.MaxValue);
+        Domain Parse(string domainFolderPath, int maxProblems = int.MaxValue);
     }
 }

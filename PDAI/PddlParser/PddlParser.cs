@@ -11,7 +11,7 @@ namespace Parser.Pddl
 {
     public class PddlParser : IPddlParser
     {
-        public void Parse(string domainFolderPath, int maxProblems = int.MaxValue)
+        public Domain Parse(string domainFolderPath, int maxProblems = int.MaxValue)
         {
             var domainParser = new DomainParser();
             var problemParser = new ProblemParser();
@@ -26,6 +26,8 @@ namespace Parser.Pddl
                 if(problem is not null)
                     domain.Problems.Add(problem);
             }
+
+            return domain;
         }
     }
 }
