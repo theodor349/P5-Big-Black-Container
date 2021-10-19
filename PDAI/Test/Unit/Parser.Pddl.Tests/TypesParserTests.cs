@@ -9,6 +9,21 @@ namespace Parser.Pddl.Tests
     [TestClass]
     public class TypesParserTests
     {
+        [TestMethod]
+        public void NoTypeMultiLine()
+        {
+            string type = "object";
+            var lines = StringGenerator.GetTypesListMiltiLine(0, type);
+
+            var res = TypesParser.Parse(lines);
+
+            Assert.AreEqual(1, res.Count);
+            foreach (var t in res)
+            {
+                Assert.AreEqual(type, t.Type);
+            }
+        }
+
         [DataRow(1)]
         [DataRow(2)]
         [DataRow(3)]
@@ -20,9 +35,11 @@ namespace Parser.Pddl.Tests
 
             var res =  TypesParser.Parse(lines);
 
-            Assert.AreEqual(amount, res.Count);
+            Assert.AreEqual(amount + 1, res.Count);
             foreach (var t in res)
             {
+                if (t.Type.Equals("object"))
+                    continue;
                 Assert.AreEqual(type, t.Type);
             }
         }
@@ -38,9 +55,11 @@ namespace Parser.Pddl.Tests
 
             var res = TypesParser.Parse(lines);
 
-            Assert.AreEqual(amount, res.Count);
+            Assert.AreEqual(amount + 1, res.Count);
             foreach (var t in res)
             {
+                if (t.Type.Equals("object"))
+                    continue;
                 Assert.AreEqual(type, t.Type);
             }
         }
@@ -57,7 +76,7 @@ namespace Parser.Pddl.Tests
 
             var res = TypesParser.Parse(lines);
 
-            Assert.AreEqual(expected, res.Count);
+            Assert.AreEqual(expected + 1, res.Count);
             // Parent
             var type = res.Where(x => x.Type.Equals("parent")).FirstOrDefault(); ;
             Assert.IsNotNull(type);

@@ -20,7 +20,7 @@ namespace Shared.Models
         {
             Name = text.Split(" ")[0].Trim();
 
-            if (entities.Count > 1)
+            if (entities.Count > 2)
             {
                 HandleMultipleTypes(text, entities);
             }
@@ -35,7 +35,7 @@ namespace Shared.Models
         {
             string parameter = paramReg.Match(text).Value;
             string parameterParentacy = parentReg.Match(parameter).Value.Trim('(', ')');
-            Parameters.AddRange(GetParameters(parameterParentacy, entities.FirstOrDefault()));
+            Parameters.AddRange(GetParameters(parameterParentacy, entities.LastOrDefault()));
         }
 
         private void HandleMultipleTypes(string text, List<Entity> entities)

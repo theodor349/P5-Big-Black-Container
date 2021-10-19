@@ -17,6 +17,7 @@ namespace Parser.Pddl.Tests
         {
             var name = "action1";
             var entities = new List<Entity>();
+            entities.Add(new Entity() { Type = "object" });
             entities.Add(new Entity() { Type = "type1" });
 
             var lines = new List<string>();
@@ -42,7 +43,7 @@ namespace Parser.Pddl.Tests
             for (int i = 0; i < amount; i++)
             {
                 Assert.AreEqual("var" + i, res[0].Parameters[i].Name);
-                Assert.AreEqual(entities[0].Type, res[0].Parameters[i].Entity.Type);
+                Assert.AreEqual(entities[1].Type, res[0].Parameters[i].Entity.Type);
             }
         }
 
@@ -54,6 +55,7 @@ namespace Parser.Pddl.Tests
         {
             var name = "action1";
             var entities = new List<Entity>();
+            entities.Add(new Entity() { Type = "object" });
             entities.Add(new Entity() { Type = "type1" });
 
             var lines = new List<string>();
@@ -66,7 +68,6 @@ namespace Parser.Pddl.Tests
             lines.Add(":effect (and (not (clear ?bt)) (not (ontable ?bm))(on ?bm ?bt))");
             lines.Add(")");
 
-
             var res = ActionsParser.Parse(lines, entities);
 
             Assert.AreEqual(1, res.Count);
@@ -75,7 +76,7 @@ namespace Parser.Pddl.Tests
             for (int i = 0; i < amount; i++)
             {
                 Assert.AreEqual("var" + i, res[0].Parameters[i].Name);
-                Assert.AreEqual(entities[0].Type, res[0].Parameters[i].Entity.Type);
+                Assert.AreEqual(entities[1].Type, res[0].Parameters[i].Entity.Type);
             }
         }
 
@@ -88,6 +89,7 @@ namespace Parser.Pddl.Tests
             var actionName = "action1";
             var typeName = "Type";
             var entities = new List<Entity>();
+            entities.Add(new Entity() { Type = "object" });
             for (int i = 0; i < types; i++)
                 entities.Add(new Entity() { Type = typeName + i });
 
@@ -108,6 +110,7 @@ namespace Parser.Pddl.Tests
             lines.Add(")");
 
             var res = ActionsParser.Parse(lines, entities);
+            entities.RemoveAt(0);
 
             Assert.AreEqual(1, res.Count);
             Assert.AreEqual(actionName, res[0].Name);
@@ -127,6 +130,7 @@ namespace Parser.Pddl.Tests
         {
             var actionName = "action";
             var entities = new List<Entity>();
+            entities.Add(new Entity() { Type = "object" });
             entities.Add(new Entity() { Type = "type1" });
 
             var lines = new List<string>();
@@ -158,6 +162,7 @@ namespace Parser.Pddl.Tests
         {
             var actionName = "action";
             var entities = new List<Entity>();
+            entities.Add(new Entity() { Type = "object" });
             entities.Add(new Entity() { Type = "type1" });
 
             var lines = new List<string>();

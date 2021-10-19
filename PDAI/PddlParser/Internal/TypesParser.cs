@@ -10,6 +10,10 @@ namespace PddlParser.Internal
         public static List<Entity> Parse(List<string> lines)
         {
             var res = new List<Entity>();
+            res.Add(new Entity()
+            {
+                Type = "object"
+            });
             var searchWord = "(:types";
             int startRow = GetStartLine(lines, searchWord);
             int endRow = GetEndLine(lines, startRow);
