@@ -126,7 +126,7 @@ namespace PopperWriter
                 for (int j = 0; j < parameters[i].Children.Count; j++)
                 {
                     List<Entity> replacedParams = CloneEntityList(parameters);
-                    replacedParams.Insert(i, parameters[i].Children[j]);
+                    replacedParams[i] = parameters[i].Children[j];
                     typeDecls.AddRange(GetTypeDecleration(clauseName, replacedParams, false));
                 }
             }
@@ -178,6 +178,7 @@ namespace PopperWriter
                 newEntity.Name = entity.Name;
                 newEntity.Type = entity.Type;
                 newEntity.Children = CloneEntityList(entity.Children);
+                newList.Add(newEntity);
             }
 
             return newList;
