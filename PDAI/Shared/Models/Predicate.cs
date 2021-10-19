@@ -32,7 +32,7 @@ namespace Shared.Models
 
         private void HandleSingleType(string text, List<Entity> entities)
         {
-            Parameters = GetParameters(text, entities.FirstOrDefault());
+            Parameters = GetParameters(text, entities.LastOrDefault());
         }
 
         private List<Parameter> GetParameters(string text, Entity entity)
