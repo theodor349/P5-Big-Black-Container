@@ -21,8 +21,9 @@ namespace PddlParser.Internal
         {
             List<string> words = line.Split().ToList();
             words.RemoveAt(0);
-            words.RemoveAt(words.Count - 1);
-            return string.Join(' ', words);
+            var res = string.Join(' ', words);
+            res.Remove(res.Length - 1);
+            return res;
         }
     }
 }
