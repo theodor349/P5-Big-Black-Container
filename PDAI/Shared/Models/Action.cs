@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Shared.ExtensionMethods;
 
 namespace Shared.Models
 {
@@ -18,7 +19,7 @@ namespace Shared.Models
 
         public Action(string text, List<Entity> entities)
         {
-            Name = text.Split(" ")[0].Trim();
+            Name = text.Split(" ")[0].Trim().FirstCharToLowerCase();
 
             if (entities.Count > 2)
             {

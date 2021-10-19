@@ -17,7 +17,7 @@ namespace Shared.Models
         public Predicate(string text, List<Entity> entities)
         {
             text = text.Trim('(', ')');
-            Name = text.Split(" ").First().Trim('?');
+            Name = text.Split(" ").First().Trim('?').FirstCharToLowerCase();
             text = text.Substring(Name.Length).Trim();
             if (entities.Count > 1)
             {
