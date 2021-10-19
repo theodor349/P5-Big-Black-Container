@@ -22,12 +22,23 @@ namespace PopperWriter
             allClauses.AddRange(usedInitPreds);
             allClauses.AddRange(usedGoalPreds);
 
+            List<string> allClausesPre = new();
+            allClausesPre.Add("");
+            foreach (var p in usedInitPreds)
+            {
+                allClausesPre.Add("init_");
+            }
+            foreach (var p in usedGoalPreds)
+            {
+                allClausesPre.Add("goal_");
+            }
+
             int maxVars = Math.Max(usedInitPreds.Select(x => x.Parameters.Count).Max(), usedGoalPreds.Select(x => x.Parameters.Count).Max());
             maxVars = Math.Max(maxVars, action.Parameters.Count);
 
             lines.AddRange(GetConstraints(maxVars));
             lines.AddRange(GetClauseDeclarations(action, usedInitPreds, usedGoalPreds));
-            lines.AddRange(GetTypeDeclerations(allClauses));
+            lines.AddRange(GetTypeDeclerations(allClauses, allClausesPre).Distinct().ToList());
 
             File.WriteAllLinesAsync(path, lines);
         }
@@ -97,13 +108,13 @@ namespace PopperWriter
             return usedPredicates;
         }
 
-        public List<string> GetTypeDeclerations(List<Clause> clauses)
+        public List<string> GetTypeDeclerations(List<Clause> clauses, List<string> preStrings)
         {
             List<string> typeDecls = new();
 
-            foreach (Clause clause in clauses)
+            for (int i = 0; i < clauses.Count; i++)
             {
-                typeDecls.AddRange(GetTypeDecleration(clause.Name, clause.Parameters.Select(x => x.Entity).ToList(), true));
+                typeDecls.AddRange(GetTypeDecleration(preStrings[i] + clauses[i].Name, clauses[i].Parameters.Select(x => x.Entity).ToList(), true));
             }
 
             return typeDecls;
