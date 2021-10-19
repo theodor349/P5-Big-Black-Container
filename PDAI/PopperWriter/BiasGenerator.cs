@@ -165,7 +165,7 @@ namespace PopperWriter
 
         public List<string> GetConstraints(int maxVars)
         {
-            return new List<string>() { "max_clauses(5).", "max_body(5).", "max_vars(" + maxVars + ")." };
+            return new List<string>() { "max_clauses(5).", "max_body(5).", "max_vars(" + (maxVars + 1) + ")." };
         }
 
         private List<Entity> CloneEntityList(List<Entity> entityList)
