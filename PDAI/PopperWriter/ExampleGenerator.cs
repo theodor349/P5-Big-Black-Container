@@ -10,9 +10,9 @@ namespace PopperWriter
 {
     internal class ExampleGenerator
     {
-        public void Write(List<Problem> problems, string path)
+        public void Write(Shared.Models.Action action, List<Problem> problems, string path)
         {
-            File.WriteAllLinesAsync(path, GetActions(problems));
+            File.WriteAllLinesAsync(path, GetActions(action, problems));
         }
 
         public string ActionToString(ActionOperator action, string problemName, bool isPositive)
@@ -30,7 +30,7 @@ namespace PopperWriter
             return actionString;
         }
 
-        public List<string> GetActions(List<Problem> problems)
+        public List<string> GetActions(Shared.Models.Action action, List<Problem> problems)
         {
             List<string> actions = new List<string>();
 
@@ -38,11 +38,17 @@ namespace PopperWriter
             {
                 foreach (ActionOperator goodOperator in problem.GoodOperators)
                 {
-                    actions.Add(ActionToString(goodOperator, problem.Name, true));
+                    if (goodOperator.Name == action.Name)
+                    {
+                        actions.Add(ActionToString(goodOperator, problem.Name, true));
+                    }
                 }
                 foreach (ActionOperator badOperator in problem.BadOperators)
                 {
-                    actions.Add(ActionToString(badOperator, problem.Name, false));
+                    if (badOperator.Name == action.Name)
+                    {
+                        actions.Add(ActionToString(badOperator, problem.Name, false));
+                    }
                 }
             }
 
