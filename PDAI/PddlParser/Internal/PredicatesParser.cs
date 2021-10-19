@@ -1,5 +1,6 @@
 ﻿using Shared.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 
@@ -13,11 +14,11 @@ namespace PddlParser.Internal
         {
             var res = new List<Predicate>();
             var predicateText = RegHelper.GetProblemSection(lines, predicateReg);
-            var predicateLines = RegHelper.GetProblemSection(predicateText, opReg);
+            var predicateLines = opReg.Matches(predicateText.FirstOrDefault());
 
-            foreach (var predicateLine in predicateLines) 
+            foreach (Match predicateLine in predicateLines) 
             {
-                res.Add(new Predicate(predicateLine, entities));
+                res.Add(new Predicate(predicateLine.Value, entities));
             }
             return res;
         }
