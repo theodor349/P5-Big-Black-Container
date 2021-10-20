@@ -14,7 +14,8 @@ namespace PopperWriter
         {
             List<string> predicates = GetPredicates(domain.Problems);
 
-            File.WriteAllLinesAsync(path, predicates);
+            var t = File.WriteAllLinesAsync(path, predicates);
+            t.Wait();
         }
 
         public List<string> GetPredicates(List<Problem> problems)

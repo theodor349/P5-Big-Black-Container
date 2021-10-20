@@ -40,7 +40,8 @@ namespace PopperWriter
             lines.AddRange(GetClauseDeclarations(action, usedInitPreds, usedGoalPreds));
             lines.AddRange(GetTypeDeclerations(allClauses, allClausesPre).Distinct().ToList());
 
-            File.WriteAllLinesAsync(path, lines);
+            var t = File.WriteAllLinesAsync(path, lines);
+            t.Wait();
         }
 
         public List<Predicate> GetUsedPreds(List<Problem> problems, List<Predicate> predicates, bool initPreds)

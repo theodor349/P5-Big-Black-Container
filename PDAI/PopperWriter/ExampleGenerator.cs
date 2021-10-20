@@ -12,7 +12,8 @@ namespace PopperWriter
     {
         public void Write(Shared.Models.Action action, List<Problem> problems, string path)
         {
-            File.WriteAllLinesAsync(path, GetActions(action, problems));
+            var t = File.WriteAllLinesAsync(path, GetActions(action, problems));
+            t.Wait();
         }
 
         public string ActionToString(ActionOperator action, string problemName, bool isPositive)
