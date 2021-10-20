@@ -1,4 +1,5 @@
 ﻿using Parser.Pddl.Internal;
+using Shared.ExtensionMethods;
 using Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -14,21 +15,20 @@ namespace Parser.Pddl
     {
         public Domain Parse(string domainFolderPath, int maxProblems = int.MaxValue)
         {
+            Logger.Log("Parsing Domain");
             var domainParser = new DomainParser();
-            var problemParser = new ProblemParser();
-
             var domain = new Domain();
             domainParser.Parser(domainFolderPath + "/domain.pddl", domain);
 
             var problemsFolder = Directory.GetDirectories(domainFolderPath + "/runs/optimal");
+            Logger.Log("Found " + Math.Min(problemsFolder.Length, maxProblems) + " problems");
+            Logger.Log("Loading Problems");
 
             var threads = new List<Task<Problem>>();
-            for (int i = 0; i < problemsFolder.Length; i++)
+            for (int i = 0; i < problemsFolder.Length && i < maxProblems; i++)
             {
-                //var problem = problemParser.Parse(problemsFolder[i]);
                 threads.Add(ParseTask(problemsFolder[i]));
             }
-
             Task.WaitAll(threads.ToArray());
             for (int i = 0; i < threads.Count; i++)
             {
@@ -50,24 +50,6 @@ namespace Parser.Pddl
             {
                 return problemParser.Parse(folderPath);
             });
-        }
-
-        private class ProblemThread
-        {
-            public Problem ProblemData { get; set; }
-            public string Folder { get; set; }
-            public ProblemParser ProblemParser { get; set; }
-
-            public void DoWork()
-            {
-                //var problemThread = new ProblemThread();
-                //problemThread.Folder = problemsFolder[i];
-                //problemThread.ProblemParser = problemParser;
-                //var t = new Thread(new ThreadStart(problemThread.DoWork));
-                //t.Start();
-
-                ProblemData = ProblemParser.Parse(Folder);
-            }
         }
     }
 }

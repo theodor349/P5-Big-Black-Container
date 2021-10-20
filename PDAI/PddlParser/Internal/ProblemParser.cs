@@ -5,6 +5,7 @@ using System.Linq;
 using ICSharpCode.SharpZipLib.BZip2;
 using Shared.Models;
 using System.Text.RegularExpressions;
+using Shared.ExtensionMethods;
 
 namespace Parser.Pddl.Internal
 {
