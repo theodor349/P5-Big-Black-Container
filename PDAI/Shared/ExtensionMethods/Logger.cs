@@ -11,7 +11,7 @@ namespace Shared.ExtensionMethods
         public static void Log(string message)
         {
             var time = DateTime.Now.ToString("dd/MM HH:mm");
-            Console.WriteLine(time + ": " + message);
+            Console.WriteLine(time + " | " + message);
         }
     }
 }
