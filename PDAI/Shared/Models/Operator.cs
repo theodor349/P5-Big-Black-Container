@@ -17,7 +17,7 @@ namespace Shared.Models
             .Trim()
             .Split(' ');
 
-            Name = words[0];
+            Name = words[0].Replace("-", "_");
 
             for (int i = 1; i < words.Length; i++)
             {

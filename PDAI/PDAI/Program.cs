@@ -10,21 +10,27 @@ namespace PDAI
     {
         static void Main(string[] args)
         {
-            var line = "at a b c";
-            var a = new ActionOperator(line);
-            var b = new ActionOperator(line);
-
             string inputFolderPath = args[0];
             string outputFolderPath = args[1];
             int maxProblems = int.MaxValue;
             if (args.Length > 2)
                 maxProblems = int.Parse(args[2]);
 
-            IPddlParser parser = new Parser.Pddl.PddlParser();
-            var domain = parser.Parse(inputFolderPath, maxProblems);
+            var domain = Parse(inputFolderPath, maxProblems);
+            Write(outputFolderPath, domain);
+        }
 
+        private static void Write(string outputFolderPath, Domain domain)
+        {
             var writer = new Popper();
             writer.Write(domain, outputFolderPath, 0.2, 4);
+        }
+
+        private static Domain Parse(string inputFolderPath, int maxProblems)
+        {
+            IPddlParser parser = new Parser.Pddl.PddlParser();
+            var domain = parser.Parse(inputFolderPath, maxProblems);
+            return domain;
         }
     }
 }
