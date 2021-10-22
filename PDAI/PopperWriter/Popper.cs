@@ -10,8 +10,17 @@ namespace Writer.Popper
 {
     public class Popper
     {
-        public void Write(Domain domain, string folderPath)
+        public void Write(Domain domain, string folderPath, double testPercent, int numOfSplits)
         {
+            domain.Problems.Sort();
+
+            int numOfTestProblems = (int)Math.Round(domain.Problems.Count * testPercent);
+
+            List<Problem> testProblems = domain.Problems.GetRange(domain.Problems.Count - numOfTestProblems, numOfTestProblems);
+            domain.Problems.RemoveRange(domain.Problems.Count - numOfTestProblems, numOfTestProblems);
+
+            List<List<Problem>> chunks = GetChunks(domain.Problems, numOfSplits);
+
             Logger.Log("Printing to Popper");
 
             if (Directory.Exists(folderPath))
@@ -20,29 +29,79 @@ namespace Writer.Popper
             }
             Directory.CreateDirectory(folderPath);
 
-            var threads = new List<Task>();
+            List<Task> threads = new();
             foreach (var a in domain.Actions)
             {
-                threads.Add(PrintAction(folderPath, a, domain));
+                threads.Add(PrintAction(folderPath, a, domain, chunks, testProblems));
             }
             Task.WaitAll(threads.ToArray());
         }
 
-        private Task PrintAction(string folderPath, Shared.Models.Action a, Domain domain)
+        private static List<List<Problem>> GetChunks(List<Problem> problems, int numOfChunks)
         {
-            var bgGenerator = new BackgroundGenerator();
-            var biasGenerator = new BiasGenerator();
-            var exampleGenerator = new ExampleGenerator();
+            List<List<Problem>> chunkies = problems.ChunkBy(numOfChunks);
+            List<List<Problem>> chunks = new(new List<Problem>[numOfChunks]);
+
+            for (int i = 0; i < chunkies.Count; i++)
+            {
+                chunks[i] = new();
+                chunks[i].AddRange(chunkies[i]);
+                for (int j = 0; j < i; j++)
+                {
+                    chunks[i].AddRange(chunkies[j]);
+                }
+            }
+
+            return chunks;
+        }
+
+        private static Task PrintAction(string folderPath, Shared.Models.Action action, Domain domain, List<List<Problem>> chunks, List<Problem> testProblems)
+        {
+            BackgroundGenerator bgGenerator = new();
+            BiasGenerator biasGenerator = new();
+            ExampleGenerator exampleGenerator = new();
 
             return Task.Run(() =>
             {
-                string path = folderPath + "/" + a.Name;
+                string path = folderPath + "/" + action.Name;
                 Directory.CreateDirectory(path);
-                bgGenerator.Write(domain, folderPath + "/" + a.Name + "/bk.pl");
-                biasGenerator.Write(a, domain, path + "/bias.pl");
-                exampleGenerator.Write(a, domain.Problems, path + "/exs.pl");
-                Logger.Log("Done with action: " + a.Name);
+
+                foreach (List<Problem> chunk in chunks)
+                {
+                    double chunkPercent = Math.Round(((double)chunk.Count / (double)chunks[^1].Count) * 100);
+
+                    string chunkPath = path + "/" + chunkPercent;
+                    Directory.CreateDirectory(chunkPath);
+
+                    bgGenerator.Write(chunk, chunkPath + "/bk.pl");
+                    biasGenerator.Write(action, chunk, domain.Predicates, chunkPath + "/bias.pl");
+                    exampleGenerator.Write(action, chunk, chunkPath);
+
+                    PrintStats(chunkPath, chunkPercent, chunk);
+                }
+
+                string testPath = path + "/test";
+                Directory.CreateDirectory(testPath);
+                bgGenerator.Write(testProblems, testPath + "/bk.pl");
+                exampleGenerator.WriteTest(action, testProblems, testPath);
+
+                Logger.Log("Done with action: " + action.Name);
             });
+        }
+
+
+        private static void PrintStats(string chunkPath, double chunkPercent, List<Problem> chunk)
+        {
+            int numberOfUsefulActions = 0;
+            int numberOfUselessActions = 0;
+            foreach (Problem problem in chunk)
+            {
+                numberOfUsefulActions += problem.GoodOperators.Count;
+                numberOfUselessActions += problem.BadOperators.Count;
+            }
+
+            var t = File.WriteAllTextAsync(chunkPath + "/stats.csv", chunkPercent + "," + chunk.Count + "," + numberOfUsefulActions + "," + numberOfUselessActions);
+            t.Wait();
         }
     }
 }

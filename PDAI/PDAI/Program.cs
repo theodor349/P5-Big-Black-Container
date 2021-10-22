@@ -24,7 +24,7 @@ namespace PDAI
             var domain = parser.Parse(inputFolderPath, maxProblems);
 
             var writer = new Popper();
-            writer.Write(domain, outputFolderPath);
+            writer.Write(domain, outputFolderPath, 0.2, 4);
         }
     }
 }

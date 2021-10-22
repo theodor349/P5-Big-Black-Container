@@ -10,12 +10,12 @@ namespace PopperWriter
 {
     internal class BiasGenerator
     {
-        public void Write(Shared.Models.Action action, Domain domain, string path)
+        public void Write(Shared.Models.Action action, List<Problem> problems, List<Predicate> predicates, string path)
         {
             List<string> lines = new();
 
-            List<Predicate> usedInitPreds = GetUsedPreds(domain.Problems, domain.Predicates, true);
-            List<Predicate> usedGoalPreds = GetUsedPreds(domain.Problems, domain.Predicates, false);
+            List<Predicate> usedInitPreds = GetUsedPreds(problems, predicates, true);
+            List<Predicate> usedGoalPreds = GetUsedPreds(problems, predicates, false);
 
             List<Clause> allClauses = new();
             allClauses.Add(action);
@@ -177,7 +177,7 @@ namespace PopperWriter
 
         public List<string> GetConstraints(int maxVars)
         {
-            return new List<string>() { "max_clauses(5).", "max_body(5).", "max_vars(" + (maxVars + 1) + ")." };
+            return new List<string>() { "max_clauses(5).", "max_body(5).", "max_vars(" + (maxVars + 2) + ")." };
         }
 
         private List<Entity> CloneEntityList(List<Entity> entityList)

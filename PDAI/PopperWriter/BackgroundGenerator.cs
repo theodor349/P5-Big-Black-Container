@@ -10,11 +10,13 @@ namespace PopperWriter
 {
     internal class BackgroundGenerator
     {
-        public void Write(Domain domain, string path)
+        public void Write(List<Problem> problems, string path)
         {
-            List<string> predicates = GetPredicates(domain.Problems);
+            List<string> predicates = GetPredicates(problems);
 
-            var t = File.WriteAllLinesAsync(path, predicates);
+            predicates.Insert(0, ":-style_check(-discontiguous).");
+
+            Task t = File.WriteAllLinesAsync(path, predicates);
             t.Wait();
         }
 
