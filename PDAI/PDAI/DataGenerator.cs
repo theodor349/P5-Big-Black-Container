@@ -37,19 +37,16 @@ namespace PDAI
 
         private void SetInput(string actionPath, int iteration, IBiasEnumerator biasEnumerator)
         {
-            // gå ind i mappen
             ConstraintHelper ch = new ConstraintHelper();
             var directoryInfo = new DirectoryInfo(actionPath);
             int directoryCount = directoryInfo.GetDirectories().Length;
-            List<string> lines = new List<string>();
             List<string> actionsPaths = Directory.GetDirectories(actionPath).ToList();
 
             for (int i = 0; i < directoryCount; i++)
             {
-                // access hver træningssplit og opdater bias fil (vars, body, clauses)
-
+                var biasIncrement = biasEnumerator.GetIncrement(iteration);
+                ch.IncrementConstraintValues(actionsPaths[i] + "/bias.pl", biasIncrement.Clause, biasIncrement.Body, biasIncrement.Var);
             }
-
         }
 
         private void Train()
