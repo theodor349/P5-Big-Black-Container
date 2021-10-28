@@ -47,7 +47,7 @@ namespace PDAI
             int directoryCount = directoryInfo.GetDirectories().Length;
             List<string> actionsPaths = Directory.GetDirectories(actionPath).ToList();
 
-            for (int i = 0; i < directoryCount; i++)
+            for (int i = 0; i < directoryCount - 1; i++)
             {
                 var biasIncrement = biasEnumerator.GetIncrement(iteration);
                 ch.IncrementConstraintValues(actionsPaths[i] + "/bias.pl", biasIncrement.Clause, biasIncrement.Body, biasIncrement.Var);
