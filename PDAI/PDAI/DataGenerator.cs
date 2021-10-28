@@ -41,11 +41,11 @@ namespace PDAI
         {
             var threads = new List<Task>();
             for (int j = 0; j < 10; j++)
-                threads.Add(RunPopper());
+                threads.Add(RunPopper(""));
             Task.WaitAll(threads.ToArray());
         }
 
-        private async Task RunPopper()
+        private async Task RunPopper(string trainingFolder)
         {
             await Task.Run(() =>
             {
