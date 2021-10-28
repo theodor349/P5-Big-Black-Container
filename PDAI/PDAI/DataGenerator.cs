@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PDAI.Helpers;
 using PddlParser.Internal;
 
 namespace PDAI
@@ -15,25 +16,26 @@ namespace PDAI
         {
             string domainFolderPath = Path.Combine(outputFolderPath, "domainfiles", Path.GetFileName(inputFolderPath));
             List<string> actionsPaths = Directory.GetDirectories(domainFolderPath).ToList();
+            var biasEnumerator = new BiasVarEnumerator();
 
             foreach (var actionPath in actionsPaths)
             {
-                GenerateForAction(outputFolderPath, domainFolderPath, actionPath);
+                GenerateForAction(outputFolderPath, domainFolderPath, actionPath, biasEnumerator);
             }
         }
 
-        private void GenerateForAction(string rootPath, string domainPath, string actionPath)
+        private void GenerateForAction(string rootPath, string domainPath, string actionPath, IBiasEnumerator biasEnumerator)
         {
             for (int i = 0; i < 10; i++)
             {
-                SetInput("");
+                SetInput("", i, biasEnumerator);
                 Train();
                 Test();
                 SaveResults();
             }
         }
 
-        private void SetInput(string actionPath, int iteration)
+        private void SetInput(string actionPath, int iteration, IBiasEnumerator biasEnumerator)
         {
             // gå ind i mappen
             ConstraintHelper ch = new ConstraintHelper();
