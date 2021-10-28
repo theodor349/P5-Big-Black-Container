@@ -25,14 +25,14 @@ namespace PDAI
         {
             for (int i = 0; i < 10; i++)
             {
-                SetInput();
+                SetInput("");
                 Train();
                 Test();
                 SaveResults();
             }
         }
 
-        private void SetInput()
+        private void SetInput(string actionPath)
         {
             
         }
