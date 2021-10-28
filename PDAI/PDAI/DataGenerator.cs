@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PDAI.Helpers;
 using PddlParser.Internal;
+using Shared.ExtensionMethods;
 
 namespace PDAI
 {
@@ -15,6 +16,8 @@ namespace PDAI
     {
         public void GenerateData(string inputFolderPath, string outputFolderPath)
         {
+            Console.WriteLine("");
+            Logger.Log("Generating Data");
             string domainFolderPath = Path.Combine(outputFolderPath, "domainfiles", Path.GetFileName(inputFolderPath));
             var actionsPaths = Directory.GetDirectories(domainFolderPath).ToList();
 
@@ -25,7 +28,9 @@ namespace PDAI
 
             foreach (var actionPath in actionsPaths)
             {
+                Logger.Log("Generating data for action: " + Path.GetFileName(actionPath));
                 GenerateForAction(outputFolderPath, domainFolderPath, actionPath, biasEnumerator, iterations, beta, maxRuntime);
+                Console.WriteLine("");
             }
         }
 
@@ -33,6 +38,7 @@ namespace PDAI
         {
             for (int i = 0; i < iterations; i++)
             {
+                Logger.Log("Iteration: " + i);
                 SetInput(actionPath, i, biasEnumerator);
                 Train(actionPath, rootPath, beta, maxRuntime);
                 Test();
