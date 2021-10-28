@@ -46,14 +46,19 @@ namespace PDAI
             Task.WaitAll(threads.ToArray());
         }
 
-        private async Task RunPopper()
+        private async Task RunPopper(string trainPath, string rootPath, int beta, int maxRuntime)
         {
-            string domainfilesPath = "C:\\Users\\Esben\\source\\repos\\theodor349\\P5\\BBC\\domainfiles";
-
             await Task.Run(() =>
             {
+                string popperPath = Path.Combine(rootPath, "popper\\popper.py");
+
                 Process popperProcess = new();
-                popperProcess.StartInfo.FileName = "s";
+                popperProcess.StartInfo.FileName = GetPythonExePath();
+                popperProcess.StartInfo.CreateNoWindow = true;
+                popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta;
+
+                popperProcess.Start();
+                popperProcess.WaitForExit(maxRuntime);
             });
         }
 
@@ -75,6 +80,26 @@ namespace PDAI
         private void SaveResults()
         {
 
+        }
+
+        private string GetPythonExePath()
+        {
+            string path = Environment.GetEnvironmentVariable("PATH");
+            string pythonPath = null;
+            foreach (string p in path.Split(new char[] { ';' }))
+            {
+                string fullPath = Path.Combine(p, "python.exe");
+                if (File.Exists(fullPath))
+                {
+                    pythonPath = fullPath;
+                    break;
+                }
+            }
+
+            if (pythonPath == null)
+                throw new Exception("Unable to find python exe in Environment variables :(");
+            else
+                return pythonPath;
         }
     }
 }
