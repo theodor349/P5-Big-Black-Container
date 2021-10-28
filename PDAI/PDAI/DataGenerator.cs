@@ -19,20 +19,22 @@ namespace PDAI
             var actionsPaths = Directory.GetDirectories(domainFolderPath).ToList();
 
             var biasEnumerator = new BiasVarEnumerator();
-            long iterations = 10;
+            long iterations = 1;
+            int beta = 2;
+            int maxRuntime = 1 * 1 * 60 * 1000; // ms, sec, min, hour
 
             foreach (var actionPath in actionsPaths)
             {
-                GenerateForAction(outputFolderPath, domainFolderPath, actionPath, biasEnumerator, iterations);
+                GenerateForAction(outputFolderPath, domainFolderPath, actionPath, biasEnumerator, iterations, beta, maxRuntime);
             }
         }
 
-        private void GenerateForAction(string rootPath, string domainPath, string actionPath, IBiasEnumerator biasEnumerator, long iterations)
+        private void GenerateForAction(string rootPath, string domainPath, string actionPath, IBiasEnumerator biasEnumerator, long iterations, int beta, int maxRuntime)
         {
             for (int i = 0; i < iterations; i++)
             {
                 SetInput(actionPath, i, biasEnumerator);
-                Train();
+                Train(actionPath, rootPath, beta, maxRuntime);
                 Test();
                 SaveResults();
             }
@@ -52,11 +54,12 @@ namespace PDAI
             }
         }
 
-        private void Train()
+        private void Train(string actionFolderPath, string rootPath, int beta, int maxRuntime)
         {
+            var trainingFolders = Directory.GetDirectories(actionFolderPath);
             var threads = new List<Task>();
-            for (int j = 0; j < 10; j++)
-                threads.Add(RunPopper(""));
+            foreach (var trainingFolder in trainingFolders)
+                threads.Add(RunPopper(trainingFolder, rootPath, beta, maxRuntime));
             Task.WaitAll(threads.ToArray());
         }
 
