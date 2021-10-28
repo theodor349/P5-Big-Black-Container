@@ -7,6 +7,7 @@ namespace Shared.Models
 {
     public class Domain
     {
+        public string Name { get; set; }
         public List<Action> Actions { get; set; } = new List<Action>();
         public List<Predicate> Predicates { get; set; } = new List<Predicate>();
         public List<Entity> Entities { get; set; } = new List<Entity>();
