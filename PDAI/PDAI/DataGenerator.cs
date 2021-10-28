@@ -58,8 +58,12 @@ namespace PDAI
         {
             var trainingFolders = Directory.GetDirectories(actionFolderPath);
             var threads = new List<Task>();
-            foreach (var trainingFolder in trainingFolders)
-                threads.Add(RunPopper(trainingFolder, rootPath, beta, maxRuntime));
+            for (int i = 0; i < trainingFolders.Length - 1; i++)
+            {
+                threads.Add(RunPopper(trainingFolders[i], rootPath, beta, maxRuntime));
+                threads[i].Wait();
+            }
+
             Task.WaitAll(threads.ToArray());
         }
 
@@ -71,7 +75,7 @@ namespace PDAI
 
                 Process popperProcess = new();
                 popperProcess.StartInfo.FileName = GetPythonExePath();
-                popperProcess.StartInfo.CreateNoWindow = true;
+                popperProcess.StartInfo.CreateNoWindow = false;
                 popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta;
 
                 popperProcess.Start();
