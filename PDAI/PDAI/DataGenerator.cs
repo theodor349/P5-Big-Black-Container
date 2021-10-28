@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PddlParser.Internal;
 
 namespace PDAI
 {
@@ -32,9 +33,21 @@ namespace PDAI
             }
         }
 
-        private void SetInput(string actionPath)
+        private void SetInput(string actionPath, int iteration)
         {
-            
+            // gå ind i mappen
+            ConstraintHelper ch = new ConstraintHelper();
+            var directoryInfo = new DirectoryInfo(actionPath);
+            int directoryCount = directoryInfo.GetDirectories().Length;
+            List<string> lines = new List<string>();
+            List<string> actionsPaths = Directory.GetDirectories(actionPath).ToList();
+
+            for (int i = 0; i < directoryCount; i++)
+            {
+                // access hver træningssplit og opdater bias fil (vars, body, clauses)
+
+            }
+
         }
 
         private void Train()

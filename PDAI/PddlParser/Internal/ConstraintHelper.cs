@@ -16,16 +16,6 @@ namespace PddlParser.Internal
             lines[1] = "max_body(" + max_body + ")";
             lines[2] = "max_vars(" + max_vars + ")";
 
-            /*
-            List<string> maxNames = new List<string> { "clauses", "body", "vars" };
-            List<int> param = new List<int> { max_clauses, max_body, max_vars};
-
-            for (int i = 0; i < 3; i++)
-            {
-                first3Lines[i] = "max_" + maxNames[i] + "(" + param[i] + ")";
-            }*/
-
-
             File.WriteAllLines(filepath, lines);
         }
 
