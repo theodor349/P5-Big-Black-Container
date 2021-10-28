@@ -15,7 +15,7 @@ namespace PDAI
         public void GenerateData(string inputFolderPath, string outputFolderPath)
         {
             string domainFolderPath = Path.Combine(outputFolderPath, "domainfiles", Path.GetFileName(inputFolderPath));
-            List<string> actionsPaths = Directory.GetDirectories(domainFolderPath).ToList();
+            var actionsPaths = Directory.GetDirectories(domainFolderPath).ToList();
             var biasEnumerator = new BiasVarEnumerator();
 
             foreach (var actionPath in actionsPaths)
@@ -28,7 +28,7 @@ namespace PDAI
         {
             for (int i = 0; i < 10; i++)
             {
-                SetInput("", i, biasEnumerator);
+                SetInput(actionPath, i, biasEnumerator);
                 Train();
                 Test();
                 SaveResults();
