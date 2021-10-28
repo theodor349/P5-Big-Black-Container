@@ -78,7 +78,7 @@ namespace Writer.Popper
                     biasGenerator.Write(action, chunk, domain.Predicates, chunkPath + "/bias.pl");
                     exampleGenerator.Write(action, chunk, chunkPath);
 
-                    string domainName = folderPath[folderPath.LastIndexOf("\\")..][1..];
+                    string domainName = Path.GetFileName(folderPath);
 
                     PrintStats(domainName, action.Name, chunkPath, chunkPercent, testPercent, chunk);
                 }
