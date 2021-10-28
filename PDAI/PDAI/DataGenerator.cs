@@ -16,17 +16,19 @@ namespace PDAI
         {
             string domainFolderPath = Path.Combine(outputFolderPath, "domainfiles", Path.GetFileName(inputFolderPath));
             var actionsPaths = Directory.GetDirectories(domainFolderPath).ToList();
+
             var biasEnumerator = new BiasVarEnumerator();
+            long iterations = 10;
 
             foreach (var actionPath in actionsPaths)
             {
-                GenerateForAction(outputFolderPath, domainFolderPath, actionPath, biasEnumerator);
+                GenerateForAction(outputFolderPath, domainFolderPath, actionPath, biasEnumerator, iterations);
             }
         }
 
-        private void GenerateForAction(string rootPath, string domainPath, string actionPath, IBiasEnumerator biasEnumerator)
+        private void GenerateForAction(string rootPath, string domainPath, string actionPath, IBiasEnumerator biasEnumerator, long iterations)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < iterations; i++)
             {
                 SetInput(actionPath, i, biasEnumerator);
                 Train();
