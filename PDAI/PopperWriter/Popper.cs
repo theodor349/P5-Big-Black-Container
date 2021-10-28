@@ -3,6 +3,7 @@ using Shared.ExtensionMethods;
 using Shared.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace Writer.Popper
             List<Task> threads = new();
             foreach (var a in domain.Actions)
             {
-                threads.Add(PrintAction(folderPath, a, domain, chunks, testProblems));
+                threads.Add(PrintAction(folderPath, testPercent, a, domain, chunks, testProblems));
             }
             Task.WaitAll(threads.ToArray());
         }
@@ -55,7 +56,7 @@ namespace Writer.Popper
             return chunks;
         }
 
-        private static Task PrintAction(string folderPath, Shared.Models.Action action, Domain domain, List<List<Problem>> chunks, List<Problem> testProblems)
+        private static Task PrintAction(string folderPath, double testPercent, Shared.Models.Action action, Domain domain, List<List<Problem>> chunks, List<Problem> testProblems)
         {
             BackgroundGenerator bgGenerator = new();
             BiasGenerator biasGenerator = new();
@@ -77,7 +78,9 @@ namespace Writer.Popper
                     biasGenerator.Write(action, chunk, domain.Predicates, chunkPath + "/bias.pl");
                     exampleGenerator.Write(action, chunk, chunkPath);
 
-                    PrintStats(chunkPath, chunkPercent, chunk);
+                    string domainName = folderPath[folderPath.LastIndexOf("\\")..][1..];
+
+                    PrintStats(domainName, action.Name, chunkPath, chunkPercent, testPercent, chunk);
                 }
 
                 string testPath = path + "/test";
@@ -90,7 +93,7 @@ namespace Writer.Popper
         }
 
 
-        private static void PrintStats(string chunkPath, double chunkPercent, List<Problem> chunk)
+        private static void PrintStats(string domainName, string actionName, string chunkPath, double chunkPercent, double testPercent, List<Problem> chunk)
         {
             int numberOfUsefulActions = 0;
             int numberOfUselessActions = 0;
@@ -100,7 +103,14 @@ namespace Writer.Popper
                 numberOfUselessActions += problem.BadOperators.Count;
             }
 
-            var t = File.WriteAllTextAsync(chunkPath + "/stats.csv", chunkPercent + "," + chunk.Count + "," + numberOfUsefulActions + "," + numberOfUselessActions);
+            Task t = File.WriteAllTextAsync(chunkPath + "/temp0.csv",
+                domainName + "," +
+                actionName + "," +
+                testPercent.ToString(CultureInfo.InvariantCulture) + "," +
+                (chunkPercent / 100).ToString(CultureInfo.InvariantCulture) + "," +
+                chunk.Count + "," +
+                numberOfUsefulActions + "," +
+                numberOfUselessActions);
             t.Wait();
         }
     }

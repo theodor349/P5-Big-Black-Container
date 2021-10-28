@@ -16,15 +16,23 @@ namespace PDAI
             int maxProblems = int.MaxValue;
             if (args.Length > 2)
                 maxProblems = int.Parse(args[2]);
+            if (maxProblems == -1)
+                maxProblems = int.MaxValue;
+            double splitPercent = 0.2;
+            int numOfChunks = 1;
+            if (args.Length > 3)
+                splitPercent = double.Parse(args[3]);
+            if (args.Length > 4)
+                numOfChunks = int.Parse(args[4]);
 
             var domain = Parse(inputFolderPath, maxProblems);
-            Write(outputFolderPath, domain);
+            Write(outputFolderPath, domain, splitPercent, numOfChunks);
         }
 
-        private static void Write(string outputFolderPath, Domain domain)
+        private static void Write(string outputFolderPath, Domain domain, double splitPercent, int numOfChunks)
         {
             var writer = new Popper();
-            writer.Write(domain, outputFolderPath, 0.2, 4);
+            writer.Write(domain, outputFolderPath, splitPercent, numOfChunks);
         }
 
         private static Domain Parse(string inputFolderPath, int maxProblems)

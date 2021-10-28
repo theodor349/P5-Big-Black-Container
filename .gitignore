@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# THE BOIS
+BBC/domainfiles/
+BBC/StatsFile.csv
+
 # User-specific files
 *.rsuser
 *.suo
