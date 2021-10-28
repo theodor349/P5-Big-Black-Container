@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Parser.Pddl;
 using PddlParser.Internal;
 using Shared.ExtensionMethods;
@@ -27,15 +26,11 @@ namespace PDAI
                 numOfChunks = int.Parse(args[4]);
 
             var domain = Parse(inputFolderPath, maxProblems);
-            domain.Name = Path.GetFileName(inputFolderPath);
             Write(outputFolderPath, domain, splitPercent, numOfChunks);
-            new DataGenerator().GenerateData(inputFolderPath, outputFolderPath);
         }
 
         private static void Write(string outputFolderPath, Domain domain, double splitPercent, int numOfChunks)
         {
-            outputFolderPath = Path.Combine(outputFolderPath, "domainfiles", domain.Name);
-
             var writer = new Popper();
             writer.Write(domain, outputFolderPath, splitPercent, numOfChunks);
         }

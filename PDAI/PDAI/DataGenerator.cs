@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -38,8 +39,12 @@ namespace PDAI
 
         private async Task RunPopper()
         {
+            string domainfilesPath = "C:\\Users\\Esben\\source\\repos\\theodor349\\P5\\BBC\\domainfiles";
+
             await Task.Run(() =>
             {
+                Process popperProcess = new();
+                popperProcess.StartInfo.FileName = "s";
             });
         }
 
