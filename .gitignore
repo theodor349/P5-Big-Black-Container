@@ -5,6 +5,7 @@
 
 # THE BOIS
 BBC/domainfiles/
+BBC/StatsFile.csv
 
 # User-specific files
 *.rsuser
