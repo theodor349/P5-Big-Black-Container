@@ -1,28 +1,25 @@
 ﻿using FileHelpers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PDAI
 {
-    class TempFileManager
+    static class TempFileManager
     {
-        public static void GetStats(string folder)
+        public static void SaveStats(string rootPath, string trainPath)
         {
-            // Example parameter: "depots/drive/100"
-            string BbcRelativePath = "../../../../../BBC";
-            string path = BbcRelativePath + "/domainfiles/" + folder;
-
             FileHelperEngine<Temp0> tempEngine0 = new();
             FileHelperEngine<Temp1> tempEngine1 = new();
             FileHelperEngine<Temp2> tempEngine2 = new();
-            Temp0[] t0 = tempEngine0.ReadFile(path + "/temp0.csv");
-            Temp1[] t1 = tempEngine1.ReadFile(path + "/temp1.csv");
-            Temp2[] t2 = tempEngine2.ReadFile(path + "/temp2.csv");
+            Temp0[] t0 = tempEngine0.ReadFile(Path.Combine(trainPath, "temp0.csv"));
+            Temp1[] t1 = tempEngine1.ReadFile(Path.Combine(trainPath, "temp1.csv"));
+            Temp2[] t2 = tempEngine2.ReadFile(Path.Combine(trainPath, "temp2.csv"));
 
-            Stats stats = new Stats()
+            Stats stats = new()
             {
                 Domain = t0[0].Domain,
                 Action = t0[0].Action,
@@ -57,7 +54,7 @@ namespace PDAI
             };
 
             FileHelperEngine<Stats> statsEngine = new();
-            statsEngine.AppendToFile(BbcRelativePath + "/StatsFile.csv", stats);
+            statsEngine.AppendToFile(Path.Combine(rootPath, "StatsFile.csv"), stats);
         }
     }
 

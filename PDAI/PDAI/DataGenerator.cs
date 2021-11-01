@@ -81,7 +81,7 @@ namespace PDAI
 
                 Process popperProcess = new();
                 popperProcess.StartInfo.FileName = GetPythonExePath();
-                popperProcess.StartInfo.CreateNoWindow = false;
+                popperProcess.StartInfo.CreateNoWindow = true;
                 popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta;
 
                 popperProcess.Start();
@@ -93,14 +93,23 @@ namespace PDAI
         {
             var threads = new List<Task>();
             for (int j = 0; j < 10; j++)
-                threads.Add(RunTest());
+                //threads.Add(RunTest());
             Task.WaitAll(threads.ToArray());
         }
 
-        private async Task RunTest()
+        private async Task RunTest(string rootPath, string trainPath)
         {
             await Task.Run(() =>
             {
+                string testerPath = Path.Combine(rootPath, "tester.py");
+
+                Process process = new();
+                process.StartInfo.FileName = GetPythonExePath();
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.Arguments = testerPath + " " + trainPath;
+
+                process.Start();
+                process.WaitForExit();
             });
         }
 

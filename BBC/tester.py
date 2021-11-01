@@ -7,11 +7,10 @@ import re
 
 def main():
     path = sys.argv[1]
+    path = path.replace("\\","/")
 
     hypPath = path + "/hyp.pl"
     testPath = path[0:path.rfind("/")] + "/test"
-
-    # print(testPath)
 
     prolog = Prolog()
     prolog.consult(testPath + "/bk.pl")
