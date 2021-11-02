@@ -24,7 +24,7 @@ namespace PDAI
             var biasEnumerator = new BiasVarEnumerator();
             long iterations = 1;
             int beta = 2;
-            int maxRuntime = 1 * 1 * 10 * 1000; // hour, min, sec, ms 
+            int maxRuntime = 1 * 10 * 60 * 1000; // hour, min, sec, ms 
 
             foreach (var actionPath in actionsPaths)
             {
