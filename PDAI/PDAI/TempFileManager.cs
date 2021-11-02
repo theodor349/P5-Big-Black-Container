@@ -53,8 +53,13 @@ namespace PDAI
                 PrecisionValidation = 0
             };
 
+            string statsFilePath = Path.Combine(rootPath, "StatsFile.csv");
             FileHelperEngine<Stats> statsEngine = new();
-            statsEngine.AppendToFile(Path.Combine(rootPath, "StatsFile.csv"), stats);
+            statsEngine.HeaderText = statsEngine.GetFileHeader();
+            if (File.Exists(statsFilePath))
+                statsEngine.AppendToFile(statsFilePath, stats);
+            else
+                statsEngine.WriteFile(statsFilePath, new List<Stats>() { stats });
         }
     }
 
