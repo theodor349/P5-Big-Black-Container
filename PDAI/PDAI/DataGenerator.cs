@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using PDAI.Helpers;
 using PddlParser.Internal;
 using Shared.ExtensionMethods;
+using System.Runtime.InteropServices;
 
 namespace PDAI
 {
@@ -74,7 +75,7 @@ namespace PDAI
         {
             await Task.Run(() =>
             {
-                string popperPath = Path.Combine(rootPath, "popper\\popper.py");
+                string popperPath = Path.Combine(rootPath, "popper/popper.py");
 
                 Process popperProcess = new();
                 popperProcess.StartInfo.FileName = GetPythonExePath();
@@ -103,7 +104,13 @@ namespace PDAI
                 string testerPath = Path.Combine(rootPath, "tester.py");
 
                 Process process = new();
-                process.StartInfo.FileName = GetPythonExePath();
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    process.StartInfo.FileName = GetPythonExePath();
+
+                else
+                    process.StartInfo.FileName = GetPythonExePathMac();
+
+
                 process.StartInfo.CreateNoWindow = false;
                 process.StartInfo.Arguments = testerPath + " " + trainPath;
 
@@ -123,7 +130,8 @@ namespace PDAI
         private string GetPythonExePath()
         {
             string path = Environment.GetEnvironmentVariable("PATH");
-            string pythonPath = null;
+            string pythonPath = "/usr/local/bin/python3.9";
+            
             foreach (string p in path.Split(new char[] { ';' }))
             {
                 string fullPath = Path.Combine(p, "python.exe");
@@ -136,8 +144,13 @@ namespace PDAI
 
             if (pythonPath == null)
                 throw new Exception("Unable to find python exe in Environment variables :(");
-            else
+            else 
                 return pythonPath;
+        }
+
+        private string GetPythonExePathMac()
+        {
+            return "/usr/local/bin/python3.9";
         }
 
         private static List<string> GetTrainingFolders(string actionFolderPath, bool includeTest = false)
