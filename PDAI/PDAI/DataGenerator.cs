@@ -51,12 +51,12 @@ namespace PDAI
             ConstraintHelper ch = new ConstraintHelper();
             var directoryInfo = new DirectoryInfo(actionPath);
             int directoryCount = directoryInfo.GetDirectories().Length;
-            List<string> actionsPaths = Directory.GetDirectories(actionPath).ToList();
+            List<string> trainingFolders = GetTrainingFolders(actionPath);
 
-            for (int i = 0; i < directoryCount - 1; i++)
+            foreach (var trainingFolder in trainingFolders)
             {
                 var biasIncrement = biasEnumerator.GetIncrement(iteration);
-                ch.IncrementConstraintValues(Path.Combine(actionsPaths[i], "bias.pl"), biasIncrement.Clause, biasIncrement.Body, biasIncrement.Var);
+                ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), biasIncrement.Clause, biasIncrement.Body, biasIncrement.Var);
             }
         }
 
@@ -83,6 +83,7 @@ namespace PDAI
 
                 popperProcess.Start();
                 popperProcess.WaitForExit(maxRuntime);
+                popperProcess.Kill();
             });
         }
 
@@ -108,6 +109,7 @@ namespace PDAI
 
                 process.Start();
                 process.WaitForExit();
+                process.Kill();
             });
         }
 
@@ -141,7 +143,10 @@ namespace PDAI
         private static List<string> GetTrainingFolders(string actionFolderPath, bool includeTest = false)
         {
             var res = Directory.GetDirectories(actionFolderPath).ToList();
-            return res.Take(res.Count - 1).ToList();
+            if (includeTest)
+                return res;
+            else 
+                return res.Where(x => !new DirectoryInfo(x).Name.ToLower().Equals("test")).ToList();
         }
     }
 }
