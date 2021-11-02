@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using PDAI.Helpers;
 using PddlParser.Internal;
 using Shared.ExtensionMethods;
+using System.Runtime.InteropServices;
 
 namespace PDAI
 {
@@ -21,10 +22,10 @@ namespace PDAI
             string domainFolderPath = Path.Combine(rootBbcFolder, "domainfiles", Path.GetFileName(inputFolderPath));
             var actionsPaths = Directory.GetDirectories(domainFolderPath).ToList();
 
-            var biasEnumerator = new BiasVarEnumerator();
-            long iterations = 1;
+            var biasEnumerator = new BiasAllEnumerator();
+            int iterations = 5;
             int beta = 2;
-            int maxRuntime = 1 * 1 * 10 * 1000; // hour, min, sec, ms 
+            int maxRuntime = 1 * 4 * 60 * 1000; // hour, min, sec, ms 
 
             foreach (var actionPath in actionsPaths)
             {
@@ -34,7 +35,7 @@ namespace PDAI
             }
         }
 
-        private void GenerateForAction(string rootPath, string domainPath, string actionPath, IBiasEnumerator biasEnumerator, long iterations, int beta, int maxRuntime)
+        private void GenerateForAction(string rootPath, string domainPath, string actionPath, IBiasEnumerator biasEnumerator, int iterations, int beta, int maxRuntime)
         {
             for (int i = 0; i < iterations; i++)
             {
@@ -103,7 +104,13 @@ namespace PDAI
                 string testerPath = Path.Combine(rootPath, "tester.py");
 
                 Process process = new();
-                process.StartInfo.FileName = GetPythonExePath();
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    process.StartInfo.FileName = GetPythonExePath();
+
+                else
+                    process.StartInfo.FileName = GetPythonExePathMac();
+
+
                 process.StartInfo.CreateNoWindow = false;
                 process.StartInfo.Arguments = testerPath + " " + trainPath;
 
@@ -125,7 +132,8 @@ namespace PDAI
             return "/Library/Frameworks/Python.framework/Versions/3.9/bin/python3.9";
             /*
             string path = Environment.GetEnvironmentVariable("PATH");
-            string pythonPath = null;
+            string pythonPath = "/usr/local/bin/python3.9";
+            
             foreach (string p in path.Split(new char[] { ';' }))
             {
                 string fullPath = Path.Combine(p, "python.exe");
@@ -138,8 +146,13 @@ namespace PDAI
 
             if (pythonPath == null)
                 throw new Exception("Unable to find python exe in Environment variables :(");
-            else
+            else 
                 return pythonPath;*/
+        }
+
+        private string GetPythonExePathMac()
+        {
+            return "/usr/local/bin/python3.9";
         }
 
         private static List<string> GetTrainingFolders(string actionFolderPath, bool includeTest = false)
