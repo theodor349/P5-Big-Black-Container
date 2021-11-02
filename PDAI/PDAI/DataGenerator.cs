@@ -83,6 +83,7 @@ namespace PDAI
 
                 popperProcess.Start();
                 popperProcess.WaitForExit(maxRuntime);
+                popperProcess.Kill();
             });
         }
 
@@ -108,6 +109,7 @@ namespace PDAI
 
                 process.Start();
                 process.WaitForExit();
+                process.Kill();
             });
         }
 
