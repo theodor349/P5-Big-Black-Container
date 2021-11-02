@@ -63,14 +63,14 @@ namespace PDAI
             Task.WaitAll(threads.ToArray());
         }
 
-        private async Task RunPopper(string trainPath, string rootPath, int beta, int maxRuntime)
+        public async Task RunPopper(string trainPath, string rootPath, int beta, int maxRuntime)
         {
             await Task.Run(() =>
             {
                 string popperPath = Path.Combine(rootPath, "popper\\popper.py");
 
                 Process popperProcess = new();
-                popperProcess.StartInfo.FileName = GetPythonExePath();
+                popperProcess.StartInfo.FileName = "/Library/Frameworks/Python.framework/Versions/3.9/bin/python3.9";
                 popperProcess.StartInfo.CreateNoWindow = true;
                 popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta;
 
@@ -99,7 +99,7 @@ namespace PDAI
 
         }
 
-        private string GetPythonExePath()
+        public string GetPythonExePath()
         {
             string path = Environment.GetEnvironmentVariable("PATH");
             string pythonPath = null;
