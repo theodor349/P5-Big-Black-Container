@@ -14,22 +14,22 @@ namespace PDAI
     // John 
     public class DataGenerator
     {
-        public void GenerateData(string inputFolderPath, string outputFolderPath)
+        public void GenerateData(string inputFolderPath, string rootBbcFolder)
         {
             Console.WriteLine("");
             Logger.Log("Generating Data");
-            string domainFolderPath = Path.Combine(outputFolderPath, "domainfiles", Path.GetFileName(inputFolderPath));
+            string domainFolderPath = Path.Combine(rootBbcFolder, "domainfiles", Path.GetFileName(inputFolderPath));
             var actionsPaths = Directory.GetDirectories(domainFolderPath).ToList();
 
             var biasEnumerator = new BiasVarEnumerator();
             long iterations = 1;
             int beta = 2;
-            int maxRuntime = 1 * 1 * 60 * 1000; // ms, sec, min, hour
+            int maxRuntime = 1 * 1 * 10 * 1000; // hour, min, sec, ms 
 
             foreach (var actionPath in actionsPaths)
             {
                 Logger.Log("Generating data for action: " + Path.GetFileName(actionPath));
-                GenerateForAction(outputFolderPath, domainFolderPath, actionPath, biasEnumerator, iterations, beta, maxRuntime);
+                GenerateForAction(rootBbcFolder, domainFolderPath, actionPath, biasEnumerator, iterations, beta, maxRuntime);
                 Console.WriteLine("");
             }
         }
@@ -41,8 +41,8 @@ namespace PDAI
                 Logger.Log("Iteration: " + i);
                 SetInput(actionPath, i, biasEnumerator);
                 Train(actionPath, rootPath, beta, maxRuntime);
-                Test();
-                SaveResults();
+                Test(rootPath, actionPath);
+                SaveResults(rootPath, actionPath);
             }
         }
 
@@ -56,19 +56,16 @@ namespace PDAI
             for (int i = 0; i < directoryCount - 1; i++)
             {
                 var biasIncrement = biasEnumerator.GetIncrement(iteration);
-                ch.IncrementConstraintValues(actionsPaths[i] + "/bias.pl", biasIncrement.Clause, biasIncrement.Body, biasIncrement.Var);
+                ch.IncrementConstraintValues(Path.Combine(actionsPaths[i], "bias.pl"), biasIncrement.Clause, biasIncrement.Body, biasIncrement.Var);
             }
         }
 
         private void Train(string actionFolderPath, string rootPath, int beta, int maxRuntime)
         {
-            var trainingFolders = Directory.GetDirectories(actionFolderPath);
+            var trainingFolders = GetTrainingFolders(actionFolderPath);
             var threads = new List<Task>();
-            for (int i = 0; i < trainingFolders.Length - 1; i++)
-            {
-                threads.Add(RunPopper(trainingFolders[i], rootPath, beta, maxRuntime));
-                threads[i].Wait();
-            }
+            foreach (string trainingFolder in trainingFolders)
+                threads.Add(RunPopper(trainingFolder, rootPath, beta, maxRuntime));
 
             Task.WaitAll(threads.ToArray());
         }
@@ -81,7 +78,7 @@ namespace PDAI
 
                 Process popperProcess = new();
                 popperProcess.StartInfo.FileName = GetPythonExePath();
-                popperProcess.StartInfo.CreateNoWindow = true;
+                popperProcess.StartInfo.CreateNoWindow = false;
                 popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta;
 
                 popperProcess.Start();
@@ -89,11 +86,12 @@ namespace PDAI
             });
         }
 
-        private void Test()
+        private void Test(string rootPath, string actionFolderPath)
         {
             var threads = new List<Task>();
-            for (int j = 0; j < 10; j++)
-                //threads.Add(RunTest());
+            var trainingFolders = GetTrainingFolders(actionFolderPath);
+            foreach (var trainingFolder in trainingFolders)
+                threads.Add(RunTest(rootPath, trainingFolder));
             Task.WaitAll(threads.ToArray());
         }
 
@@ -105,7 +103,7 @@ namespace PDAI
 
                 Process process = new();
                 process.StartInfo.FileName = GetPythonExePath();
-                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.CreateNoWindow = false;
                 process.StartInfo.Arguments = testerPath + " " + trainPath;
 
                 process.Start();
@@ -113,9 +111,11 @@ namespace PDAI
             });
         }
 
-        private void SaveResults()
+        private void SaveResults(string rootPath, string actionFolderPath)
         {
-
+            var trainingFolders = GetTrainingFolders(actionFolderPath);
+            foreach (var trainingFolder in trainingFolders)
+                TempFileManager.SaveStats(rootPath, trainingFolder);
         }
 
         private string GetPythonExePath()
@@ -136,6 +136,12 @@ namespace PDAI
                 throw new Exception("Unable to find python exe in Environment variables :(");
             else
                 return pythonPath;
+        }
+
+        private static List<string> GetTrainingFolders(string actionFolderPath, bool includeTest = false)
+        {
+            var res = Directory.GetDirectories(actionFolderPath).ToList();
+            return res.Take(res.Count - 1).ToList();
         }
     }
 }
