@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PDAI.Helpers;
 using PddlParser.Internal;
+using Shared.ExtensionMethods;
 
 namespace PDAI
 {
@@ -15,6 +16,8 @@ namespace PDAI
     {
         public void GenerateData(string inputFolderPath, string outputFolderPath)
         {
+            Console.WriteLine("");
+            Logger.Log("Generating Data");
             string domainFolderPath = Path.Combine(outputFolderPath, "domainfiles", Path.GetFileName(inputFolderPath));
             var actionsPaths = Directory.GetDirectories(domainFolderPath).ToList();
 
@@ -25,7 +28,9 @@ namespace PDAI
 
             foreach (var actionPath in actionsPaths)
             {
+                Logger.Log("Generating data for action: " + Path.GetFileName(actionPath));
                 GenerateForAction(outputFolderPath, domainFolderPath, actionPath, biasEnumerator, iterations, beta, maxRuntime);
+                Console.WriteLine("");
             }
         }
 
@@ -33,6 +38,7 @@ namespace PDAI
         {
             for (int i = 0; i < iterations; i++)
             {
+                Logger.Log("Iteration: " + i);
                 SetInput(actionPath, i, biasEnumerator);
                 Train(actionPath, rootPath, beta, maxRuntime);
                 Test();
@@ -47,7 +53,7 @@ namespace PDAI
             int directoryCount = directoryInfo.GetDirectories().Length;
             List<string> actionsPaths = Directory.GetDirectories(actionPath).ToList();
 
-            for (int i = 0; i < directoryCount; i++)
+            for (int i = 0; i < directoryCount - 1; i++)
             {
                 var biasIncrement = biasEnumerator.GetIncrement(iteration);
                 ch.IncrementConstraintValues(actionsPaths[i] + "/bias.pl", biasIncrement.Clause, biasIncrement.Body, biasIncrement.Var);
@@ -58,8 +64,12 @@ namespace PDAI
         {
             var trainingFolders = Directory.GetDirectories(actionFolderPath);
             var threads = new List<Task>();
-            foreach (var trainingFolder in trainingFolders)
-                threads.Add(RunPopper(trainingFolder, rootPath, beta, maxRuntime));
+            for (int i = 0; i < trainingFolders.Length - 1; i++)
+            {
+                threads.Add(RunPopper(trainingFolders[i], rootPath, beta, maxRuntime));
+                threads[i].Wait();
+            }
+
             Task.WaitAll(threads.ToArray());
         }
 
@@ -83,14 +93,23 @@ namespace PDAI
         {
             var threads = new List<Task>();
             for (int j = 0; j < 10; j++)
-                threads.Add(RunTest());
+                //threads.Add(RunTest());
             Task.WaitAll(threads.ToArray());
         }
 
-        private async Task RunTest()
+        private async Task RunTest(string rootPath, string trainPath)
         {
             await Task.Run(() =>
             {
+                string testerPath = Path.Combine(rootPath, "tester.py");
+
+                Process process = new();
+                process.StartInfo.FileName = GetPythonExePath();
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.Arguments = testerPath + " " + trainPath;
+
+                process.Start();
+                process.WaitForExit();
             });
         }
 
