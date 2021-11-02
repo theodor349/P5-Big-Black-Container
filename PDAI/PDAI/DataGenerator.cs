@@ -74,7 +74,7 @@ namespace PDAI
         {
             await Task.Run(() =>
             {
-                string popperPath = Path.Combine(rootPath, "popper\\popper.py");
+                string popperPath = Path.Combine(rootPath, "popper/popper.py");
 
                 Process popperProcess = new();
                 popperProcess.StartInfo.FileName = GetPythonExePath();
@@ -122,6 +122,8 @@ namespace PDAI
 
         public string GetPythonExePath()
         {
+            return "/Library/Frameworks/Python.framework/Versions/3.9/bin/python3.9";
+            /*
             string path = Environment.GetEnvironmentVariable("PATH");
             string pythonPath = null;
             foreach (string p in path.Split(new char[] { ';' }))
@@ -137,7 +139,7 @@ namespace PDAI
             if (pythonPath == null)
                 throw new Exception("Unable to find python exe in Environment variables :(");
             else
-                return pythonPath;
+                return pythonPath;*/
         }
 
         private static List<string> GetTrainingFolders(string actionFolderPath, bool includeTest = false)
