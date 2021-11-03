@@ -1,0 +1,1 @@
+Domain;Action;Beta;ValidationPercent;TestdataPercent;TrainingdataPercent;NumProblems;NumusefulActions;NumuselessActions;Vars;Clauses;Body;TpTraining;TnTraining;FpTraining;FnTraining;RecallTraining;PrecisionTraining;TpTest;TnTest;FpTest;FnTest;RecallTest;PrecisionTest;TpValidation;TnValidation;FpValidation;FnValidation;RecallValidation;PrecisionValidation
