@@ -152,8 +152,10 @@ namespace PDAI
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 return "/usr/local/bin/python3.9";
-            else
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 return "/usr/bin/python";
+            else
+                throw new Exception("Unable to find python in environment variables :(");
         }
 
         private static List<string> GetTrainingFolders(string actionFolderPath, bool includeTest = false)
