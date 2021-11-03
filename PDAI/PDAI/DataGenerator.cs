@@ -108,7 +108,7 @@ namespace PDAI
                     process.StartInfo.FileName = GetPythonExePath();
 
                 else
-                    process.StartInfo.FileName = GetPythonExePathMac();
+                    process.StartInfo.FileName = GetPythonExePathUnix();
 
 
                 process.StartInfo.CreateNoWindow = false;
@@ -129,8 +129,6 @@ namespace PDAI
 
         public string GetPythonExePath()
         {
-            return "/Library/Frameworks/Python.framework/Versions/3.9/bin/python3.9";
-            /*
             string path = Environment.GetEnvironmentVariable("PATH");
             string pythonPath = "/usr/local/bin/python3.9";
             
@@ -147,12 +145,15 @@ namespace PDAI
             if (pythonPath == null)
                 throw new Exception("Unable to find python exe in Environment variables :(");
             else 
-                return pythonPath;*/
+                return pythonPath;
         }
 
-        private string GetPythonExePathMac()
+        private string GetPythonExePathUnix()
         {
-            return "/usr/local/bin/python3.9";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                return "/usr/local/bin/python3.9";
+            else
+                return "/usr/bin/python";
         }
 
         private static List<string> GetTrainingFolders(string actionFolderPath, bool includeTest = false)
