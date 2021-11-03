@@ -152,7 +152,7 @@ namespace PDAI
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 return "/usr/local/bin/python3.9";
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 return "/usr/bin/python";
             else
                 throw new Exception("Unable to find python in environment variables :(");
