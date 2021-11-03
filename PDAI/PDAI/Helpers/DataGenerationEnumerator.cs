@@ -15,18 +15,31 @@ namespace PDAI.Helpers
     }
     public interface IBiasEnumerator
     {
-        BiasIncrement GetIncrement(long iteration);
+        BiasIncrement GetIncrement(int iteration);
     }
 
     public class BiasVarEnumerator : IBiasEnumerator
     {
-        public BiasIncrement GetIncrement(long iteration)
+        public BiasIncrement GetIncrement(int iteration)
         {
             return new BiasIncrement()
             {
-                Var = 1,
+                Var = iteration % int.MaxValue,
                 Body = 0,
                 Clause = 0,
+            };
+        }
+    }
+
+    public class BiasAllEnumerator : IBiasEnumerator
+    {
+        public BiasIncrement GetIncrement(int iteration)
+        {
+            return new BiasIncrement()
+            {
+                Var = iteration % 3 >= 0 ? 1 : 0,
+                Body = iteration % 3 >= 1 ? 1 : 0,
+                Clause = iteration % 3 >= 2 ? 1 : 0,
             };
         }
     }
