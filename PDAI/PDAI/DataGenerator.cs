@@ -74,12 +74,12 @@ namespace PDAI
         {
             await Task.Run(() =>
             {
-                string popperPath = Path.Combine(rootPath, "popper\\popper.py");
+                string popperPath = Path.Combine(rootPath, "popper/popper.py");
 
                 Process popperProcess = new();
                 popperProcess.StartInfo.FileName = GetPythonExePath();
                 popperProcess.StartInfo.CreateNoWindow = false;
-                popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta;
+                popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta + " --stats --info";
 
                 popperProcess.Start();
                 popperProcess.WaitForExit(maxRuntime);
@@ -145,7 +145,7 @@ namespace PDAI
             var res = Directory.GetDirectories(actionFolderPath).ToList();
             if (includeTest)
                 return res;
-            else 
+            else
                 return res.Where(x => !new DirectoryInfo(x).Name.ToLower().Equals("test")).ToList();
         }
     }
