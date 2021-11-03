@@ -22,8 +22,8 @@ namespace PDAI
             string domainFolderPath = Path.Combine(rootBbcFolder, "domainfiles", Path.GetFileName(inputFolderPath));
             var actionsPaths = Directory.GetDirectories(domainFolderPath).ToList();
 
-            var biasEnumerator = new BiasAllEnumerator();
-            int iterations = 5;
+            var biasEnumerator = new BiasRandomEnumerator();
+            int iterations = 6;
             int beta = 2;
             int maxRuntime = 1 * 4 * 60 * 1000; // hour, min, sec, ms 
 
