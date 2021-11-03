@@ -39,6 +39,7 @@ namespace PopperWriter
             lines.AddRange(GetConstraints(maxVars));
             lines.AddRange(GetClauseDeclarations(action, usedInitPreds, usedGoalPreds));
             lines.AddRange(GetTypeDeclerations(allClauses, allClausesPre).Distinct().ToList());
+            lines.AddRange(GetDirectionDeclerations(allClauses, allClausesPre));
 
             var t = File.WriteAllLinesAsync(path, lines);
             t.Wait();
@@ -149,9 +150,9 @@ namespace PopperWriter
             return typeDecls;
         }
 
-        public string GetDirectionDecleration(Clause clause)
+        public string GetDirectionDecleration(Clause clause, string preString)
         {
-            string decl = "direction(" + clause.Name + ",(";
+            string decl = "direction(" + preString + clause.Name + ",(";
 
             for (int i = 0; i < clause.Parameters.Count; i++)
             {
@@ -163,13 +164,13 @@ namespace PopperWriter
             return decl;
         }
 
-        public List<string> GetDirectionDeclerations(List<Clause> clauses)
+        public List<string> GetDirectionDeclerations(List<Clause> clauses, List<string> preStrings)
         {
             List<string> decls = new();
 
-            foreach(Clause clause in clauses)
+            for (int i = 0; i < clauses.Count; i++)
             {
-                decls.Add(GetDirectionDecleration(clause));
+                decls.Add(GetDirectionDecleration(clauses[i], preStrings[i]));
             }
 
             return decls;
