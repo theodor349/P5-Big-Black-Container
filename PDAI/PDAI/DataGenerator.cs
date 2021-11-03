@@ -71,7 +71,7 @@ namespace PDAI
             Task.WaitAll(threads.ToArray());
         }
 
-        private async Task RunPopper(string trainPath, string rootPath, int beta, int maxRuntime)
+        public async Task RunPopper(string trainPath, string rootPath, int beta, int maxRuntime)
         {
             await Task.Run(() =>
             {
@@ -80,7 +80,7 @@ namespace PDAI
                 Process popperProcess = new();
                 popperProcess.StartInfo.FileName = GetPythonExePath();
                 popperProcess.StartInfo.CreateNoWindow = false;
-                popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta;
+                popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta + " --stats --info";
 
                 popperProcess.Start();
                 popperProcess.WaitForExit(maxRuntime);
@@ -108,7 +108,7 @@ namespace PDAI
                     process.StartInfo.FileName = GetPythonExePath();
 
                 else
-                    process.StartInfo.FileName = GetPythonExePathMac();
+                    process.StartInfo.FileName = GetPythonExePathUnix();
 
 
                 process.StartInfo.CreateNoWindow = false;
@@ -127,7 +127,7 @@ namespace PDAI
                 TempFileManager.SaveStats(rootPath, trainingFolder);
         }
 
-        private string GetPythonExePath()
+        public string GetPythonExePath()
         {
             string path = Environment.GetEnvironmentVariable("PATH");
             string pythonPath = "/usr/local/bin/python3.9";
@@ -148,9 +148,14 @@ namespace PDAI
                 return pythonPath;
         }
 
-        private string GetPythonExePathMac()
+        private string GetPythonExePathUnix()
         {
-            return "/usr/local/bin/python3.9";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                return "/usr/local/bin/python3.9";
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return "/usr/bin/python";
+            else
+                throw new Exception("Unable to find python in environment variables :(");
         }
 
         private static List<string> GetTrainingFolders(string actionFolderPath, bool includeTest = false)
@@ -158,7 +163,7 @@ namespace PDAI
             var res = Directory.GetDirectories(actionFolderPath).ToList();
             if (includeTest)
                 return res;
-            else 
+            else
                 return res.Where(x => !new DirectoryInfo(x).Name.ToLower().Equals("test")).ToList();
         }
     }

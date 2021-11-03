@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="FileHelpers" Version="3.5.1" />
+    <PackageReference Include="IronPython" Version="2.7.11" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,4 +16,7 @@
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="IronPython" />
+  </ItemGroup>
 </Project>

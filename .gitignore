@@ -6,6 +6,7 @@
 # THE BOIS
 BBC/domainfiles/
 BBC/StatsFile.csv
+BBC/E.pbix
 
 # User-specific files
 *.rsuser
