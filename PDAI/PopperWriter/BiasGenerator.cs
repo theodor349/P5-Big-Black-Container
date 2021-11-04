@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Writer.Popper;
 
 namespace PopperWriter
 {
@@ -178,7 +179,8 @@ namespace PopperWriter
 
         public List<string> GetConstraints(int maxVars)
         {
-            return new List<string>() { "max_clauses(5).", "max_body(5).", "max_vars(" + (maxVars + 2) + ")." };
+            Popper.MinVars = (maxVars + 2);
+            return new List<string>() { "max_clauses(5).", "max_body(5).", "max_vars(" + Popper.MinVars + ")." };
         }
 
         private List<Entity> CloneEntityList(List<Entity> entityList)

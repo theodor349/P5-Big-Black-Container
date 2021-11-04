@@ -1,57 +1,52 @@
-﻿using System;
+﻿using PDAI.Helpers;
+using PddlParser.Internal;
+using Shared.ExtensionMethods;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PDAI.Helpers;
-using PddlParser.Internal;
-using Shared.ExtensionMethods;
 
 namespace PDAI
 {
-    // John 
-    public class DataGenerator
+    // Johnny Bravo
+    public class InifiniteDataGenerator
     {
-        public void GenerateData(string rootBbcFolder, string domainName, int beta, int maxRuntime)
+        public void GenerateData(string rootBbcFolder, string domainName, int beta, int maxRunTime, int actionToRunOn, int minVars)
         {
             Console.WriteLine("");
             Logger.Log("Generating Data");
             var actionsPaths = SystemExtensions.GetActionFolders(rootBbcFolder, domainName);
+            if (actionsPaths.Count <= actionToRunOn)
+                throw new Exception("There are not that many actions");
 
-            var biasEnumerator = new BiasRandomEnumerator();
-            int iterations = 6;
-
-            foreach (var actionPath in actionsPaths)
-            {
-                Logger.Log("Generating data for action: " + Path.GetFileName(actionPath));
-                GenerateForAction(rootBbcFolder, actionPath, biasEnumerator, iterations, beta, maxRuntime);
-                Console.WriteLine("");
-            }
+            var actionPath = actionsPaths[actionToRunOn];
+            Logger.Log("Generating data for action: " + Path.GetFileName(actionPath));
+            GenerateForActionRunForEver(rootBbcFolder, actionPath, beta, maxRunTime, minVars);
+            Console.WriteLine("");
         }
 
-        private void GenerateForAction(string rootPath, string actionPath, IBiasEnumerator biasEnumerator, int iterations, int beta, int maxRuntime)
+        private void GenerateForActionRunForEver(string rootPath, string actionPath, int beta, int maxRuntime, int minVars)
         {
-            for (int i = 0; i < iterations; i++)
+            new BiasRunnerInfinite(minVars).Run((x) =>
             {
-                Logger.Log("Iteration: " + i);
-                SetInput(actionPath, i, biasEnumerator);
+                SetInput(actionPath, x);
                 Train(actionPath, rootPath, beta, maxRuntime);
                 Test(rootPath, actionPath);
                 SaveResults(rootPath, actionPath);
-            }
+            });
         }
 
-        private void SetInput(string actionPath, int iteration, IBiasEnumerator biasEnumerator)
+        private void SetInput(string actionPath, BiasSetup bias)
         {
             ConstraintHelper ch = new ConstraintHelper();
             List<string> trainingFolders = SystemExtensions.GetTrainingFolders(actionPath);
 
             foreach (var trainingFolder in trainingFolders)
             {
-                var biasIncrement = biasEnumerator.GetIncrement(iteration);
-                ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), biasIncrement.Clause, biasIncrement.Body, biasIncrement.Var);
+                ch.ChangeConstraint(Path.Combine(trainingFolder, "bias.pl"), bias.Clause, bias.Body, bias.Var);
             }
         }
 
@@ -64,7 +59,7 @@ namespace PDAI
             Task.WaitAll(threads.ToArray());
         }
 
-        public async Task RunPopper(string trainPath, string rootPath, int beta, int maxRuntime)
+        private async Task RunPopper(string trainPath, string rootPath, int beta, int maxRuntime)
         {
             await Task.Run(() =>
             {
@@ -72,7 +67,7 @@ namespace PDAI
 
                 Process popperProcess = new();
                 popperProcess.StartInfo.FileName = SystemExtensions.GetPythonPath();
-                popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta + " --stats --info";
+                popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta;// + " --stats --info";
                 StartProcess(popperProcess, maxRuntime);
             });
         }

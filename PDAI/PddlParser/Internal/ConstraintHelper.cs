@@ -9,12 +9,11 @@ namespace PddlParser.Internal
     {
         public void ChangeConstraint(string filepath, int max_clauses, int max_body, int max_vars)
         {
-
             List<string> lines = File.ReadLines(filepath).ToList();
-
-            lines[0] = "max_clauses(" + max_clauses + ")";
-            lines[1] = "max_body(" + max_body + ")";
-            lines[2] = "max_vars(" + max_vars + ")";
+            Console.WriteLine("Var: " + max_vars + " body: " + max_body + " clause: " + max_clauses);
+            lines[0] = "max_clauses(" + max_clauses + ").";
+            lines[1] = "max_body(" + max_body + ").";
+            lines[2] = "max_vars(" + max_vars + ").";
 
             File.WriteAllLines(filepath, lines);
         }
