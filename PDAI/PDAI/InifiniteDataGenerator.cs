@@ -70,7 +70,7 @@ namespace PDAI
                 Process popperProcess = new();
                 popperProcess.StartInfo.FileName = SystemExtensions.GetPythonPath();
                 popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta;// + " --stats --info";
-                StartProcess(popperProcess, false, maxRuntime);
+                StartProcess(popperProcess, true, maxRuntime);
             });
         }
 
