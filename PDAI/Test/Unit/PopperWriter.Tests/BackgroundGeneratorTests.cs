@@ -10,20 +10,6 @@ namespace PopperWriter.Tests
     [TestClass]
     public class BackgroundGeneratorTests
     {
-        [DataRow("(on B1 b8)", "p1", true, "goal_on(b1,b8,p1).")]
-        [DataRow("(calibration_target instrument0 star3)", "p5", false, "init_calibration_target(instrument0,star3,p5).")]
-        [DataRow("(power_avail satellite0)", "p23", true, "goal_power_avail(satellite0,p23).")]
-        [DataTestMethod]
-        public void PredicateToString_validPredicate_CorrectString(string predicateString, string problemName, bool isGoal, string expected)
-        {
-            BackgroundGenerator backgroundGenerator = new BackgroundGenerator();
-            PredicateOperator predicate = Models.GetPredicateOperator(predicateString);
-
-            string result = backgroundGenerator.PredicateToString(predicate, problemName, isGoal);
-
-            Assert.AreEqual(expected, result);
-        }
-
         [DynamicData("PredicateInput")]
         [DataTestMethod]
         public void GetPredicates_validPredicate_CorrectString(List<string> names, List<List<PredicateOperator>> initialstates, List<List<PredicateOperator>> goalstates, List<string> expected)

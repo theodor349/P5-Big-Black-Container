@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace PDAI.Helpers
 {
 
-    public class BiasIncrement
+    public class BiasSetup
     {
         public int Var { get; set; }
         public int Body { get; set; }
@@ -15,14 +15,14 @@ namespace PDAI.Helpers
     }
     public interface IBiasEnumerator
     {
-        BiasIncrement GetIncrement(int iteration);
+        BiasSetup GetIncrement(int iteration);
     }
 
     public class BiasVarEnumerator : IBiasEnumerator
     {
-        public BiasIncrement GetIncrement(int iteration)
+        public BiasSetup GetIncrement(int iteration)
         {
-            return new BiasIncrement()
+            return new BiasSetup()
             {
                 Var = 1,
                 Body = 0,
@@ -33,9 +33,9 @@ namespace PDAI.Helpers
 
     public class BiasAllEnumerator : IBiasEnumerator
     {
-        public BiasIncrement GetIncrement(int iteration)
+        public BiasSetup GetIncrement(int iteration)
         {
-            return new BiasIncrement()
+            return new BiasSetup()
             {
                 Var = iteration % 3 >= 0 ? 1 : 0,
                 Body = iteration % 3 >= 1 ? 1 : 0,
@@ -46,11 +46,11 @@ namespace PDAI.Helpers
 
     public class BiasRandomEnumerator : IBiasEnumerator
     {
-        public BiasIncrement GetIncrement(int iteration)
+        public BiasSetup GetIncrement(int iteration)
         {
             var rand = new Random().Next();
 
-            return new BiasIncrement()
+            return new BiasSetup()
             {
                 Var = rand % 3 == 0 ? 1 : 0,
                 Body = rand % 3 == 1 ? 1 : 0,
@@ -61,9 +61,9 @@ namespace PDAI.Helpers
 
     public class BiasBodyEnumerator : IBiasEnumerator
     {
-        public BiasIncrement GetIncrement(int iteration)
+        public BiasSetup GetIncrement(int iteration)
         {
-            return new BiasIncrement()
+            return new BiasSetup()
             {
                 Var = 0,
                 Body = 1,
@@ -74,9 +74,9 @@ namespace PDAI.Helpers
 
     public class BiasClauseEnumerator : IBiasEnumerator
     {
-        public BiasIncrement GetIncrement(int iteration)
+        public BiasSetup GetIncrement(int iteration)
         {
-            return new BiasIncrement()
+            return new BiasSetup()
             {
                 Var = 0,
                 Body = 0,
@@ -87,9 +87,9 @@ namespace PDAI.Helpers
 
     public class BiasAllReverseEnumerator : IBiasEnumerator
     {
-        public BiasIncrement GetIncrement(int iteration)
+        public BiasSetup GetIncrement(int iteration)
         {
-            return new BiasIncrement()
+            return new BiasSetup()
             {
                 Var = iteration % 3 >= 2 ? 1 : 0,
                 Body = iteration % 3 >= 1 ? 1 : 0,

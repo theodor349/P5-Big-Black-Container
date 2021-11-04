@@ -3,8 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Writer.Popper;
 
 namespace PopperWriter
 {
@@ -14,8 +13,13 @@ namespace PopperWriter
         {
             List<string> lines = new();
 
-            List<Predicate> usedInitPreds = GetUsedPreds(problems, predicates, true);
-            List<Predicate> usedGoalPreds = GetUsedPreds(problems, predicates, false);
+            List<Predicate> usedInitPreds = CollectAllUsedPredicates(problems, predicates, true);
+            List<Predicate> usedGoalPreds = CollectAllUsedPredicates(problems, predicates, false);
+
+            int maxInitalValue = usedInitPreds.Select(x => x.Parameters.Count).Max();
+            int maxGoalValue = usedInitPreds.Select(x => x.Parameters.Count).Max();
+            int maxVars = Math.Max(maxInitalValue, maxGoalValue);
+            maxVars = Math.Max(maxVars, action.Parameters.Count);
 
             List<Clause> allClauses = new();
             allClauses.Add(action);
@@ -33,9 +37,6 @@ namespace PopperWriter
                 allClausesPre.Add("goal_");
             }
 
-            int maxVars = Math.Max(usedInitPreds.Select(x => x.Parameters.Count).Max(), usedGoalPreds.Select(x => x.Parameters.Count).Max());
-            maxVars = Math.Max(maxVars, action.Parameters.Count);
-
             lines.AddRange(GetConstraints(maxVars));
             lines.AddRange(GetClauseDeclarations(action, usedInitPreds, usedGoalPreds));
             lines.AddRange(GetTypeDeclerations(allClauses, allClausesPre).Distinct().ToList());
@@ -45,13 +46,13 @@ namespace PopperWriter
             t.Wait();
         }
 
-        public List<Predicate> GetUsedPreds(List<Problem> problems, List<Predicate> predicates, bool initPreds)
+        public List<Predicate> CollectAllUsedPredicates(List<Problem> problems, List<Predicate> predicates, bool isInitialState)
         {
             List<PredicateOperator> allPredicates = new();
 
             foreach (Problem problem in problems)
             {
-                if (initPreds)
+                if (isInitialState)
                 {
                     problem.InitalState.ForEach(x => allPredicates.Add(x));
                 }
@@ -62,6 +63,12 @@ namespace PopperWriter
             }
 
             return GetUsedPredicates(predicates, allPredicates);
+        }
+
+        public List<string> GetConstraints(int maxVars)
+        {
+            Popper.MinVars = (maxVars + 2);
+            return new List<string>() { "max_clauses(5).", "max_body(5).", "max_vars(" + Popper.MinVars + ")." }; // maxVars is added by two. +1 for problem and +1 for make the vars one value above the minimum. 
         }
 
         public List<string> GetClauseDeclarations(Shared.Models.Action action, List<Predicate> usedInitPreds, List<Predicate> usedGoalPreds)
@@ -83,7 +90,31 @@ namespace PopperWriter
             return predDeclStrings;
         }
 
-        public string GetClauseDecleration(Clause clause, bool isHeadPred, bool isGoal)
+        public List<string> GetTypeDeclerations(List<Clause> clauses, List<string> stateNames)
+        {
+            List<string> typeDecls = new();
+
+            for (int i = 0; i < clauses.Count; i++)
+            {
+                typeDecls.AddRange(GetTypeDecleration(stateNames[i] + clauses[i].Name, clauses[i].Parameters.Select(x => x.Entity).ToList(), true));
+            }
+
+            return typeDecls;
+        }
+
+        public List<string> GetDirectionDeclerations(List<Clause> clauses, List<string> preStrings)
+        {
+            List<string> decls = new();
+
+            for (int i = 0; i < clauses.Count; i++)
+            {
+                decls.Add(GetDirectionDecleration(clauses[i], preStrings[i]));
+            }
+
+            return decls;
+        }
+
+        private string GetClauseDecleration(Clause clause, bool isHeadPred, bool isGoal)
         {
             string predDecl = (isHeadPred ? "head_pred" : "body_pred") + "(";
             if (!isHeadPred)
@@ -95,7 +126,21 @@ namespace PopperWriter
             return predDecl;
         }
 
-        public List<Predicate> GetUsedPredicates(List<Predicate> possiblePredicates, List<PredicateOperator> predicates)
+        private string GetDirectionDecleration(Clause clause, string stateName)
+        {
+            string decl = "direction(" + stateName + clause.Name + ",(";
+
+            for (int i = 0; i < clause.Parameters.Count; i++)
+            {
+                decl += "out,";
+            }
+
+            decl += "in)).";
+
+            return decl;
+        }
+
+        private List<Predicate> GetUsedPredicates(List<Predicate> possiblePredicates, List<PredicateOperator> predicates)
         {
             List<Predicate> usedPredicates = new List<Predicate>();
 
@@ -110,19 +155,7 @@ namespace PopperWriter
             return usedPredicates;
         }
 
-        public List<string> GetTypeDeclerations(List<Clause> clauses, List<string> preStrings)
-        {
-            List<string> typeDecls = new();
-
-            for (int i = 0; i < clauses.Count; i++)
-            {
-                typeDecls.AddRange(GetTypeDecleration(preStrings[i] + clauses[i].Name, clauses[i].Parameters.Select(x => x.Entity).ToList(), true));
-            }
-
-            return typeDecls;
-        }
-
-        public List<string> GetTypeDecleration(string clauseName, List<Entity> parameters, bool originalCall)
+        private List<string> GetTypeDecleration(string clauseName, List<Entity> parameters, bool originalCall)
         {
             List<string> typeDecls = new();
 
@@ -148,37 +181,6 @@ namespace PopperWriter
             typeDecls.Add(decl);
 
             return typeDecls;
-        }
-
-        public string GetDirectionDecleration(Clause clause, string preString)
-        {
-            string decl = "direction(" + preString + clause.Name + ",(";
-
-            for (int i = 0; i < clause.Parameters.Count; i++)
-            {
-                decl += "out,";
-            }
-
-            decl += "in)).";
-
-            return decl;
-        }
-
-        public List<string> GetDirectionDeclerations(List<Clause> clauses, List<string> preStrings)
-        {
-            List<string> decls = new();
-
-            for (int i = 0; i < clauses.Count; i++)
-            {
-                decls.Add(GetDirectionDecleration(clauses[i], preStrings[i]));
-            }
-
-            return decls;
-        }
-
-        public List<string> GetConstraints(int maxVars)
-        {
-            return new List<string>() { "max_clauses(5).", "max_body(5).", "max_vars(" + (maxVars + 2) + ")." };
         }
 
         private List<Entity> CloneEntityList(List<Entity> entityList)

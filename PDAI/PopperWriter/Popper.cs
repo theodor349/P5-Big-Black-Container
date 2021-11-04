@@ -11,6 +11,8 @@ namespace Writer.Popper
 {
     public class Popper
     {
+        public static int MinVars = 0;
+
         public void Write(Domain domain, string folderPath, double testPercent, int numOfSplits)
         {
             domain.Problems.Sort();
