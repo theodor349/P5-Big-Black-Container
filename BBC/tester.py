@@ -46,8 +46,15 @@ def main():
 
     beta = 2
 
-    precision = tp / (tp + fp)
-    recall = tp / (tp + fn)
+    if (tp + fp == 0):
+        precision = 0
+    else:
+        precision = tp / (tp + fp)
+
+    if (tp + fn == 0):
+        recall = 0
+    else:
+        recall = tp / (tp + fn)
     # if (beta**2 * precision) + recall == 0:
     #     f_score = nan
     # else:

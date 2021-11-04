@@ -156,10 +156,10 @@ namespace PopperWriter
 
             for (int i = 0; i < clause.Parameters.Count; i++)
             {
-                decl += "in,";
+                decl += "out,";
             }
 
-            decl += "out)).";
+            decl += "in)).";
 
             return decl;
         }
