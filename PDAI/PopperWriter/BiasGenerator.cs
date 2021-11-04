@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Writer.Popper;
 
 namespace PopperWriter
 {
@@ -66,7 +67,8 @@ namespace PopperWriter
 
         public List<string> GetConstraints(int maxVars)
         {
-            return new List<string>() { "max_clauses(5).", "max_body(5).", "max_vars(" + (maxVars + 2) + ")." }; // maxVars is added by two. +1 for problem and +1 for make the vars one value above the minimum. 
+            Popper.MinVars = (maxVars + 2);
+            return new List<string>() { "max_clauses(5).", "max_body(5).", "max_vars(" + Popper.MinVars + ")." }; // maxVars is added by two. +1 for problem and +1 for make the vars one value above the minimum. 
         }
 
         public List<string> GetClauseDeclarations(Shared.Models.Action action, List<Predicate> usedInitPreds, List<Predicate> usedGoalPreds)
