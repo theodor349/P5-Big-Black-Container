@@ -73,11 +73,11 @@ namespace Writer.Popper
                 {
                     double chunkPercent = Math.Round(((double)chunk.Count / (double)chunks[^1].Count) * 100);
 
-                    string chunkPath = path + "/" + chunkPercent;
+                    string chunkPath = Path.Combine(path, chunkPercent.ToString());
                     Directory.CreateDirectory(chunkPath);
 
-                    bgGenerator.Write(chunk, chunkPath + "/bk.pl");
-                    biasGenerator.Write(action, chunk, domain.Predicates, chunkPath + "/bias.pl");
+                    bgGenerator.Write(chunk, Path.Combine(chunkPath, "bk.pl"));
+                    biasGenerator.Write(action, chunk, domain.Predicates, Path.Combine(chunkPath, "bias.pl"));
                     exampleGenerator.Write(action, chunk, chunkPath);
 
                     string domainName = Path.GetFileName(folderPath);
@@ -85,9 +85,9 @@ namespace Writer.Popper
                     PrintStats(domainName, action.Name, chunkPath, chunkPercent, testPercent, chunk);
                 }
 
-                string testPath = path + "/test";
+                string testPath = Path.Combine(path, "test");
                 Directory.CreateDirectory(testPath);
-                bgGenerator.Write(testProblems, testPath + "/bk.pl");
+                bgGenerator.Write(testProblems, Path.Combine(testPath, "bk.pl"));
                 exampleGenerator.WriteTest(action, testProblems, testPath);
 
                 Logger.Log("Done with action: " + action.Name);
