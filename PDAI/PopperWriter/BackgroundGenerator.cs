@@ -1,9 +1,6 @@
 ﻿using Shared.Models;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PopperWriter
@@ -39,7 +36,7 @@ namespace PopperWriter
             return predicates;
         }
 
-        public string PredicateToString(PredicateOperator predicate, string problemName, bool isGoal)
+        private string PredicateToString(PredicateOperator predicate, string problemName, bool isGoal)
         {
             string predString = isGoal ? "goal_" : "init_";
             predString += predicate.Name + "(";   
