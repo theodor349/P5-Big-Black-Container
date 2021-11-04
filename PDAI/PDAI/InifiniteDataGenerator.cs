@@ -22,6 +22,7 @@ namespace PDAI
             if (actionsPaths.Count <= actionToRunOn)
                 throw new Exception("There are not that many actions");
 
+            Console.WriteLine("Working in folder: " + actionsPaths[actionToRunOn]);
             var actionPath = actionsPaths[actionToRunOn];
             Logger.Log("Generating data for action: " + Path.GetFileName(actionPath));
             GenerateForActionRunForEver(rootBbcFolder, actionPath, beta, maxRunTime, minVars, forward);

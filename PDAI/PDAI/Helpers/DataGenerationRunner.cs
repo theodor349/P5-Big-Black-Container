@@ -14,17 +14,17 @@ namespace PDAI.Helpers
     public class BiasRunnerInfinite : IDataGenerationRunner
     {
         private int _minVars;
+        private int _forward;
 
         public BiasRunnerInfinite(int minVars, int forward)
         {
             _minVars = minVars;
+            _forward = forward;
         }
-
-        public int Forward { get; set; }
 
         public void Run(Action<BiasSetup> action)
         {
-            for (int x = 0; x < Forward; x++)
+            for (int x = 0; x < _forward; x++)
             {
                 for (int y = 0; y < x; y++)
                 {
