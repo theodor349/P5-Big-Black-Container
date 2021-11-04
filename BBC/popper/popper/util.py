@@ -193,33 +193,11 @@ class Stats:
         prog_stats = self.make_program_stats(program, conf_matrix)
         self.best_programs.append(prog_stats)
 
-        precision = 'n/a'
-
-        parser_args = parse_args()
-        f = open("%s/hyp.pl" % (parser_args.kbpath), "w")
-        f.write(prog_stats.code)
-        f.close()
-        tp, fn, tn, fp = conf_matrix
-
-        if (tp + fp == 0):
-            precision = 0
-        else:
-            precision = tp / (tp + fp)
-
-        if (tp + fn == 0):
-            recall = 0
-        else:
-            recall = tp / (tp + fn)
-        
-        f = open("%s/temp1.csv" % (parser_args.kbpath), "w")
-        f.write("%d,%d,%d,%d,%d,%f,%f" % (parser_args.beta, tp, fn, tn, fp, precision, recall))
-        f.close()
-
         if self.log_best_programs:
             self.logger.info(f'% NEW BEST PROG {self.total_programs}:')
             self.logger.info(prog_stats.code)
             self.logger.info(format_conf_matrix(conf_matrix))
-
+        
     def log_final_result(self):
         if self.solution:
             prog_stats = self.solution

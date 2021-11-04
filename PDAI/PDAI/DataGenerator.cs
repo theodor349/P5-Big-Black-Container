@@ -111,7 +111,7 @@ namespace PDAI
                     process.StartInfo.FileName = GetPythonExePathUnix();
 
 
-                process.StartInfo.CreateNoWindow = false;
+                process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.Arguments = testerPath + " " + trainPath;
 
                 process.Start();

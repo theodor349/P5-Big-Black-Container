@@ -9,70 +9,59 @@ def main():
     path = sys.argv[1]
     path = path.replace("\\","/")
 
-    hypPath = path + "/hyp.pl"
-    testPath = path[0:path.rfind("/")] + "/test"
+    num_of_hyps = sum(map(lambda x : x.startswith("hyp"), os.listdir(path)))
 
-    prolog = Prolog()
-    prolog.consult(testPath + "/bk.pl")
-    prolog.consult(hypPath)
-    
-    with open(testPath + "/output.txt") as f:
-        testResults = f.read().splitlines()
-    
-    actual = list(map(stringToBool, testResults))
+    for i in range(1, num_of_hyps + 1):
+        hypPath = path + "/hyp{}.pl".format(i)
+        testPath = path[0:path.rfind("/")] + "/test"
 
-    with open(testPath + "/input.txt") as f:
-        tests = f.read().splitlines()
+        prolog = Prolog()
+        prolog.consult(testPath + "/bk.pl")
+        prolog.consult(hypPath)
+        
+        with open(testPath + "/output.txt") as f:
+            testResults = f.read().splitlines()
+        
+        actual = list(map(stringToBool, testResults))
 
-    prediction = []
-    for test in tests:
-        testResult = bool(list(prolog.query(test)))
-        prediction.append(testResult)
+        with open(testPath + "/input.txt") as f:
+            tests = f.read().splitlines()
 
-    tp = 0
-    fp = 0
-    tn = 0
-    fn = 0
+        prediction = []
+        for test in tests:
+            testResult = bool(list(prolog.query(test)))
+            prediction.append(testResult)
 
-    for a, p in zip(actual, prediction):
-        if (a == True and p == True):
-            tp += 1
-        elif (a == True and p == False):
-            fn += 1
-        elif (a == False and p == True):
-            fp += 1
+        tp = 0
+        fp = 0
+        tn = 0
+        fn = 0
+
+        for a, p in zip(actual, prediction):
+            if (a == True and p == True):
+                tp += 1
+            elif (a == True and p == False):
+                fn += 1
+            elif (a == False and p == True):
+                fp += 1
+            else:
+                tn += 1
+
+        if (tp + fp == 0):
+            precision = 0
         else:
-            tn += 1
+            precision = tp / (tp + fp)
 
-    beta = 2
+        if (tp + fn == 0):
+            recall = 0
+        else:
+            recall = tp / (tp + fn)
 
-    if (tp + fp == 0):
-        precision = 0
-    else:
-        precision = tp / (tp + fp)
+        max_clauses, max_body, max_vars = getConstraints(path)
 
-    if (tp + fn == 0):
-        recall = 0
-    else:
-        recall = tp / (tp + fn)
-    # if (beta**2 * precision) + recall == 0:
-    #     f_score = nan
-    # else:
-    #     f_score = (1 + beta**2) * ((precision * recall) / ((beta**2 * precision) + recall))
-
-    # print(actual)
-    # print(prediction)
-    # print("tp: %d  fp: %d" % (tp, fp))
-    # print("fn: %d  tn: %d" % (fn, tn))
-    # print("precision: %f" % (precision))
-    # print("recall: %f" % (recall))
-    # print("f_score: %f" % (f_score))
-
-    max_clauses, max_body, max_vars = getConstraints(path)
-
-    stats_file = open(path + "/temp2.csv", 'w')
-    stats_file.write("%s,%s,%s,%d,%d,%d,%d,%f,%f" % (max_vars, max_clauses, max_body, tp, tn, fp, fn, recall, precision))
-    stats_file.close()
+        stats_file = open(path + "/temp2_{}.csv".format(i), 'w')
+        stats_file.write("%s,%s,%s,%d,%d,%d,%d,%f,%f" % (max_vars, max_clauses, max_body, tp, tn, fp, fn, recall, precision))
+        stats_file.close()
 
 
 def stringToBool(s):

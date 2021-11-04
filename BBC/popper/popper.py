@@ -2,12 +2,16 @@
 
 import logging
 import sys
+import timeit
 from popper.util import Settings, Stats, timeout, parse_settings, format_program, parse_args
 from popper.asp import ClingoGrounder, ClingoSolver
 from popper.tester import Tester
 from popper.constrain import Constrain
 from popper.generate import generate_program
 from popper.core import Grounding, Clause
+
+num_of_hyps = 1
+start_time = timeit.default_timer()
 
 class Outcome:
     ALL = 'all'
@@ -160,6 +164,12 @@ def popper(settings, stats):
             if best_score == None or score > best_score:
                 best_score = score
 
+                prog_stats = stats.make_program_stats(program, conf_matrix)
+
+                global num_of_hyps
+                write_hypothesis(prog_stats.code, conf_matrix, num_of_hyps)
+                num_of_hyps += 1
+
                 if outcome == (Outcome.ALL, Outcome.NONE):
                     stats.register_solution(program, conf_matrix)
                     return stats.solution.code
@@ -193,6 +203,35 @@ def learn_solution(settings):
     stats.log_final_result()
     if settings.stats:
         stats.show()
+
+
+def write_hypothesis(hypothesis, conf_matrix, hyp_num):
+    # Get time elapsed
+    global start_time
+    time_elapsed = timeit.default_timer() - start_time
+
+    # Write hyp file
+    parser_args = parse_args()
+    f = open("%s/hyp%d.pl" % (parser_args.kbpath, hyp_num), "w")
+    f.write(hypothesis)
+    f.close()
+
+    # Write data file
+    tp, fn, tn, fp = conf_matrix
+    if (tp + fp == 0):
+        precision = -1
+    else:
+        precision = tp / (tp + fp)
+    if (tp + fn == 0):
+        recall = -1
+    else:
+        recall = tp / (tp + fn)
+
+    hypothesis = hypothesis.replace("\n", " | ")
+    
+    f = open("%s/temp1_%d.csv" % (parser_args.kbpath, hyp_num), "w")
+    f.write("%d;%d;%d;%d;%d;%f;%f;%s;%f" % (parser_args.beta, tp, fn, tn, fp, precision, recall, hypothesis, time_elapsed))
+    f.close()
 
 if __name__ == '__main__':
     settings = parse_settings()
