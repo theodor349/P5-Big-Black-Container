@@ -66,7 +66,7 @@ namespace Writer.Popper
 
             return Task.Run(() =>
             {
-                string path = folderPath + "/" + action.Name;
+                string path = Path.Combine(folderPath, action.Name);
                 Directory.CreateDirectory(path);
 
                 foreach (List<Problem> chunk in chunks)
