@@ -58,7 +58,8 @@ namespace PDAI
                     RecallValidation = 0,
                     PrecisionValidation = 0,
                     Hypothesis = t1[0].Hypothesis,
-                    SecondsElapsed = t1[0].SecondsElapsed
+                    SecondsElapsed = t1[0].SecondsElapsed,
+                    Date = DateTime.Now,
                 };
 
                 string statsFilePath = Path.Combine(rootPath, "StatsFile.csv");
@@ -147,5 +148,7 @@ namespace PDAI
         public float PrecisionValidation;
         public string Hypothesis;
         public float SecondsElapsed;
+        [FieldConverter(ConverterKind.Date, "dd/MM/yyyy HH:mm")]
+        public DateTime Date;
     }
 }
