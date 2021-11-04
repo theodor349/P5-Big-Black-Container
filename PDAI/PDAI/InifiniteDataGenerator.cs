@@ -14,7 +14,7 @@ namespace PDAI
     // Johnny Bravo
     public class InifiniteDataGenerator
     {
-        public void GenerateData(string rootBbcFolder, string domainName, int beta, int maxRunTime, int actionToRunOn, int minVars)
+        public void GenerateData(string rootBbcFolder, string domainName, int beta, int maxRunTime, int actionToRunOn, int minVars, int forward)
         {
             Console.WriteLine("");
             Logger.Log("Generating Data");
@@ -24,13 +24,13 @@ namespace PDAI
 
             var actionPath = actionsPaths[actionToRunOn];
             Logger.Log("Generating data for action: " + Path.GetFileName(actionPath));
-            GenerateForActionRunForEver(rootBbcFolder, actionPath, beta, maxRunTime, minVars);
+            GenerateForActionRunForEver(rootBbcFolder, actionPath, beta, maxRunTime, minVars, forward);
             Console.WriteLine("");
         }
 
-        private void GenerateForActionRunForEver(string rootPath, string actionPath, int beta, int maxRuntime, int minVars)
+        private void GenerateForActionRunForEver(string rootPath, string actionPath, int beta, int maxRuntime, int minVars, int forward)
         {
-            new BiasRunnerInfinite(minVars).Run((x) =>
+            new BiasRunnerInfinite(minVars, forward).Run((x) =>
             {
                 Console.WriteLine("Var: " + x.Var + " body: " + x.Body + " clause: " + x.Clause);
                 SetInput(actionPath, x);

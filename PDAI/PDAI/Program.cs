@@ -21,6 +21,7 @@ namespace PDAI
             int actionToRun = 0;
             int maxRuntime = 1 * 4 * 60 * 1000; // hour, min, sec, ms
             int beta = 2;
+            int forward = int.MaxValue;
             if (args.Length > 1)
             {
                 inputFolderPath = args[0];
@@ -44,13 +45,16 @@ namespace PDAI
                 maxRuntime = int.Parse(args[7]);
             if (args.Length > 8)
                 beta = int.Parse(args[8]);
+            if (args.Length > 9)
+                forward = int.Parse(args[9]);
+
 
             var domain = Parse(inputFolderPath, maxProblems);
             domain.Name = Path.GetFileName(inputFolderPath);
             Write(outputFolderPath, domain, splitPercent, numOfChunks);
 
             if (runInfinite)
-                new InifiniteDataGenerator().GenerateData(outputFolderPath, domain.Name, beta, maxRuntime, actionToRun, Popper.MinVars);
+                new InifiniteDataGenerator().GenerateData(outputFolderPath, domain.Name, beta, maxRuntime, actionToRun, Popper.MinVars, forward);
             else
                 new DataGenerator().GenerateData(outputFolderPath, domain.Name, beta, maxRuntime);
         }

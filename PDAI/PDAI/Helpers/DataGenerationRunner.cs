@@ -15,12 +15,12 @@ namespace PDAI.Helpers
     {
         private int _minVars;
 
-        public BiasRunnerInfinite(int minVars)
+        public BiasRunnerInfinite(int minVars, int forward)
         {
             _minVars = minVars;
         }
 
-        public int Forward { get; set; } = 3;
+        public int Forward { get; set; }
 
         public void Run(Action<BiasSetup> action)
         {
