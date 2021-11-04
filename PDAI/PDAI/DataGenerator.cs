@@ -20,7 +20,7 @@ namespace PDAI
             Logger.Log("Generating Data");
             var actionsPaths = SystemExtensions.GetActionFolders(rootBbcFolder, domainName);
 
-            var biasEnumerator = new BiasRandomEnumerator();
+            var biasEnumerator = new BiasBodyEnumerator();
             int iterations = 6;
 
             foreach (var actionPath in actionsPaths)
