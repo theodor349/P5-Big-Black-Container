@@ -105,7 +105,7 @@ namespace Writer.Popper
                 numberOfUselessActions += problem.BadOperators.Count;
             }
 
-            Task t = File.WriteAllTextAsync(chunkPath + "/temp0.csv",
+            Task t = File.WriteAllTextAsync(Path.Combine(chunkPath, "temp0.csv"),
                 domainName + "," +
                 actionName + "," +
                 testPercent.ToString(CultureInfo.InvariantCulture) + "," +
