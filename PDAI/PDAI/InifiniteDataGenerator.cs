@@ -33,7 +33,7 @@ namespace PDAI
         {
             new BiasRunnerInfinite(minVars, forward).Run((x) =>
             {
-                Console.WriteLine("Var: " + x.Var + " body: " + x.Body + " clause: " + x.Clause);
+                Logger.Log("Var: " + x.Var + " body: " + x.Body + " clause: " + x.Clause);
                 SetInput(actionPath, x);
                 Train(actionPath, rootPath, beta, maxRuntime);
                 Test(rootPath, actionPath);
