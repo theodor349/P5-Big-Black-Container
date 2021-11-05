@@ -27,22 +27,22 @@ namespace PDAI
             Logger.Log("Generating data for action: " + Path.GetFileName(actionPath));
 
             var threads = new List<Task>();
-            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[3], beta, maxRunTime, minVars, forward)));
-            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[2], beta, maxRunTime, minVars, forward)));
-            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[1], beta, maxRunTime, minVars, forward)));
-            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[0], beta, maxRunTime, minVars, forward)));
+            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[3], beta, maxRunTime, minVars, forward, 0)));
+            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[2], beta, maxRunTime, minVars, forward, 1)));
+            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[1], beta, maxRunTime, minVars, forward, 2)));
+            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[0], beta, maxRunTime, minVars, forward, 3)));
             Task.WaitAll(threads.ToArray());
             //GenerateForActionRunForEver(rootBbcFolder, actionPath, beta, maxRunTime, minVars, forward);
             Console.WriteLine("");
         }
 
-        private void GenerateForActionRunForEver(string rootPath, string actionPath, int beta, int maxRuntime, int minVars, int forward)
+        private void GenerateForActionRunForEver(string rootPath, string actionPath, int beta, int maxRuntime, int minVars, int forward, int num)
         {
             new BiasRunnerConstant(vars: 8, body: 15, clause: 8).Run((x) =>
             {
                 Logger.Log("Var: " + x.Var + " body: " + x.Body + " clause: " + x.Clause);
                 SetInput(actionPath, x);
-                Train(actionPath, rootPath, beta, maxRuntime);
+                Train(actionPath, rootPath, beta, maxRuntime + num * 60000);
                 Test(rootPath, actionPath);
                 SaveResults(rootPath, actionPath);
             });
