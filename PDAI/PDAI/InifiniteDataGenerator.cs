@@ -31,7 +31,7 @@ namespace PDAI
 
         private void GenerateForActionRunForEver(string rootPath, string actionPath, int beta, int maxRuntime, int minVars, int forward)
         {
-            new BiasRunnerConstant(10).Run((x) =>
+            new BiasRunnerConstant(vars: 10, body: 15, clause: 10).Run((x) =>
             {
                 Logger.Log("Var: " + x.Var + " body: " + x.Body + " clause: " + x.Clause);
                 SetInput(actionPath, x);

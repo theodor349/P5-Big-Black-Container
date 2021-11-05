@@ -13,20 +13,24 @@ namespace PDAI.Helpers
 
     public class BiasRunnerConstant : IDataGenerationRunner
     {
-        private readonly int _value;
+        private readonly int _vars;
+        private readonly int _body;
+        private readonly int _clause;
 
-        public BiasRunnerConstant(int value)
+        public BiasRunnerConstant(int vars, int body, int clause)
         {
-            _value = value;
+            _body = body;
+            _clause = clause;
+            _vars = vars;
         }
 
         public void Run(Action<BiasSetup> action)
         {
             action(new BiasSetup()
             {
-                Var = _value,
-                Body = _value,
-                Clause = _value,
+                Var = _vars,
+                Body = _body,
+                Clause = _clause,
             });
         }
     }
