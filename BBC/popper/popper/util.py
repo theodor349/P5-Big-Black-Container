@@ -7,6 +7,7 @@ from time import perf_counter
 from contextlib import contextmanager
 from .core import Clause
 from .constrain import Constrain
+import datetime
 
 TIMEOUT=600
 EVAL_TIMEOUT=0.001
@@ -194,6 +195,9 @@ class Stats:
         self.best_programs.append(prog_stats)
 
         if self.log_best_programs:
+            now = datetime.datetime.now()
+            print("[ {} ]".format(now.strftime("%Y-%m-%d %H:%M:%S")))
+
             self.logger.info(f'% NEW BEST PROG {self.total_programs}:')
             self.logger.info(prog_stats.code)
             self.logger.info(format_conf_matrix(conf_matrix))
@@ -206,6 +210,9 @@ class Stats:
         else:
             self.logger.info('NO PROGRAMS FOUND')
             return
+
+        now = datetime.datetime.now()
+        print("[ {} ]".format(now.strftime("%Y-%m-%d %H:%M:%S")))
 
         self.logger.info(f'\n% BEST PROG {self.total_programs}:')
         self.logger.info(prog_stats.code)
