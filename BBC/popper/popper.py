@@ -118,19 +118,19 @@ def build_rules(settings, stats, constrainer, tester, program, before, min_claus
 PROG_KEY = 'prog'
 
 def calc_score(conf_matrix):
-    # tp, fn, tn, fp = conf_matrix
-    # return tp + tn
-
-    beta = parse_args().beta
     tp, fn, tn, fp = conf_matrix
-    if (tp + fp == 0 or tp + fn == 0):
-        return 0
-    precision = tp / (tp + fp)
-    recall = tp / (tp + fn)
-    if ((((beta**2 * precision) + recall)) == 0):
-        return 0
-    f_score = (1 + beta**2) * ((precision * recall) / ((beta**2 * precision) + recall))
-    return f_score
+    return tp + tn
+
+    # beta = parse_args().beta
+    # tp, fn, tn, fp = conf_matrix
+    # if (tp + fp == 0 or tp + fn == 0):
+    #     return 0
+    # precision = tp / (tp + fp)
+    # recall = tp / (tp + fn)
+    # if ((((beta**2 * precision) + recall)) == 0):
+    #     return 0
+    # f_score = (1 + beta**2) * ((precision * recall) / ((beta**2 * precision) + recall))
+    # return f_score
 
 def popper(settings, stats):
     solver = ClingoSolver(settings)
