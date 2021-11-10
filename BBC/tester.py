@@ -48,12 +48,12 @@ def main():
                 tn += 1
 
         if (tp + fp == 0):
-            precision = 0
+            precision = -1
         else:
             precision = tp / (tp + fp)
 
         if (tp + fn == 0):
-            recall = 0
+            recall = -1
         else:
             recall = tp / (tp + fn)
 
