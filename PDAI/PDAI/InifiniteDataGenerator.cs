@@ -26,14 +26,7 @@ namespace PDAI
             var actionPath = actionsPaths[actionToRunOn];
             Logger.Log("Generating data for action: " + Path.GetFileName(actionPath));
 
-            var threads = new List<Task>();
-            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[3], beta, maxRunTime, minVars, forward, 0)));
-            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[2], beta, maxRunTime, minVars, forward, 1)));
-            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[1], beta, maxRunTime, minVars, forward, 2)));
-            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[0], beta, maxRunTime, minVars, forward, 3)));
-            threads.Add(Task.Run(() => GenerateForActionRunForEver(rootBbcFolder, actionsPaths[4], beta, maxRunTime, minVars, forward, 4)));
-            Task.WaitAll(threads.ToArray());
-            //GenerateForActionRunForEver(rootBbcFolder, actionPath, beta, maxRunTime, minVars, forward);
+            GenerateForActionRunForEver(rootBbcFolder, actionPath, beta, maxRunTime, minVars, forward, 0);
             Console.WriteLine("");
         }
 
