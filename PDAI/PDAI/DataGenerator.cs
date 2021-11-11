@@ -94,7 +94,7 @@ namespace PDAI
                 Process process = new();
                 process.StartInfo.FileName = SystemExtensions.GetPythonPath();
                 process.StartInfo.Arguments = testerPath + " " + trainPath;
-                StartProcess(process, true);
+                StartProcess(process, false);
             });
         }
 

@@ -1,4 +1,5 @@
-﻿using Shared.Models;
+﻿using Shared.ExtensionMethods;
+using Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -163,7 +164,7 @@ namespace PopperWriter
 
             for (int i = 0; i < parameters.Count; i++)
             {
-                decl += parameters[i].Type + ",";
+                decl += parameters[i].Type.FirstCharToLowerCase() + ",";
             }
             decl += "problem";
 

@@ -35,5 +35,15 @@ namespace PddlParser.Internal
 
             File.WriteAllLines(filepath, lines);
         }
+
+        public void AddRecursion(string filepath)
+        {
+            File.AppendAllText(filepath, "enable_recursion." + Environment.NewLine);
+        }
+
+        public void AddPredicateInvension(string filepath)
+        {
+            File.AppendAllText(filepath, "enable_pi." + Environment.NewLine);
+        }
     }
 }
