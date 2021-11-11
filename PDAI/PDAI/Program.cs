@@ -23,17 +23,15 @@ namespace PDAI
             double splitPercent = _settings.SplitPercent;
             int numOfChunks = _settings.NumChunks;
             bool runInfinite = _settings.RunInfinite;
-            int actionToRun = 1;
             int maxRuntime = _settings.MaxRuntime;
             int beta = _settings.Beta;
-            int forward = int.MaxValue;
 
             var domain = Parse(inputFolderPath, maxProblems);
             domain.Name = Path.GetFileName(inputFolderPath);
             Write(outputFolderPath, domain, splitPercent, numOfChunks);
 
             if (runInfinite)
-                new InifiniteDataGenerator().GenerateData(outputFolderPath, domain.Name, beta, maxRuntime, actionToRun, Popper.MinVars, forward);
+                new InifiniteDataGenerator().GenerateData();
             else
                 new DataGenerator().GenerateData(outputFolderPath, domain.Name, beta, maxRuntime);
         }

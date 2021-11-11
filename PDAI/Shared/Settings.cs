@@ -1,6 +1,7 @@
 ﻿using NDesk.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,20 @@ namespace Shared
         public int MaxRuntime { get; set; } = 1 * 4 * 60 * 1000;
         public int Beta { get; set; } = 2;
         public int Iterations { get; set; } = 1;
+
+        // Dynamic
+        public List<string> ActionFolders => Directory.GetDirectories(Path.Combine(TargetFolder, "domainfiles", Domain)).ToList();
+        public string Domain => Path.GetFileName(DomainFolder);
+        public string ActionToRunPath
+        {
+            get
+            {
+                var res = ActionFolders.FirstOrDefault(x => Path.GetFileName(x).ToLower().Equals(ActionToRun.ToLower()));
+                if (string.IsNullOrWhiteSpace(res))
+                    throw new ArgumentOutOfRangeException("Unable to finde the action: " + ActionToRun);
+                return res;
+            }
+        }
 
         public Settings(string[] args)
         {
