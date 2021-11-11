@@ -11,46 +11,22 @@ namespace PDAI
 {
     class Program
     {
+        static Settings _settings => Settings.Current;
+
         static void Main(string[] args)
         {
             Settings.Current = new Settings(args);
 
-            string inputFolderPath = "";
-            string outputFolderPath = "";
-            int maxProblems = int.MaxValue;
-            double splitPercent = 0.2;
-            int numOfChunks = 1;
-            bool runInfinite = false;
-            int actionToRun = 0;
-            int maxRuntime = 1 * 4 * 60 * 1000; // hour, min, sec, ms
-            int beta = 2;
+            string inputFolderPath = _settings.DomainFolder;
+            string outputFolderPath = _settings.TargetFolder;
+            int maxProblems = _settings.MaxProblems;
+            double splitPercent = _settings.SplitPercent;
+            int numOfChunks = _settings.NumChunks;
+            bool runInfinite = _settings.RunInfinite;
+            int actionToRun = 1;
+            int maxRuntime = _settings.MaxRuntime;
+            int beta = _settings.Beta;
             int forward = int.MaxValue;
-            if (args.Length > 1)
-            {
-                inputFolderPath = args[0];
-                outputFolderPath = args[1];
-            }
-            if(args.Length > 2)
-            {
-                maxProblems = int.Parse(args[2]);
-                if (maxProblems == -1)
-                    maxProblems = int.MaxValue;
-            }
-            if (args.Length > 3)
-                splitPercent = double.Parse(args[3]);
-            if (args.Length > 4)
-                numOfChunks = int.Parse(args[4]);
-            if (args.Length > 5)
-                runInfinite = int.Parse(args[5]) == 1;
-            if (args.Length > 6)
-                actionToRun = int.Parse(args[6]);
-            if (args.Length > 7)
-                maxRuntime = int.Parse(args[7]);
-            if (args.Length > 8)
-                beta = int.Parse(args[8]);
-            if (args.Length > 9)
-                forward = int.Parse(args[9]);
-
 
             var domain = Parse(inputFolderPath, maxProblems);
             domain.Name = Path.GetFileName(inputFolderPath);

@@ -12,16 +12,16 @@ namespace Shared
         public static Settings Current;
 
         public bool ShowHelp { get; set; }
-        public string DomainFolder { get; set; }    // d    --domain-folder
-        public string TargetFolder { get; set; }    // t
-        public int MaxProblems { get; set; }        // p
-        public double SplitPercent { get; set; }    // s
-        public int NumChunks { get; set; }          // c
-        public bool RunInfinite { get; set; }       // r
-        public string ActionToRun { get; set; }     // a
-        public int MaxRuntime { get; set; }         // R
-        public int Beta { get; set; }               // b
-        public int Iterations { get; set; }         // i
+        public string DomainFolder { get; set; } 
+        public string TargetFolder { get; set; } 
+        public int MaxProblems { get; set; } = int.MaxValue;
+        public double SplitPercent { get; set; } = 0.2;
+        public int NumChunks { get; set; } = 1;
+        public bool RunInfinite { get; set; }
+        public string ActionToRun { get; set; }
+        public int MaxRuntime { get; set; } = 1 * 4 * 60 * 1000;
+        public int Beta { get; set; } = 2;
+        public int Iterations { get; set; } = 1;
 
         public Settings(string[] args)
         {
