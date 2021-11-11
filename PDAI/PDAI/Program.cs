@@ -2,6 +2,7 @@
 using System.IO;
 using Parser.Pddl;
 using PddlParser.Internal;
+using Shared;
 using Shared.ExtensionMethods;
 using Shared.Models;
 using Writer.Popper;
@@ -12,6 +13,8 @@ namespace PDAI
     {
         static void Main(string[] args)
         {
+            Settings.Current = new Settings(args);
+
             string inputFolderPath = "";
             string outputFolderPath = "";
             int maxProblems = int.MaxValue;
