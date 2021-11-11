@@ -16,18 +16,69 @@ namespace PDAI
     {
         public void GenerateData(string rootBbcFolder, string domainName, int beta, int maxRuntime)
         {
-            Console.WriteLine("");
+            /*Console.WriteLine("");
             Logger.Log("Generating Data");
             var actionsPaths = SystemExtensions.GetActionFolders(rootBbcFolder, domainName);
 
             var biasEnumerator = new BiasBodyEnumerator();
-            int iterations = 6;
+            int iterations = 1;
 
             foreach (var actionPath in actionsPaths)
             {
                 Logger.Log("Generating data for action: " + Path.GetFileName(actionPath));
                 GenerateForAction(rootBbcFolder, actionPath, biasEnumerator, iterations, beta, maxRuntime);
                 Console.WriteLine("");
+            }*/
+
+            Console.WriteLine("");
+            Logger.Log("Generating Data");
+
+            List<string> actionsPaths = SystemExtensions.GetActionFolders(rootBbcFolder, domainName);
+            List<string> relevantActions = actionsPaths.Where(a => Path.GetFileName(a).StartsWith("move_b_to_b")).ToList();
+
+            ConstraintHelper ch = new();
+
+            List<Task> threads = new();
+            for (int i = 0; i < relevantActions.Count; i++)
+            {
+                List<string> trainingFolders = SystemExtensions.GetTrainingFolders(relevantActions[i]);
+                foreach (string trainingFolder in trainingFolders)
+                {
+                    string biasPath = Path.Combine(trainingFolder, "bias.pl");
+                    ch.ChangeConstraint(biasPath, 8, 8, 8);
+                    if (i == 0)
+                    {
+                        ch.AddRecursion(biasPath);
+                        ch.AddPredicateInvension(biasPath);
+                    }
+                    else if (i == 1)
+                        ch.AddRecursion(biasPath);
+                    else if (i == 2)
+                        ch.AddPredicateInvension(biasPath);
+
+                    threads.Add(RunPopper(trainingFolder, rootBbcFolder, beta, maxRuntime));
+                }
+            }
+            Task.WaitAll(threads.ToArray());
+
+            List<Task> testThreads = new();
+            for (int i = 0; i < relevantActions.Count; i++)
+            {
+                List<string> trainingFolders = SystemExtensions.GetTrainingFolders(relevantActions[i]);
+                foreach (string trainingFolder in trainingFolders)
+                {
+                    testThreads.Add(RunTest(rootBbcFolder, trainingFolder));
+                }
+            }
+            Task.WaitAll(testThreads.ToArray());
+
+            for (int i = 0; i < relevantActions.Count; i++)
+            {
+                List<string> trainingFolders = SystemExtensions.GetTrainingFolders(relevantActions[i]);
+                foreach (string trainingFolder in trainingFolders)
+                {
+                    TempFileManager.SaveStats(rootBbcFolder, trainingFolder);
+                }
             }
         }
 
