@@ -45,20 +45,22 @@ namespace Shared
                 { "h|help", "Prints help to the console", v => ShowHelp = true },
                 { "d|domain-folder=", "Path to the input domain folder", v => DomainFolder = v },
                 { "t|target-folder=", "Path to the output folder", v => TargetFolder = v },
-                { "p|max-problems=", "Max number of ms each iteration can run for", v => MaxProblems = int.Parse(v) },
-                { "s|split-percent=", "Percentage of problems used for testing", v => SplitPercent = double.Parse(v) },
-                { "c|chunks=", "Number of chunks to split the training data into", v => NumChunks = int.Parse(v) },
+                { "p|max-problems=", "Max number of ms each iteration can run for: " + MaxProblems, v => MaxProblems = int.Parse(v) },
+                { "s|split-percent=", "Percentage of problems used for testing: " + SplitPercent, v => SplitPercent = double.Parse(v) },
+                { "c|chunks=", "Number of chunks to split the training data into: " + NumChunks, v => NumChunks = int.Parse(v) },
                 { "r|run-infinite", "Should it run the 'Infinite' data generator", v => RunInfinite = true },
                 { "a|action", "Name of the action to run", v => ActionToRun = v },
-                { "R|max-runtime=", "Max ms each iteration can run", v => MaxRuntime = int.Parse(v) },
-                { "b|beta=", "Value used in the F-Score", v => Beta = int.Parse(v) },
-                { "i|iterations=", "Number of iterations", v => Iterations = int.Parse(v) },
+                { "R|max-runtime=", "Max ms each iteration can run: " + MaxRuntime, v => MaxRuntime = int.Parse(v) },
+                { "b|beta=", "Value used in the F-Score: " + Beta, v => Beta = int.Parse(v) },
+                { "i|iterations=", "Number of iterations: " + Iterations, v => Iterations = int.Parse(v) },
             };
             try
             {
                 var extra = p.Parse(args);
                 if (ShowHelp)
                     p.WriteOptionDescriptions(Console.Out);
+                if (!Directory.Exists(DomainFolder))
+                    throw new ArgumentException("Unable to find domain folder");
             }
             catch (OptionException e)
             {
