@@ -45,18 +45,26 @@ namespace PDAI
                 foreach (string trainingFolder in trainingFolders)
                 {
                     string biasPath = Path.Combine(trainingFolder, "bias.pl");
+                    string name = "default";
                     ch.ChangeConstraint(biasPath, 8, 8, 8);
                     if (i == 0)
                     {
                         ch.AddRecursion(biasPath);
                         ch.AddPredicateInvension(biasPath);
+                        name = "both";
                     }
                     else if (i == 1)
+                    {
                         ch.AddRecursion(biasPath);
+                        name = "recursion";
+                    }
                     else if (i == 2)
+                    {
                         ch.AddPredicateInvension(biasPath);
+                        name = "predicate invension";
+                    }
 
-                    threads.Add(RunPopper(trainingFolder, rootBbcFolder, beta, maxRuntime));
+                    threads.Add(RunPopper(trainingFolder, rootBbcFolder, beta, maxRuntime, name));
                 }
             }
             Task.WaitAll(threads.ToArray());
@@ -115,7 +123,7 @@ namespace PDAI
             Task.WaitAll(threads.ToArray());
         }
 
-        public async Task RunPopper(string trainPath, string rootPath, int beta, int maxRuntime)
+        public async Task RunPopper(string trainPath, string rootPath, int beta, int maxRuntime, string name = "")
         {
             await Task.Run(() =>
             {
@@ -125,6 +133,7 @@ namespace PDAI
                 popperProcess.StartInfo.FileName = SystemExtensions.GetPythonPath();
                 popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta + " --stats --info";
                 StartProcess(popperProcess, false, maxRuntime);
+                SystemExtensions.PrintProcessName(name, popperProcess);
             });
         }
 
