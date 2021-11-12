@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -10,6 +11,13 @@ namespace Shared.ExtensionMethods
 {
     public static class SystemExtensions
     {
+        #region Process
+        public static void PrintProcessName(string identifier, Process process)
+        {
+            Logger.Log("'" + identifier + "' has id: " + process.Id);
+        }
+        #endregion
+
         #region Paths
         public static List<string> GetActionFolders(string rootBbcFolder, string domainName)
         {
