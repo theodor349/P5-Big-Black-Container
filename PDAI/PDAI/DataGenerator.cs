@@ -132,8 +132,7 @@ namespace PDAI
                 Process popperProcess = new();
                 popperProcess.StartInfo.FileName = SystemExtensions.GetPythonPath();
                 popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta + " --stats --info";
-                StartProcess(popperProcess, false, maxRuntime);
-                SystemExtensions.PrintProcessName(name, popperProcess);
+                StartProcess(popperProcess, false, maxRuntime, name);
             });
         }
 
@@ -158,10 +157,11 @@ namespace PDAI
             });
         }
 
-        private static void StartProcess(Process process, bool noConsole, int maxRuntime = int.MaxValue)
+        private static void StartProcess(Process process, bool noConsole, int maxRuntime = int.MaxValue, string name = "")
         {
             process.StartInfo.CreateNoWindow = noConsole;
             process.Start();
+            SystemExtensions.PrintProcessName(name, process);
             process.WaitForExit(maxRuntime);
             process.Kill();
         }
