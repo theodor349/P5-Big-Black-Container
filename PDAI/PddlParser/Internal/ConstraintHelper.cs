@@ -21,13 +21,19 @@ namespace PddlParser.Internal
         {
             var lines = File.ReadLines(filepath).ToList();
 
-            var oldMaxClauses = lines[0].FirstOrDefault(c => char.IsDigit(c));
-            var oldMaxBody = lines[1].FirstOrDefault(c => char.IsDigit(c));
-            var oldMaxVars = lines[2].FirstOrDefault(c => char.IsDigit(c));
+            var oldMaxClauses = new string(lines[0].SkipWhile(c => !char.IsDigit(c))
+                         .TakeWhile(c => char.IsDigit(c))
+                         .ToArray());
+            var oldMaxBody = new string(lines[1].SkipWhile(c => !char.IsDigit(c))
+                         .TakeWhile(c => char.IsDigit(c))
+                         .ToArray());
+            var oldMaxVars = new string(lines[2].SkipWhile(c => !char.IsDigit(c))
+                         .TakeWhile(c => char.IsDigit(c))
+                         .ToArray());
 
-            int incremented_Clauses = (int)char.GetNumericValue(oldMaxClauses) + increment_max_clauses;
-            int incremented_Body = (int)char.GetNumericValue(oldMaxBody) + increment_max_body;
-            int incremented_Vars = (int)char.GetNumericValue(oldMaxVars) + increment_max_vars;
+            int incremented_Clauses = Int32.Parse(oldMaxClauses) + increment_max_clauses;
+            int incremented_Body = Int32.Parse(oldMaxBody) + increment_max_body;
+            int incremented_Vars = Int32.Parse(oldMaxVars) + increment_max_vars;
 
             lines[0] = "max_clauses(" + incremented_Clauses + ").";
             lines[1] = "max_body(" + incremented_Body + ").";

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using PDAI.Helpers;
 using PddlParser.Internal;
@@ -69,7 +67,6 @@ namespace PDAI
             await Task.Run(() =>
             {
                 string popperPath = Path.Combine(rootPath, "popper/popper.py");
-
                 Process popperProcess = new();
                 popperProcess.StartInfo.FileName = SystemExtensions.GetPythonPath();
                 popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta + " --stats --info";
