@@ -18,7 +18,8 @@ namespace PddlParser.Internal
 
             foreach (Match predicateLine in predicateLines) 
             {
-                res.Add(new Predicate(predicateLine.Value, entities));
+                var pred = new Predicate(predicateLine.Value, entities);
+                res.Add(pred);
             }
             return res;
         }

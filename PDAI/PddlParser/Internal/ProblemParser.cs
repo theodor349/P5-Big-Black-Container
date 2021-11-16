@@ -49,7 +49,9 @@ namespace Parser.Pddl.Internal
 
             foreach (Match match in opReg.Matches(stateLine))
             {
-                res.Add(new PredicateOperator(match.Value));
+                PredicateOperator predicate = new PredicateOperator(match.Value);
+                if(!predicate.Name.Equals("=")) // We do not need to assign values
+                    res.Add(predicate);
             }
             return res;
         }
@@ -85,7 +87,8 @@ namespace Parser.Pddl.Internal
             var lines = File.ReadAllLines(path);
             foreach(string line in lines) 
             {
-                res.Add(new ActionOperator(line));
+                ActionOperator action = new ActionOperator(line);
+                res.Add(action);
             }
 
             return res;

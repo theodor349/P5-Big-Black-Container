@@ -26,6 +26,8 @@ namespace Parser.Pddl.Tests
             lines.Add("(ontable ?x)");
             lines.Add("(:predicates (clear ?x)");
             lines.Add("(ontable ?x)");
+            lines.Add("; ; Family members will be used in descending order");
+            lines.Add("; ; the max is the number of member at present");
             lines.Add("(on ");
             for (int i = 0; i < amount; i++)
                 lines.Add("?var" + i);
