@@ -21,7 +21,8 @@ namespace Shared.Models
 
             for (int i = 1; i < words.Length; i++)
             {
-                Attributes.Add(words[i].FirstCharToLowerCase());
+                if(!string.IsNullOrWhiteSpace(words[i]))
+                    Attributes.Add(words[i].FirstCharToLowerCase());
             }
         }
 
