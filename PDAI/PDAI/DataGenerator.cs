@@ -37,6 +37,7 @@ namespace PDAI
             List<string> relevantActions = actionsPaths.Where(a => Path.GetFileName(a).StartsWith("move_b_to_b")).ToList();
 
             ConstraintHelper ch = new();
+            Console.WriteLine("yea bitch " + relevantActions.Count);
 
             List<Task> threads = new();
             for (int i = 0; i < relevantActions.Count; i++)
@@ -47,7 +48,11 @@ namespace PDAI
                     string biasPath = Path.Combine(trainingFolder, "bias.pl");
                     string name = "default";
                     ch.ChangeConstraint(biasPath, 8, 8, 8);
-                    if (i == 0)
+
+                    ch.AddPredicateInvension(biasPath);
+                    name = "predicate invension";
+
+                    /*if (i == 0)
                     {
                         ch.AddRecursion(biasPath);
                         ch.AddPredicateInvension(biasPath);
@@ -62,7 +67,7 @@ namespace PDAI
                     {
                         ch.AddPredicateInvension(biasPath);
                         name = "predicate invension";
-                    }
+                    }*/
 
                     threads.Add(RunPopper(trainingFolder, rootBbcFolder, beta, maxRuntime, name));
                 }

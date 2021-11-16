@@ -33,12 +33,9 @@ namespace Writer.Popper
             Directory.CreateDirectory(folderPath);
 
             List<Task> threads = new();
-            for (int i = 1; i <= 4; i++)
+            foreach (var a in domain.Actions)
             {
-                foreach (var a in domain.Actions)
-                {
-                    threads.Add(PrintAction(folderPath, testPercent, a, domain, chunks, testProblems, i));
-                }
+                threads.Add(PrintAction(folderPath, testPercent, a, domain, chunks, testProblems));
             }
             Task.WaitAll(threads.ToArray());
         }
@@ -61,7 +58,7 @@ namespace Writer.Popper
             return chunks;
         }
 
-        private static Task PrintAction(string folderPath, double testPercent, Shared.Models.Action action, Domain domain, List<List<Problem>> chunks, List<Problem> testProblems, int actionNumber)
+        private static Task PrintAction(string folderPath, double testPercent, Shared.Models.Action action, Domain domain, List<List<Problem>> chunks, List<Problem> testProblems)
         {
             BackgroundGenerator bgGenerator = new();
             BiasGenerator biasGenerator = new();
@@ -69,7 +66,7 @@ namespace Writer.Popper
 
             return Task.Run(() =>
             {
-                string path = Path.Combine(folderPath, action.Name + actionNumber);
+                string path = Path.Combine(folderPath, action.Name);
                 Directory.CreateDirectory(path);
 
                 foreach (List<Problem> chunk in chunks)
