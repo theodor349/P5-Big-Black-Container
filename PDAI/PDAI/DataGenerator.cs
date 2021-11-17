@@ -19,11 +19,15 @@ namespace PDAI
             var actionsPaths = SystemExtensions.GetActionFolders(rootBbcFolder, domainName);
 
             var biasEnumerator = new BiasBodyEnumerator();
-            int iterations = 6;
+            int iterations = 1;
 
             foreach (var actionPath in actionsPaths)
             {
-                Logger.Log("Generating data for action: " + Path.GetFileName(actionPath));
+                string actionName = Path.GetFileName(actionPath);
+                if (actionName != "ag__finish_round_renew")
+                    continue;
+
+                Logger.Log("Generating data for action: " + actionName);
                 GenerateForAction(rootBbcFolder, actionPath, biasEnumerator, iterations, beta, maxRuntime);
                 Console.WriteLine("");
             }
@@ -48,18 +52,25 @@ namespace PDAI
 
             foreach (var trainingFolder in trainingFolders)
             {
-                var biasIncrement = biasEnumerator.GetIncrement(iteration);
-                ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), biasIncrement.Clause, biasIncrement.Body, biasIncrement.Var);
+                //var biasIncrement = biasEnumerator.GetIncrement(iteration);
+                //ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), biasIncrement.Clause, biasIncrement.Body, biasIncrement.Var);
+                ch.ChangeConstraint(Path.Combine(trainingFolder, "bias.pl"), 6, 6, 6);
             }
         }
 
         private void Train(string actionFolderPath, string rootPath, int beta, int maxRuntime)
         {
             var trainingFolders = SystemExtensions.GetTrainingFolders(actionFolderPath);
-            var threads = new List<Task>();
+            /*var threads = new List<Task>();
             foreach (string trainingFolder in trainingFolders)
                 threads.Add(RunPopper(trainingFolder, rootPath, beta, maxRuntime));
-            Task.WaitAll(threads.ToArray());
+            Task.WaitAll(threads.ToArray());*/
+            foreach (string trainingFolder in trainingFolders)
+            {
+                Logger.Log("Now training: " + trainingFolder);
+                Task trainTask = RunPopper(trainingFolder, rootPath, beta, maxRuntime);
+                trainTask.Wait(maxRuntime);
+            }
         }
 
         public async Task RunPopper(string trainPath, string rootPath, int beta, int maxRuntime)

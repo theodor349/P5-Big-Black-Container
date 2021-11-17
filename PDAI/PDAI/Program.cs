@@ -29,11 +29,12 @@ namespace PDAI
             var domain = Parse(inputFolderPath, maxProblems);
             domain.Name = Path.GetFileName(inputFolderPath);
             Write(outputFolderPath, domain, splitPercent, numOfChunks);
+            string domainName = Path.GetFileName(inputFolderPath);
 
             if (runInfinite)
                 new InifiniteDataGenerator().GenerateData();
             else
-                new DataGenerator().GenerateData(outputFolderPath, domain.Name, beta, maxRuntime);
+                new DataGenerator().GenerateData(outputFolderPath, domainName, beta, maxRuntime);
         }
 
         private static void Write(string outputFolderPath, Domain domain, double splitPercent, int numOfChunks)
