@@ -24,7 +24,7 @@ namespace PDAI
             foreach (var actionPath in actionsPaths)
             {
                 string actionName = Path.GetFileName(actionPath);
-                if (actionName != "ag__finish_round_renew")
+                if (actionName != "load")
                     continue;
 
                 Logger.Log("Generating data for action: " + actionName);
@@ -54,7 +54,7 @@ namespace PDAI
             {
                 //var biasIncrement = biasEnumerator.GetIncrement(iteration);
                 //ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), biasIncrement.Clause, biasIncrement.Body, biasIncrement.Var);
-                ch.ChangeConstraint(Path.Combine(trainingFolder, "bias.pl"), 6, 6, 6);
+                ch.ChangeConstraint(Path.Combine(trainingFolder, "bias.pl"), 8, 8, 8);
             }
         }
 
@@ -65,11 +65,22 @@ namespace PDAI
             foreach (string trainingFolder in trainingFolders)
                 threads.Add(RunPopper(trainingFolder, rootPath, beta, maxRuntime));
             Task.WaitAll(threads.ToArray());*/
+
+            for (int i = 0; i < trainingFolders.Count; i++)
+            {
+                Logger.Log("Now training: " + trainingFolders[i]);
+                Logger.Log("Now training: " + trainingFolders[i + 1]);
+                Task trainTask1 = RunPopper(trainingFolders[i], rootPath, beta, maxRuntime);
+                Task trainTask2 = RunPopper(trainingFolders[i + 1], rootPath, beta, maxRuntime);
+                Task.WaitAll(new Task[] { trainTask1, trainTask2});
+
+            }
+
             foreach (string trainingFolder in trainingFolders)
             {
                 Logger.Log("Now training: " + trainingFolder);
                 Task trainTask = RunPopper(trainingFolder, rootPath, beta, maxRuntime);
-                trainTask.Wait(maxRuntime);
+                trainTask.Wait();
             }
         }
 
