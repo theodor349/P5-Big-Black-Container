@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Parser.Pddl;
 using PddlParser.Internal;
 using Shared;
@@ -26,9 +27,14 @@ namespace PDAI
             int maxRuntime = _settings.MaxRuntime;
             int beta = _settings.Beta;
 
-            var domain = Parse(inputFolderPath, maxProblems);
-            domain.Name = Path.GetFileName(inputFolderPath);
-            Write(outputFolderPath, domain, splitPercent, numOfChunks);
+            var folders = Directory.GetDirectories((new FileInfo(_settings.DomainFolder)).Directory.FullName).Where(x => !new FileInfo(x).Name.Equals(".git")).ToList();
+            Domain domain = null;
+            foreach (var domainFolder in folders)
+            {
+                domain = Parse(domainFolder, maxProblems);
+                domain.Name = Path.GetFileName(inputFolderPath);
+                Write(outputFolderPath, domain, splitPercent, numOfChunks);
+            }
 
             if (runInfinite)
                 new InifiniteDataGenerator().GenerateData();
