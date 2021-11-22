@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Parser.Pddl;
+using PDAI.Helpers;
 using PddlParser.Internal;
 using Shared;
 using Shared.ExtensionMethods;
@@ -39,7 +40,7 @@ namespace PDAI
             if (runInfinite)
                 new InifiniteDataGenerator().GenerateData();
             else
-                new DataGenerator().GenerateData(outputFolderPath, domain.Name, beta, maxRuntime);
+                new AllActionsDataGenerator(Settings.Current).runSettings();
         }
 
         private static void Write(string outputFolderPath, Domain domain, double splitPercent, int numOfChunks)
