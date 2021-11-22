@@ -33,7 +33,7 @@ namespace PDAI
             foreach (var domainFolder in folders)
             {
                 domain = Parse(domainFolder, maxProblems);
-                domain.Name = Path.GetFileName(inputFolderPath);
+                domain.Name = Path.GetFileName(domainFolder);
                 Write(outputFolderPath, domain, splitPercent, numOfChunks);
             }
 
