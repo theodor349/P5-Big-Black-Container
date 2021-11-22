@@ -45,7 +45,10 @@ namespace PDAI
 
         private static void Write(string outputFolderPath, Domain domain, double splitPercent, int numOfChunks)
         {
-            outputFolderPath = Path.Combine(outputFolderPath, "domainfiles", domain.Name);
+            Console.WriteLine("Domain.Name: " + domain.Name);
+            outputFolderPath = Path.Combine(outputFolderPath, "domainfiles");
+            outputFolderPath = Path.Combine(outputFolderPath, domain.Name);
+            Console.WriteLine(outputFolderPath);
 
             var writer = new Popper();
             writer.Write(domain, outputFolderPath, splitPercent, numOfChunks);
