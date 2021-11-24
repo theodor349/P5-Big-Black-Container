@@ -32,8 +32,10 @@ namespace PDAI
             Domain domain = null;
             foreach (var domainFolder in folders)
             {
+                string name = Path.GetFileName(domainFolder);
+                Console.WriteLine("Domain.Name: " + name);
                 domain = Parse(domainFolder, maxProblems);
-                domain.Name = Path.GetFileName(domainFolder);
+                domain.Name = name;
                 Write(outputFolderPath, domain, splitPercent, numOfChunks);
             }
 
@@ -53,7 +55,6 @@ namespace PDAI
 
         private static void Write(string outputFolderPath, Domain domain, double splitPercent, int numOfChunks)
         {
-            Console.WriteLine("Domain.Name: " + domain.Name);
             outputFolderPath = Path.Combine(outputFolderPath, "domainfiles");
             outputFolderPath = Path.Combine(outputFolderPath, domain.Name);
             Console.WriteLine(outputFolderPath);
