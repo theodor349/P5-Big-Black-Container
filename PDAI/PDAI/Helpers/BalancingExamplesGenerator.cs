@@ -38,11 +38,13 @@ namespace PDAI.Helpers
             int numOfPositiveExamples = CountPositiveExamples(filename);
             List<string> examples = GetExampleFile(filename);
 
-            //int numOfNegativeExamples = examples.Count - numOfPositiveExamples;
+            int numOfNegativeExamples = examples.Count - numOfPositiveExamples;
 
-            foreach (var example in examples)
+            while(numOfPositiveExamples < numOfNegativeExamples)
             {
-                examples.RemoveAll(e => e.StartsWith("neg") && examples.Count != numOfPositiveExamples);
+                int index = new Random().Next(0, examples.Count-1);
+
+                examples.RemoveAt(index);
             }
 
             return examples;
