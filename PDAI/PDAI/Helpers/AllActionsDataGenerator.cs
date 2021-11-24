@@ -23,34 +23,19 @@ namespace PDAI.Helpers
 
         public void runSettings()
         {
-            List<string> Actions = GetAllActions();
-            var threads = new List<Task>();
+            List<string> actions = GetAllActions();
             while (true)
             {
-                foreach (var action in Actions)
-                {
+                foreach (var action in actions)
                     SetInput(action);
-                }
-                foreach (var action in Actions)
-                {
-                    threads.Add(RunAction(action));
-                }
-                Task.WaitAll(threads.ToArray());
-                foreach (var action in Actions)
+                SystemExtensions.RunnInParallel(actions, x => RunSplit(x));
+                foreach (var action in actions)
                 {
                     Test(action);
                     SaveResults(action);
                 }
                 iteration++;
             }
-        }
-
-        private async Task RunAction(string action)
-        {
-            await Task.Run(() =>
-            {
-                RunSplit(action);
-            });
         }
 
         private void RunSplit(string action)
@@ -73,31 +58,22 @@ namespace PDAI.Helpers
         private void Train(string action)
         {
             var trainingFolders = SystemExtensions.GetTrainingFolders(action);
-            var threads = new List<Task>();
-            foreach (string trainingFolder in trainingFolders)
-                threads.Add(RunPopper(trainingFolder, _settings.TargetFolder, _settings.Beta, _settings.MaxRuntime));
-            Task.WaitAll(threads.ToArray());
+            SystemExtensions.RunnInParallel(trainingFolders, x => RunPopper(x, _settings.TargetFolder, _settings.Beta, _settings.MaxRuntime));
         }
 
         private void Test(string action)
         {
-            var threads = new List<Task>();
             var trainingFolders = SystemExtensions.GetTrainingFolders(action);
-            foreach (var trainingFolder in trainingFolders)
-                threads.Add(RunTest(trainingFolder));
-            Task.WaitAll(threads.ToArray());
+            SystemExtensions.RunnInParallel(trainingFolders, x => RunTest(x));
         }
 
-        private async Task RunTest(string trainPath)
+        private void RunTest(string trainPath)
         {
-            await Task.Run(() =>
-            {
-                string testerPath = Path.Combine(_settings.TargetFolder, "tester.py");
-                Process process = new();
-                process.StartInfo.FileName = SystemExtensions.GetPythonPath();
-                process.StartInfo.Arguments = testerPath + " " + trainPath;
-                StartProcess(process, false);
-            });
+            string testerPath = Path.Combine(_settings.TargetFolder, "tester.py");
+            Process process = new();
+            process.StartInfo.FileName = SystemExtensions.GetPythonPath();
+            process.StartInfo.Arguments = testerPath + " " + trainPath;
+            StartProcess(process, false);
         }
 
         private void SaveResults(string action)
@@ -107,19 +83,16 @@ namespace PDAI.Helpers
                 TempFileManager.SaveStats(_settings.TargetFolder, trainingFolder);
         }
 
-        private async Task RunPopper(string trainPath, string rootPath, int beta, int maxRuntime)
+        private void RunPopper(string trainPath, string rootPath, int beta, int maxRuntime)
         {
             if (beta == 0)
                 beta = GetDynamicBeta(trainPath);
 
-            await Task.Run(() =>
-            {
-                string popperPath = Path.Combine(rootPath, "popper/popper.py");
-                Process popperProcess = new();
-                popperProcess.StartInfo.FileName = SystemExtensions.GetPythonPath();
-                popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta + " --stats --info";
-                StartProcess(popperProcess, false, maxRuntime);
-            });
+            string popperPath = Path.Combine(rootPath, "popper/popper.py");
+            Process popperProcess = new();
+            popperProcess.StartInfo.FileName = SystemExtensions.GetPythonPath();
+            popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta + " --stats --info";
+            StartProcess(popperProcess, false, maxRuntime);
         }
 
         private int GetDynamicBeta(string trainPath)
