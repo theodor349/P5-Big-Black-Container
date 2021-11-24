@@ -27,11 +27,20 @@ namespace PDAI.Helpers
             var threads = new List<Task>();
             while (true)
             {
-                foreach(var action in Actions)
+                foreach (var action in Actions)
+                {
+                    SetInput(action);
+                }
+                foreach (var action in Actions)
                 {
                     threads.Add(RunAction(action));
                 }
                 Task.WaitAll(threads.ToArray());
+                foreach (var action in Actions)
+                {
+                    Test(action);
+                    SaveResults(action);
+                }
                 iteration++;
             }
         }
@@ -46,10 +55,7 @@ namespace PDAI.Helpers
 
         private void RunSplit(string action)
         {
-            SetInput(action);
             Train(action);
-            Test(action);
-            SaveResults(action);
         }
 
         private void SetInput(string action)
@@ -60,7 +66,7 @@ namespace PDAI.Helpers
             foreach (var trainingFolder in trainingFolders)
             {
                 if (isFirstRun)
-                    ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 1);
+                    ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 2);
             }
         }
 
@@ -124,7 +130,7 @@ namespace PDAI.Helpers
 
         private int GetIterationBeta()
         {
-            return (int) (2 * Math.Pow(iteration + 1, 3.1451));
+            return (int) (2 * Math.Pow(iteration + 1, 3.4276));
         }
 
         private static int GetWeightedBeta(string trainPath)
