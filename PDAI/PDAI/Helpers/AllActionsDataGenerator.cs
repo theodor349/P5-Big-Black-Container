@@ -46,7 +46,7 @@ namespace PDAI.Helpers
 
         private void RunSplit(string action)
         {
-            //SetInput(action);
+            SetInput(action);
             Train(action);
             Test(action);
             SaveResults(action);
@@ -59,8 +59,8 @@ namespace PDAI.Helpers
 
             foreach (var trainingFolder in trainingFolders)
             {
-                if (!isFirstRun)
-                    ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 1, 1, 1);
+                if (isFirstRun)
+                    ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 1);
             }
         }
 
