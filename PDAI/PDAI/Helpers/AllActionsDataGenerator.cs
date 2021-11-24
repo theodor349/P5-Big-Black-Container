@@ -13,7 +13,8 @@ namespace PDAI.Helpers
     public class AllActionsDataGenerator
     {
         private readonly Settings _settings;
-        private bool isFirstRun = true;
+        private bool isFirstRun => iteration == 0;
+        private int iteration = 0;
 
         public AllActionsDataGenerator(Settings _settings)
         {
@@ -23,26 +24,29 @@ namespace PDAI.Helpers
         public void runSettings()
         {
             List<string> Actions = GetAllActions();
+            var threads = new List<Task>();
             while (true)
             {
                 foreach(var action in Actions)
                 {
-                    RunAction(action);
+                    threads.Add(RunAction(action));
                 }
-                isFirstRun = false;
+                Task.WaitAll(threads.ToArray());
+                iteration++;
             }
-
         }
 
-        private void RunAction(string action)
+        private async Task RunAction(string action)
         {
-            RunSplit(action);
-     
+            await Task.Run(() =>
+            {
+                RunSplit(action);
+            });
         }
 
         private void RunSplit(string action)
         {
-            SetInput(action);
+            //SetInput(action);
             Train(action);
             Test(action);
             SaveResults(action);
@@ -99,6 +103,9 @@ namespace PDAI.Helpers
 
         private async Task RunPopper(string trainPath, string rootPath, int beta, int maxRuntime)
         {
+            if (beta == 0)
+                beta = GetDynamicBeta(trainPath);
+
             await Task.Run(() =>
             {
                 string popperPath = Path.Combine(rootPath, "popper/popper.py");
@@ -107,6 +114,32 @@ namespace PDAI.Helpers
                 popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta + " --stats --info";
                 StartProcess(popperProcess, false, maxRuntime);
             });
+        }
+
+        private int GetDynamicBeta(string trainPath)
+        {
+            var beta = GetIterationBeta();
+            return beta;
+        }
+
+        private int GetIterationBeta()
+        {
+            return (int) (2 * Math.Pow(iteration + 1, 3.1451));
+        }
+
+        private static int GetWeightedBeta(string trainPath)
+        {
+            var lines = File.ReadAllLines(Path.Combine(trainPath, "exs.pl"));
+            int pos = 0;
+            int neg = 0;
+            foreach (var line in lines)
+            {
+                if (line.StartsWith("pos"))
+                    pos++;
+                else
+                    neg++;
+            }
+            return neg / pos;
         }
 
         private static void StartProcess(Process process, bool noConsole, int maxRuntime = int.MaxValue)
@@ -124,7 +157,11 @@ namespace PDAI.Helpers
 
         private List<string> GetActions(string domain)
         {
-            return Directory.GetDirectories(domain).ToList();
+            string[] actions = Directory.GetDirectories(domain);
+            if (_settings.ActionsToRun is null)
+                return actions.ToList();
+            else
+                return actions.Where(x => _settings.ActionsToRun.Contains(new FileInfo(x).Name.ToLower())).ToList();
         }
 
         private List<string> GetAllActions()

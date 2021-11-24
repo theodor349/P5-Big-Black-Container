@@ -28,7 +28,7 @@ namespace PDAI
             int maxRuntime = _settings.MaxRuntime;
             int beta = _settings.Beta;
 
-            var folders = Directory.GetDirectories((new FileInfo(_settings.DomainFolder)).Directory.FullName).Where(x => !new FileInfo(x).Name.Equals(".git")).ToList();
+            var folders = Directory.GetDirectories(_settings.DomainFolder).Where(x => !new FileInfo(x).Name.Equals(".git")).ToList();
             Domain domain = null;
             foreach (var domainFolder in folders)
             {
@@ -39,8 +39,16 @@ namespace PDAI
 
             if (runInfinite)
                 new InifiniteDataGenerator().GenerateData();
-            else
-                new AllActionsDataGenerator(Settings.Current).runSettings();
+
+            switch (_settings.Program)
+            {
+                case 0:
+                    new AllActionsDataGenerator(Settings.Current).runSettings();
+                    break;
+                default:
+                    Console.WriteLine("I do not know what program that is: " + _settings.Program);
+                    break;
+            }
         }
 
         private static void Write(string outputFolderPath, Domain domain, double splitPercent, int numOfChunks)
