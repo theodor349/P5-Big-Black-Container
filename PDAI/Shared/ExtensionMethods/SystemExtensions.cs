@@ -17,12 +17,15 @@ namespace Shared.ExtensionMethods
             Logger.Log("'" + identifier + "' has id: " + process.Id);
         }
 
-        public static void RunnInParallel<T>(List<T> inputs, Action<T> action)
+        public static void RunnInParallel<T>(List<T> inputs, Action<T> action, bool inParallel = true)
         {
             var threads = new List<Task>();
             foreach (var item in inputs)
             {
-                threads.Add(RunInparallel(item, action));
+                if(inParallel)
+                    threads.Add(RunInparallel(item, action));
+                else
+                    action(item);
             }
             Task.WaitAll(threads.ToArray());
         }

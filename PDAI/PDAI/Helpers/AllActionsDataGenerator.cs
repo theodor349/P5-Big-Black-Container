@@ -13,12 +13,14 @@ namespace PDAI.Helpers
     public class AllActionsDataGenerator
     {
         private readonly Settings _settings;
+        private readonly DataGenerationHelper _dataGenHelper;
         private bool isFirstRun => iteration == 0;
         private int iteration = 0;
 
         public AllActionsDataGenerator(Settings _settings)
         {
             this._settings = _settings;
+            _dataGenHelper = new DataGenerationHelper(this._settings);
         }
 
         public void runSettings()
@@ -69,11 +71,7 @@ namespace PDAI.Helpers
 
         private void RunTest(string trainPath)
         {
-            string testerPath = Path.Combine(_settings.TargetFolder, "tester.py");
-            Process process = new();
-            process.StartInfo.FileName = SystemExtensions.GetPythonPath();
-            process.StartInfo.Arguments = testerPath + " " + trainPath;
-            StartProcess(process, false);
+            _dataGenHelper.RunTest(trainPath);
         }
 
         private void SaveResults(string action)
@@ -88,11 +86,7 @@ namespace PDAI.Helpers
             if (beta == 0)
                 beta = GetDynamicBeta(trainPath);
 
-            string popperPath = Path.Combine(rootPath, "popper/popper.py");
-            Process popperProcess = new();
-            popperProcess.StartInfo.FileName = SystemExtensions.GetPythonPath();
-            popperProcess.StartInfo.Arguments = popperPath + " " + trainPath + " " + beta + " --stats --info";
-            StartProcess(popperProcess, false, maxRuntime);
+            _dataGenHelper.RunPopper(trainPath, rootPath, beta, maxRuntime);
         }
 
         private int GetDynamicBeta(string trainPath)
@@ -119,14 +113,6 @@ namespace PDAI.Helpers
                     neg++;
             }
             return neg / pos;
-        }
-
-        private static void StartProcess(Process process, bool noConsole, int maxRuntime = int.MaxValue)
-        {
-            process.StartInfo.CreateNoWindow = noConsole;
-            process.Start();
-            process.WaitForExit(maxRuntime);
-            process.Kill();
         }
 
         private List<string> GetDomains()
