@@ -19,10 +19,11 @@ namespace Shared
         public double SplitPercent { get; set; } = 0.2;
         public int NumChunks { get; set; } = 1;
         public bool RunInfinite { get; set; }
-        public string ActionToRun { get; set; }
+        public List<string> ActionsToRun { get; set; }
         public int MaxRuntime { get; set; } = 1 * 4 * 60 * 1000;
-        public int Beta { get; set; } = 2;
+        public int Beta { get; set; } = 0;
         public int Iterations { get; set; } = 1;
+        public int Program { get; set; }
 
         // Dynamic
         public List<string> ActionFolders => Directory.GetDirectories(Path.Combine(TargetFolder, "domainfiles", Domain)).ToList();
@@ -31,9 +32,9 @@ namespace Shared
         {
             get
             {
-                var res = ActionFolders.FirstOrDefault(x => Path.GetFileName(x).ToLower().Equals(ActionToRun.ToLower()));
+                var res = ActionFolders.FirstOrDefault(x => Path.GetFileName(x).ToLower().Equals(ActionsToRun.FirstOrDefault()?.ToLower()));
                 if (string.IsNullOrWhiteSpace(res))
-                    throw new ArgumentOutOfRangeException("Unable to finde the action: " + ActionToRun);
+                    throw new ArgumentOutOfRangeException("Unable to finde the action: " + ActionsToRun);
                 return res;
             }
         }
@@ -49,10 +50,11 @@ namespace Shared
                 { "s|split-percent=", "Percentage of problems used for testing: " + SplitPercent, v => SplitPercent = double.Parse(v) },
                 { "c|chunks=", "Number of chunks to split the training data into: " + NumChunks, v => NumChunks = int.Parse(v) },
                 { "r|run-infinite", "Should it run the 'Infinite' data generator", v => RunInfinite = true },
-                { "a|action", "Name of the action to run", v => ActionToRun = v },
+                { "a|actions=", "Name of the actions to run (, seperated)", v => ActionsToRun = v.Split(",").ToList().ConvertAll(x => x.ToLower()) },
                 { "R|max-runtime=", "Max ms each iteration can run: " + MaxRuntime, v => MaxRuntime = int.Parse(v) },
-                { "b|beta=", "Value used in the F-Score: " + Beta, v => Beta = int.Parse(v) },
+                { "b|beta=", "Value used in the F-Score, id set to 0 then it will become dynamic: " + Beta, v => Beta = int.Parse(v) },
                 { "i|iterations=", "Number of iterations: " + Iterations, v => Iterations = int.Parse(v) },
+                { "P|program=", "The program to run: " + Program, v => Program = int.Parse(v) },
             };
             try
             {

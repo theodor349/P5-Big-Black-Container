@@ -16,6 +16,23 @@ namespace Shared.ExtensionMethods
         {
             Logger.Log("'" + identifier + "' has id: " + process.Id);
         }
+
+        public static void RunnInParallel<T>(List<T> inputs, Action<T> action)
+        {
+            var threads = new List<Task>();
+            foreach (var item in inputs)
+            {
+                threads.Add(RunInparallel(item, action));
+            }
+            Task.WaitAll(threads.ToArray());
+        }
+        private static async Task RunInparallel<T>(T item, Action<T> action)
+        {
+            await Task.Run(() =>
+            {
+                action(item);
+            });
+        }
         #endregion
 
         #region Paths
