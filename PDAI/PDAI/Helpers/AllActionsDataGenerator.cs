@@ -30,7 +30,7 @@ namespace PDAI.Helpers
             {
                 foreach (var action in actions)
                     SetInput(action);
-                SystemExtensions.RunnInParallel(actions, x => RunSplit(x));
+                SystemExtensions.RunnInParallel(actions, x => Train(x));
                 foreach (var action in actions)
                 {
                     Test(action);
@@ -38,11 +38,6 @@ namespace PDAI.Helpers
                 }
                 iteration++;
             }
-        }
-
-        private void RunSplit(string action)
-        {
-            Train(action);
         }
 
         private void SetInput(string action)
@@ -66,12 +61,7 @@ namespace PDAI.Helpers
         private void Test(string action)
         {
             var trainingFolders = SystemExtensions.GetTrainingFolders(action);
-            SystemExtensions.RunnInParallel(trainingFolders, x => RunTest(x));
-        }
-
-        private void RunTest(string trainPath)
-        {
-            _dataGenHelper.RunTest(trainPath);
+            SystemExtensions.RunnInParallel(trainingFolders, x => _dataGenHelper.RunTest(x));
         }
 
         private void SaveResults(string action)
@@ -91,7 +81,7 @@ namespace PDAI.Helpers
 
         private int GetDynamicBeta(string trainPath)
         {
-            var beta = GetIterationBeta();
+            var beta = GetWeightedBeta();
             return beta;
         }
 
