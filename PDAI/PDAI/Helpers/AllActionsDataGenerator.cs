@@ -81,7 +81,7 @@ namespace PDAI.Helpers
 
         private int GetDynamicBeta(string trainPath)
         {
-            var beta = GetWeightedBeta();
+            var beta = GetWeightedBeta(trainPath);
             return beta;
         }
 

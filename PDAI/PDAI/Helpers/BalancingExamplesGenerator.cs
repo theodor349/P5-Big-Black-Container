@@ -7,7 +7,7 @@ namespace PDAI.Helpers
 {
     public class BalancingExamplesGenerator
     {
-        public void BalanceExampleFile(string filename)
+        public void GenerateBalanceExampleFile(string filename)
         {
             List<string> balancedExamples = TrimExamplesToBalance(filename);
             //List<string> balancedExamples = AddExamplesToBalance(filename);
