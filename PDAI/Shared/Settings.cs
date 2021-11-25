@@ -43,8 +43,10 @@ namespace Shared
         public Settings(string[] args)
         {
             Cores = Environment.ProcessorCount;
+            Console.WriteLine("Found Cores: " + Cores);
             if (Cores > 6)
                 Cores /= 2;
+            Console.WriteLine("Final Cores: " + Cores);
 
             var p = new OptionSet()
             {
@@ -60,6 +62,7 @@ namespace Shared
                 { "b|beta=", "Value used in the F-Score, id set to 0 then it will become dynamic: " + Beta, v => Beta = int.Parse(v) },
                 { "i|iterations=", "Number of iterations: " + Iterations, v => Iterations = int.Parse(v) },
                 { "P|program=", "The program to run: " + Program, v => Program = int.Parse(v) },
+                { "C|cores=", "The number of physical cores the program may use: " + Cores, v => Cores = int.Parse(v) },
             };
             try
             {

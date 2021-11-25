@@ -28,6 +28,8 @@ namespace PDAI.Helpers
             List<string> actions = GetAllActions();
             while (true)
             {
+                Logger.Log("%%%%% Iteration: " + iteration);
+
                 foreach (var action in actions)
                     SetInput(action);
                 SystemExtensions.RunnInParallel(actions, x => Train(x), _settings.Cores);
@@ -102,6 +104,8 @@ namespace PDAI.Helpers
                 else
                     neg++;
             }
+            if (pos == 0)
+                return 1;
             return neg / pos;
         }
 
