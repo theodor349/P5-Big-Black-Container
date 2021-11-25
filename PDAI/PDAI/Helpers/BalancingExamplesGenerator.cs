@@ -9,7 +9,9 @@ namespace PDAI.Helpers
     {
         public void BalanceExampleFile(string filename)
         {
-            List<string> balancedExamples = TrimFile(filename);
+            List<string> balancedExamples = TrimExamplesToBalance(filename);
+            //List<string> balancedExamples = AddExamplesToBalance(filename);
+
             File.WriteAllLines(filename, balancedExamples);
         }
 
@@ -33,11 +35,10 @@ namespace PDAI.Helpers
             return numOfPositiveExamples;
         }
 
-        private List<string> TrimFile(string filename)
+        private List<string> TrimExamplesToBalance(string filename)
         {
             int numOfPositiveExamples = CountPositiveExamples(filename);
             List<string> examples = GetExampleFile(filename);
-
             int numOfNegativeExamples = examples.Count - numOfPositiveExamples;
 
             while (numOfPositiveExamples < numOfNegativeExamples)
@@ -47,6 +48,42 @@ namespace PDAI.Helpers
 
                 examples.RemoveAt(index);
                 numOfNegativeExamples--;
+            }
+
+            while (numOfNegativeExamples < numOfPositiveExamples)
+            {
+                List<int> positiveIndices = examples.Select((example, index) => example.StartsWith("pos") ? index : -1).Where(i => i != -1).ToList();
+                int index = new Random().Next(0, positiveIndices.Count - 1);
+
+                examples.RemoveAt(index);
+                numOfPositiveExamples--;
+            }
+
+            return examples;
+        }
+
+        private List<string> AddExamplesToBalance(string filename)
+        {
+            int numOfPositiveExamples = CountPositiveExamples(filename);
+            List<string> examples = GetExampleFile(filename);
+            int numOfNegativeExamples = examples.Count - numOfPositiveExamples;
+
+            while (numOfPositiveExamples < numOfNegativeExamples)
+            {
+                List<int> positiveIndices = examples.Select((example, index) => example.StartsWith("pos") ? index : -1).Where(i => i != -1).ToList();
+                int index = new Random().Next(0, positiveIndices.Count - 1);
+
+                examples.Add(examples[index]);
+                numOfPositiveExamples++;
+            }
+
+            while (numOfNegativeExamples < numOfPositiveExamples)
+            {
+                List<int> negativeIndices = examples.Select((example, index) => example.StartsWith("neg") ? index : -1).Where(i => i != -1).ToList();
+                int index = new Random().Next(0, negativeIndices.Count - 1);
+
+                examples.Add(examples[index]);
+                numOfNegativeExamples++;
             }
 
             return examples;
