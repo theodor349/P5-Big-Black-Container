@@ -12,6 +12,7 @@ namespace Shared
     {
         public static Settings Current;
 
+        public int Cores { get; set; } = 6;
         public bool ShowHelp { get; set; }
         public string DomainFolder { get; set; } 
         public string TargetFolder { get; set; } 
@@ -41,6 +42,10 @@ namespace Shared
 
         public Settings(string[] args)
         {
+            Cores = Environment.ProcessorCount;
+            if (Cores > 6)
+                Cores /= 2;
+
             var p = new OptionSet()
             {
                 { "h|help", "Prints help to the console", v => ShowHelp = true },

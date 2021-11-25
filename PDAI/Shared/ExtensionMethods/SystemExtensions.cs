@@ -17,7 +17,7 @@ namespace Shared.ExtensionMethods
             Logger.Log("'" + identifier + "' has id: " + process.Id);
         }
 
-        public static void RunnInParallel<T>(List<T> inputs, Action<T> action, bool inParallel = true)
+        public static void RunnInParallel<T>(List<T> inputs, Action<T> action, int cores, bool inParallel = true)
         {
             var threads = new List<Task>();
             foreach (var item in inputs)
@@ -26,6 +26,9 @@ namespace Shared.ExtensionMethods
                     threads.Add(RunInparallel(item, action));
                 else
                     action(item);
+
+                if (threads.Where(t => !t.IsCompleted).Count() >= cores)
+                    Task.WaitAll(threads.ToArray());
             }
             Task.WaitAll(threads.ToArray());
         }

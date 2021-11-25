@@ -30,7 +30,7 @@ namespace PDAI.Helpers
             {
                 foreach (var action in actions)
                     SetInput(action);
-                SystemExtensions.RunnInParallel(actions, x => Train(x));
+                SystemExtensions.RunnInParallel(actions, x => Train(x), _settings.Cores);
                 foreach (var action in actions)
                 {
                     Test(action);
@@ -55,13 +55,13 @@ namespace PDAI.Helpers
         private void Train(string action)
         {
             var trainingFolders = SystemExtensions.GetTrainingFolders(action);
-            SystemExtensions.RunnInParallel(trainingFolders, x => RunPopper(x, _settings.TargetFolder, _settings.Beta, _settings.MaxRuntime));
+            SystemExtensions.RunnInParallel(trainingFolders, x => RunPopper(x, _settings.TargetFolder, _settings.Beta, _settings.MaxRuntime), _settings.Cores);
         }
 
         private void Test(string action)
         {
             var trainingFolders = SystemExtensions.GetTrainingFolders(action);
-            SystemExtensions.RunnInParallel(trainingFolders, x => _dataGenHelper.RunTest(x));
+            SystemExtensions.RunnInParallel(trainingFolders, x => _dataGenHelper.RunTest(x), _settings.Cores);
         }
 
         private void SaveResults(string action)
