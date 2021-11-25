@@ -40,11 +40,13 @@ namespace PDAI.Helpers
 
             int numOfNegativeExamples = examples.Count - numOfPositiveExamples;
 
-            while(numOfPositiveExamples < numOfNegativeExamples)
+            while (numOfPositiveExamples < numOfNegativeExamples)
             {
-                int index = new Random().Next(0, examples.Count-1);
+                List<int> negativeIndices = examples.Select((example, index) => example.StartsWith("neg") ? index : -1).Where(i => i != -1).ToList();
+                int index = new Random().Next(0, negativeIndices.Count - 1);
 
                 examples.RemoveAt(index);
+                numOfNegativeExamples--;
             }
 
             return examples;
