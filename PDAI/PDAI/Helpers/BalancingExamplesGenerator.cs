@@ -20,13 +20,12 @@ namespace PDAI.Helpers
             return File.ReadLines(Path.Combine(trainingFolder, "exs.pl")).ToList();
         }
 
-        private int CountPositiveExamples(string trainingFolder)
+        private int CountPositiveExamples(List<string> examples)
         {
-            List<string> examples = GetExampleFile(trainingFolder);
             int numOfPositiveExamples = 0;
             for(int i = 1; i < examples.Count; i++)
             {
-                if (examples[i].ToString().StartsWith("pos"))
+                if (examples[i].StartsWith("pos"))
                 {
                     numOfPositiveExamples++;
                 }
@@ -38,13 +37,15 @@ namespace PDAI.Helpers
         private List<string> TrimExamplesToBalance(string trainingFolder)
         {
             List<string> examples = GetExampleFile(trainingFolder);
-            int numOfPositiveExamples = CountPositiveExamples(trainingFolder);
-            int numOfNegativeExamples = (examples.Count-1) - numOfPositiveExamples;
+            int numOfPositiveExamples = CountPositiveExamples(examples);
+            int numOfNegativeExamples = (examples.Count - 1) - numOfPositiveExamples;
+
+            Random random = new Random();
 
             while (numOfPositiveExamples < numOfNegativeExamples)
             {
                 List<int> negativeIndices = examples.Select((example, index) => example.StartsWith("neg") ? index : -1).Where(i => i != -1).ToList();
-                int index = new Random().Next(0, negativeIndices.Count - 1);
+                int index = negativeIndices[random.Next(negativeIndices.Count)];
 
                 examples.RemoveAt(index);
                 numOfNegativeExamples--;
@@ -53,7 +54,7 @@ namespace PDAI.Helpers
             while (numOfNegativeExamples < numOfPositiveExamples)
             {
                 List<int> positiveIndices = examples.Select((example, index) => example.StartsWith("pos") ? index : -1).Where(i => i != -1).ToList();
-                int index = new Random().Next(0, positiveIndices.Count - 1);
+                int index = positiveIndices[random.Next(positiveIndices.Count)];
 
                 examples.RemoveAt(index);
                 numOfPositiveExamples--;
@@ -64,8 +65,8 @@ namespace PDAI.Helpers
 
         private List<string> AddExamplesToBalance(string trainingFolder)
         {
-            int numOfPositiveExamples = CountPositiveExamples(trainingFolder);
             List<string> examples = GetExampleFile(trainingFolder);
+            int numOfPositiveExamples = CountPositiveExamples(examples);
             int numOfNegativeExamples = (examples.Count-1) - numOfPositiveExamples;
 
             while (numOfPositiveExamples < numOfNegativeExamples)
