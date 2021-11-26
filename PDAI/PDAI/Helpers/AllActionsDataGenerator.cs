@@ -14,6 +14,7 @@ namespace PDAI.Helpers
     {
         private readonly Settings _settings;
         private readonly DataGenerationHelper _dataGenHelper;
+        BalancingExamplesGenerator _balancingExamplesGenerator = new BalancingExamplesGenerator();
         private bool isFirstRun => iteration == 0;
         private int iteration = 0;
 
@@ -26,6 +27,7 @@ namespace PDAI.Helpers
         public void runSettings()
         {
             List<string> actions = GetAllActions();
+
             while (true)
             {
                 Logger.Log("%%%%% Iteration: " + iteration);
@@ -49,6 +51,8 @@ namespace PDAI.Helpers
 
             foreach (var trainingFolder in trainingFolders)
             {
+                _balancingExamplesGenerator.GenerateBalanceExampleFile(trainingFolder);
+
                 if (isFirstRun)
                     ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 2);
             }

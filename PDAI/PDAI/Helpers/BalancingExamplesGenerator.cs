@@ -7,22 +7,22 @@ namespace PDAI.Helpers
 {
     public class BalancingExamplesGenerator
     {
-        public void GenerateBalanceExampleFile()
+        public void GenerateBalanceExampleFile(string trainingFolder)
         {
-            List<string> balancedExamples = TrimExamplesToBalance();
-            //List<string> balancedExamples = AddExamplesToBalance(filename);
+            List<string> balancedExamples = TrimExamplesToBalance(trainingFolder);
+            //List<string> balancedExamples = AddExamplesToBalance();
 
             File.WriteAllLines("exs.pl", balancedExamples);
         }
 
-        private List<string> GetExampleFile()
+        private List<string> GetExampleFile(string trainingFolder)
         {
-            return File.ReadLines("exs.pl").ToList();
+            return File.ReadLines(Path.Combine(trainingFolder, "exs.pl")).ToList();
         }
 
-        private int CountPositiveExamples()
+        private int CountPositiveExamples(string trainingFolder)
         {
-            List<string> examples = GetExampleFile();
+            List<string> examples = GetExampleFile(trainingFolder);
             int numOfPositiveExamples = 0;
             for(int i = 0; i < examples.Count; i++)
             {
@@ -35,10 +35,10 @@ namespace PDAI.Helpers
             return numOfPositiveExamples;
         }
 
-        private List<string> TrimExamplesToBalance()
+        private List<string> TrimExamplesToBalance(string trainingFolder)
         {
-            int numOfPositiveExamples = CountPositiveExamples();
-            List<string> examples = GetExampleFile();
+            List<string> examples = GetExampleFile(trainingFolder);
+            int numOfPositiveExamples = CountPositiveExamples(trainingFolder);
             int numOfNegativeExamples = examples.Count - numOfPositiveExamples;
 
             while (numOfPositiveExamples < numOfNegativeExamples)
@@ -62,10 +62,10 @@ namespace PDAI.Helpers
             return examples;
         }
 
-        private List<string> AddExamplesToBalance()
+        private List<string> AddExamplesToBalance(string trainingFolder)
         {
-            int numOfPositiveExamples = CountPositiveExamples();
-            List<string> examples = GetExampleFile();
+            int numOfPositiveExamples = CountPositiveExamples(trainingFolder);
+            List<string> examples = GetExampleFile(trainingFolder);
             int numOfNegativeExamples = examples.Count - numOfPositiveExamples;
 
             while (numOfPositiveExamples < numOfNegativeExamples)
