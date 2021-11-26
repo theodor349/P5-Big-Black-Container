@@ -12,7 +12,7 @@ namespace PDAI.Helpers
             List<string> balancedExamples = TrimExamplesToBalance(trainingFolder);
             //List<string> balancedExamples = AddExamplesToBalance();
 
-            File.WriteAllLines("exs.pl", balancedExamples);
+            File.WriteAllLines(Path.Combine(trainingFolder, "exs.pl"), balancedExamples);
         }
 
         private List<string> GetExampleFile(string trainingFolder)
@@ -24,7 +24,7 @@ namespace PDAI.Helpers
         {
             List<string> examples = GetExampleFile(trainingFolder);
             int numOfPositiveExamples = 0;
-            for(int i = 0; i < examples.Count; i++)
+            for(int i = 1; i < examples.Count; i++)
             {
                 if (examples[i].ToString().StartsWith("pos"))
                 {
@@ -39,7 +39,7 @@ namespace PDAI.Helpers
         {
             List<string> examples = GetExampleFile(trainingFolder);
             int numOfPositiveExamples = CountPositiveExamples(trainingFolder);
-            int numOfNegativeExamples = examples.Count - numOfPositiveExamples;
+            int numOfNegativeExamples = (examples.Count-1) - numOfPositiveExamples;
 
             while (numOfPositiveExamples < numOfNegativeExamples)
             {
@@ -66,7 +66,7 @@ namespace PDAI.Helpers
         {
             int numOfPositiveExamples = CountPositiveExamples(trainingFolder);
             List<string> examples = GetExampleFile(trainingFolder);
-            int numOfNegativeExamples = examples.Count - numOfPositiveExamples;
+            int numOfNegativeExamples = (examples.Count-1) - numOfPositiveExamples;
 
             while (numOfPositiveExamples < numOfNegativeExamples)
             {
