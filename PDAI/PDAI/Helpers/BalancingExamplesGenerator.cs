@@ -7,22 +7,22 @@ namespace PDAI.Helpers
 {
     public class BalancingExamplesGenerator
     {
-        public void GenerateBalanceExampleFile(string filename)
+        public void GenerateBalanceExampleFile()
         {
-            List<string> balancedExamples = TrimExamplesToBalance(filename);
+            List<string> balancedExamples = TrimExamplesToBalance();
             //List<string> balancedExamples = AddExamplesToBalance(filename);
 
-            File.WriteAllLines(filename, balancedExamples);
+            File.WriteAllLines("exs.pl", balancedExamples);
         }
 
-        private List<string> GetExampleFile(string filename)
+        private List<string> GetExampleFile()
         {
-            return File.ReadLines(filename).ToList();
+            return File.ReadLines("exs.pl").ToList();
         }
 
-        private int CountPositiveExamples(string filename)
+        private int CountPositiveExamples()
         {
-            List<string> examples = GetExampleFile(filename);
+            List<string> examples = GetExampleFile();
             int numOfPositiveExamples = 0;
             for(int i = 0; i < examples.Count; i++)
             {
@@ -35,10 +35,10 @@ namespace PDAI.Helpers
             return numOfPositiveExamples;
         }
 
-        private List<string> TrimExamplesToBalance(string filename)
+        private List<string> TrimExamplesToBalance()
         {
-            int numOfPositiveExamples = CountPositiveExamples(filename);
-            List<string> examples = GetExampleFile(filename);
+            int numOfPositiveExamples = CountPositiveExamples();
+            List<string> examples = GetExampleFile();
             int numOfNegativeExamples = examples.Count - numOfPositiveExamples;
 
             while (numOfPositiveExamples < numOfNegativeExamples)
@@ -62,10 +62,10 @@ namespace PDAI.Helpers
             return examples;
         }
 
-        private List<string> AddExamplesToBalance(string filename)
+        private List<string> AddExamplesToBalance()
         {
-            int numOfPositiveExamples = CountPositiveExamples(filename);
-            List<string> examples = GetExampleFile(filename);
+            int numOfPositiveExamples = CountPositiveExamples();
+            List<string> examples = GetExampleFile();
             int numOfNegativeExamples = examples.Count - numOfPositiveExamples;
 
             while (numOfPositiveExamples < numOfNegativeExamples)
