@@ -28,20 +28,17 @@ namespace PDAI.Helpers
         {
             List<string> actions = GetAllActions();
 
-            while (true)
-            {
-                Logger.Log("%%%%% Iteration: " + iteration);
+            Logger.Log("%%%%% Iteration: " + iteration);
 
-                foreach (var action in actions)
-                    SetInput(action);
-                SystemExtensions.RunnInParallel(actions, x => Train(x), _settings.Cores);
-                foreach (var action in actions)
-                {
-                    Test(action);
-                    SaveResults(action);
-                }
-                iteration++;
+            foreach (var action in actions)
+                SetInput(action);
+            SystemExtensions.RunnInParallel(actions, x => Train(x), _settings.Cores);
+            foreach (var action in actions)
+            {
+                Test(action);
+                SaveResults(action);
             }
+            iteration++;
         }
 
         private void SetInput(string action)

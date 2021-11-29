@@ -9,8 +9,8 @@ namespace PDAI.Helpers
     {
         public void GenerateBalanceExampleFile(string trainingFolder)
         {
-            List<string> balancedExamples = TrimExamplesToBalance(trainingFolder);
-            //List<string> balancedExamples = AddExamplesToBalance();
+            //List<string> balancedExamples = TrimExamplesToBalance(trainingFolder);
+            List<string> balancedExamples = AddExamplesToBalance(trainingFolder);
 
             File.WriteAllLines(Path.Combine(trainingFolder, "exs.pl"), balancedExamples);
         }
@@ -67,12 +67,13 @@ namespace PDAI.Helpers
         {
             List<string> examples = GetExampleFile(trainingFolder);
             int numOfPositiveExamples = CountPositiveExamples(examples);
-            int numOfNegativeExamples = (examples.Count-1) - numOfPositiveExamples;
+            int numOfNegativeExamples = (examples.Count - 1) - numOfPositiveExamples;
+            Random random = new Random();
 
             while (numOfPositiveExamples < numOfNegativeExamples)
             {
                 List<int> positiveIndices = examples.Select((example, index) => example.StartsWith("pos") ? index : -1).Where(i => i != -1).ToList();
-                int index = new Random().Next(0, positiveIndices.Count - 1);
+                int index = positiveIndices[random.Next(positiveIndices.Count)];
 
                 examples.Add(examples[index]);
                 numOfPositiveExamples++;
@@ -81,7 +82,7 @@ namespace PDAI.Helpers
             while (numOfNegativeExamples < numOfPositiveExamples)
             {
                 List<int> negativeIndices = examples.Select((example, index) => example.StartsWith("neg") ? index : -1).Where(i => i != -1).ToList();
-                int index = new Random().Next(0, negativeIndices.Count - 1);
+                int index = negativeIndices[random.Next(negativeIndices.Count)];
 
                 examples.Add(examples[index]);
                 numOfNegativeExamples++;
