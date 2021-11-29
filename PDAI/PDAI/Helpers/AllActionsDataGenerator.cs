@@ -32,7 +32,7 @@ namespace PDAI.Helpers
 
             foreach (var action in actions)
                 SetInput(action);
-            SystemExtensions.RunnInParallel(actions, x => Train(x), _settings.Cores);
+            SystemExtensions.RunnInParallel(actions, x => Train(x), _settings.Cores, false);
             foreach (var action in actions)
             {
                 Test(action);
