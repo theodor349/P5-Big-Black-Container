@@ -70,6 +70,9 @@ namespace PDAI.Helpers
             int numOfNegativeExamples = (examples.Count - 1) - numOfPositiveExamples;
             Random random = new Random();
 
+            if (numOfPositiveExamples == 0 || numOfNegativeExamples == 0) {
+                return examples;
+            }
             while (numOfPositiveExamples < numOfNegativeExamples)
             {
                 List<int> positiveIndices = examples.Select((example, index) => example.StartsWith("pos") ? index : -1).Where(i => i != -1).ToList();
