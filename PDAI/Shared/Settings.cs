@@ -39,6 +39,7 @@ namespace Shared
                 return res;
             }
         }
+        public List<string> OutputDomainFolderss => Directory.GetDirectories(Path.Combine(TargetFolder, "domainfiles")).ToList();
 
         public Settings(string[] args)
         {

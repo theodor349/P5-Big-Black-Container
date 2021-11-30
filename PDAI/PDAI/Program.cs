@@ -47,6 +47,9 @@ namespace PDAI
                 case 0:
                     new AllActionsDataGenerator(Settings.Current).runSettings();
                     break;
+                case 1:
+                    new DataSetStatisticsGenerator(_settings);
+                    break;
                 default:
                     Console.WriteLine("I do not know what program that is: " + _settings.Program);
                     break;
