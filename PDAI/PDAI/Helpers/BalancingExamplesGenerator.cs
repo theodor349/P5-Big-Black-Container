@@ -9,8 +9,8 @@ namespace PDAI.Helpers
     {
         public void GenerateBalanceExampleFile(string trainingFolder)
         {
-            List<string> balancedExamples = TrimExamplesToBalance(trainingFolder);
-            //List<string> balancedExamples = AddExamplesToBalance(trainingFolder);
+            //List<string> balancedExamples = TrimExamplesToBalance(trainingFolder);
+            List<string> balancedExamples = AddExamplesToBalance(trainingFolder);
 
             File.WriteAllLines(Path.Combine(trainingFolder, "exs.pl"), balancedExamples);
         }

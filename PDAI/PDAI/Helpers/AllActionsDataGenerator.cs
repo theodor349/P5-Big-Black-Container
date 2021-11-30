@@ -29,6 +29,8 @@ namespace PDAI.Helpers
             List<string> actions = GetAllActions();
 
             Logger.Log("%%%%% Iteration: " + iteration);
+            Logger.Log("%%%%% Number Of Actions: " + actions.Count);
+
 
             foreach (var action in actions)
                 SetInput(action);
