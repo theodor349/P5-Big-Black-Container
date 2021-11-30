@@ -48,7 +48,7 @@ namespace PDAI.Helpers
 
             foreach (var trainingFolder in trainingFolders)
             {
-                //_balancingExamplesGenerator.GenerateBalanceExampleFile(trainingFolder);
+                _balancingExamplesGenerator.GenerateBalanceExampleFile(trainingFolder);
 
                 if (isFirstRun)
                     ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 2);

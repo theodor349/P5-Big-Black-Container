@@ -9,8 +9,8 @@ namespace PDAI.Helpers
     {
         public void GenerateBalanceExampleFile(string trainingFolder)
         {
-            //List<string> balancedExamples = TrimExamplesToBalance(trainingFolder);
-            List<string> balancedExamples = AddExamplesToBalance(trainingFolder);
+            List<string> balancedExamples = TrimExamplesToBalance(trainingFolder);
+            //List<string> balancedExamples = AddExamplesToBalance(trainingFolder);
 
             File.WriteAllLines(Path.Combine(trainingFolder, "exs.pl"), balancedExamples);
         }
@@ -42,6 +42,10 @@ namespace PDAI.Helpers
 
             Random random = new Random();
 
+            if (numOfPositiveExamples == 0 || numOfNegativeExamples == 0)
+            {
+                return examples;
+            }
             while (numOfPositiveExamples < numOfNegativeExamples)
             {
                 List<int> negativeIndices = examples.Select((example, index) => example.StartsWith("neg") ? index : -1).Where(i => i != -1).ToList();
