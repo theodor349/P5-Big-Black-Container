@@ -28,31 +28,34 @@ namespace PDAI
             int maxRuntime = _settings.MaxRuntime;
             int beta = _settings.Beta;
 
-            var folders = Directory.GetDirectories(_settings.DomainFolder).Where(x => !new FileInfo(x).Name.Equals(".git")).ToList();
-            Domain domain = null;
-            foreach (var domainFolder in folders)
+            while (true)
             {
-                string name = Path.GetFileName(domainFolder);
-                Console.WriteLine("Domain.Name: " + name);
-                domain = Parse(domainFolder, maxProblems);
-                domain.Name = name;
-                Write(outputFolderPath, domain, splitPercent, numOfChunks);
-            }
+                var folders = Directory.GetDirectories(_settings.DomainFolder).Where(x => !new FileInfo(x).Name.Equals(".git")).ToList();
+                Domain domain = null;
+                foreach (var domainFolder in folders)
+                {
+                    string name = Path.GetFileName(domainFolder);
+                    Console.WriteLine("Domain.Name: " + name);
+                    domain = Parse(domainFolder, maxProblems);
+                    domain.Name = name;
+                    Write(outputFolderPath, domain, splitPercent, numOfChunks);
+                }
 
-            if (runInfinite)
-                new InifiniteDataGenerator().GenerateData();
+                if (runInfinite)
+                    new InifiniteDataGenerator().GenerateData();
 
-            switch (_settings.Program)
-            {
-                case 0:
-                    new AllActionsDataGenerator(Settings.Current).runSettings();
-                    break;
-                case 1:
-                    new DataSetStatisticsGenerator(_settings);
-                    break;
-                default:
-                    Console.WriteLine("I do not know what program that is: " + _settings.Program);
-                    break;
+                switch (_settings.Program)
+                {
+                    case 0:
+                        new AllActionsDataGenerator(Settings.Current).runSettings();
+                        break;
+                    case 1:
+                        new DataSetStatisticsGenerator(_settings);
+                        break;
+                    default:
+                        Console.WriteLine("I do not know what program that is: " + _settings.Program);
+                        break;
+                }
             }
         }
 
