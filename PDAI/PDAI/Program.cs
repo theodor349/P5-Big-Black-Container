@@ -19,12 +19,7 @@ namespace PDAI
         {
             Settings.Current = new Settings(args);
 
-            string outputFolderPath = _settings.TargetFolder;
-            int maxProblems = _settings.MaxProblems;
-            double splitPercent = _settings.SplitPercent;
-            int numOfChunks = _settings.NumChunks;
-
-            GenerateDomainfilesFolder(outputFolderPath, maxProblems, splitPercent, numOfChunks);
+            GenerateDomainfilesFolder();
 
             switch (_settings.Program)
             {
@@ -46,7 +41,7 @@ namespace PDAI
             }
         }
 
-        public static void GenerateDomainfilesFolder(string outputFolderPath, int maxProblems, double splitPercent, int numOfChunks, bool randomSplit = false)
+        public static void GenerateDomainfilesFolder(bool randomSplit = false)
         {
             var folders = Directory.GetDirectories(_settings.DomainFolder).Where(x => !new FileInfo(x).Name.Equals(".git")).ToList();
             Domain domain = null;
@@ -54,9 +49,9 @@ namespace PDAI
             {
                 string name = Path.GetFileName(domainFolder);
                 Console.WriteLine("Domain.Name: " + name);
-                domain = Parse(domainFolder, maxProblems);
+                domain = Parse(domainFolder, _settings.MaxProblems);
                 domain.Name = name;
-                Write(outputFolderPath, domain, splitPercent, numOfChunks, randomSplit);
+                Write(_settings.TargetFolder, domain, _settings.SplitPercent, _settings.NumChunks, randomSplit);
             }
         }
 

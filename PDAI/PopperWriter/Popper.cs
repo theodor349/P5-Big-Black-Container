@@ -13,7 +13,7 @@ namespace Writer.Popper
     {
         public static int MinVars = 0;
 
-        public void Write(Domain domain, string folderPath, double testPercent, int numOfSplits)
+        public void Write(Domain domain, string folderPath, double testPercent, int numOfSplits, bool randomSplit)
         {
             domain.Problems.Sort();
 
@@ -22,7 +22,11 @@ namespace Writer.Popper
             List<Problem> testProblems = domain.Problems.GetRange(domain.Problems.Count - numOfTestProblems, numOfTestProblems);
             domain.Problems.RemoveRange(domain.Problems.Count - numOfTestProblems, numOfTestProblems);
 
-            List<List<Problem>> chunks = GetChunks(domain.Problems, numOfSplits);
+            List<List<Problem>> chunks = new List<List<Problem>>();
+            if (randomSplit)
+                chunks = GetChunksRandom(domain.Problems, numOfSplits);
+            else
+                chunks = GetChunks(domain.Problems, numOfSplits);
 
             Logger.Log("Printing to Popper");
 
@@ -38,6 +42,24 @@ namespace Writer.Popper
                 threads.Add(PrintAction(folderPath, testPercent, a, domain, chunks, testProblems));
             }
             Task.WaitAll(threads.ToArray());
+        }
+
+        private List<List<Problem>> GetChunksRandom(List<Problem> problems, int numOfChunks)
+        {
+            List<List<Problem>> chunkies = problems.ChunkBy(numOfChunks);
+            List<List<Problem>> chunks = new(new List<Problem>[numOfChunks]);
+
+            for (int i = 0; i < chunkies.Count; i++)
+            {
+                chunks[i] = new();
+                chunks[i].AddRange(chunkies[i]);
+                for (int j = 0; j < i; j++)
+                {
+                    chunks[i].AddRange(chunkies[j]);
+                }
+            }
+
+            return chunks;
         }
 
         private static List<List<Problem>> GetChunks(List<Problem> problems, int numOfChunks)
