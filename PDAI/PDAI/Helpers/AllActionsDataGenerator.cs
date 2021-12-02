@@ -26,7 +26,7 @@ namespace PDAI.Helpers
 
         public void runSettings()
         {
-            List<string> actions = GetAllActions();
+            List<string> actions = SystemExtensions.GetAllActions();
 
             Logger.Log("%%%%% Iteration: " + iteration);
             Logger.Log("%%%%% Number Of Actions: " + actions.Count);
@@ -112,31 +112,6 @@ namespace PDAI.Helpers
             return neg / pos;
         }
 
-        private List<string> GetDomains()
-        {
-            return Directory.GetDirectories(Path.Combine(_settings.TargetFolder, "domainfiles")).ToList();
-        }
-
-        private List<string> GetActions(string domain)
-        {
-            string[] actions = Directory.GetDirectories(domain);
-            if (_settings.ActionsToRun is null)
-                return actions.ToList();
-            else
-                return actions.Where(x => _settings.ActionsToRun.Contains(new FileInfo(x).Name.ToLower())).ToList();
-        }
-
-        private List<string> GetAllActions()
-        {
-            List<string> res = new List<string>();
-            var domains = GetDomains();
-
-            foreach (var domain in domains)
-            {
-                res.AddRange(GetActions(domain));
-            }
-
-            return res;
-        }
+        
     }
 }

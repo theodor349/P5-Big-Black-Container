@@ -11,6 +11,8 @@ namespace Shared.ExtensionMethods
 {
     public static class SystemExtensions
     {
+        private static Settings _settings => Settings.Current;
+
         #region Process
         public static void PrintProcessName(string identifier, Process process)
         {
@@ -55,6 +57,33 @@ namespace Shared.ExtensionMethods
                 return res;
             else
                 return res.Where(x => !new DirectoryInfo(x).Name.ToLower().Equals("test")).ToList();
+        }
+
+        public static List<string> GetAllActions()
+        {
+            List<string> res = new List<string>();
+            var domains = GetDomains();
+
+            foreach (var domain in domains)
+            {
+                res.AddRange(GetActions(domain));
+            }
+
+            return res;
+        }
+
+        private static List<string> GetDomains()
+        {
+            return Directory.GetDirectories(Path.Combine(_settings.TargetFolder, "domainfiles")).ToList();
+        }
+
+        private static List<string> GetActions(string domain)
+        {
+            string[] actions = Directory.GetDirectories(domain);
+            if (_settings.ActionsToRun is null)
+                return actions.ToList();
+            else
+                return actions.Where(x => _settings.ActionsToRun.Contains(new FileInfo(x).Name.ToLower())).ToList();
         }
         #endregion
 
