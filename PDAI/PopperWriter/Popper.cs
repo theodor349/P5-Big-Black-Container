@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Writer.Popper
@@ -46,20 +47,8 @@ namespace Writer.Popper
 
         private List<List<Problem>> GetChunksRandom(List<Problem> problems, int numOfChunks)
         {
-            List<List<Problem>> chunkies = problems.ChunkBy(numOfChunks);
-            List<List<Problem>> chunks = new(new List<Problem>[numOfChunks]);
-
-            for (int i = 0; i < chunkies.Count; i++)
-            {
-                chunks[i] = new();
-                chunks[i].AddRange(chunkies[i]);
-                for (int j = 0; j < i; j++)
-                {
-                    chunks[i].AddRange(chunkies[j]);
-                }
-            }
-
-            return chunks;
+            problems = problems.OrderBy(a => Guid.NewGuid()).ToList();
+            return GetChunks(problems, numOfChunks);
         }
 
         private static List<List<Problem>> GetChunks(List<Problem> problems, int numOfChunks)

@@ -22,7 +22,7 @@ namespace Shared
         public int NumChunks { get; set; } = 1;
         public List<string> ActionsToRun { get; set; }
         public int MaxRuntime { get; set; } = 1 * 4 * 60 * 1000;
-        public int Beta { get; set; } = 0;
+        public int Beta { get; set; } = 2;
         public int Iterations { get; set; } = 1;
         public int Program { get; set; }
 
