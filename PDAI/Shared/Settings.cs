@@ -1,4 +1,5 @@
 ﻿using NDesk.Options;
+using Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +25,7 @@ namespace Shared
         public int Beta { get; set; } = 0;
         public int Iterations { get; set; } = 1;
         public int Program { get; set; }
+        public List<Domain> Domains { get; set; } = new List<Domain>();
 
         // Dynamic
         public List<string> ActionFolders => Directory.GetDirectories(Path.Combine(TargetFolder, "domainfiles", Domain)).ToList();
