@@ -7,6 +7,7 @@ from time import perf_counter
 from contextlib import contextmanager
 from .core import Clause
 from .constrain import Constrain
+from sys import platform
 import datetime
 
 TIMEOUT=600
@@ -38,25 +39,28 @@ def parse_args():
     return parser.parse_args()
 
 def timeout(func, args=(), kwargs={}, timeout_duration=1, default=None):
-    class TimeoutError(Exception):
-        pass
-
-    def handler(signum, frame):
-        raise TimeoutError()
-
-    # set the timeout handler
-    signal.signal(signal.SIGALRM, handler)
-    signal.alarm(timeout_duration)
-    try:
+    print("########## platform: " + platform + " ##########")
+    if(platform == "win32"):
         result = func(*args, **kwargs)
-    except TimeoutError as exc:
-        result = default
-    finally:
-        signal.alarm(0)
+        return result
+    else:
+        class TimeoutError(Exception):
+            pass
 
-    return result
-    # result = func(*args, **kwargs)
-    # return result
+        def handler(signum, frame):
+            raise TimeoutError()
+
+        # set the timeout handler
+        signal.signal(signal.SIGALRM, handler)
+        signal.alarm(timeout_duration)
+        try:
+            result = func(*args, **kwargs)
+        except TimeoutError as exc:
+            result = default
+        finally:
+            signal.alarm(0)
+
+        return result
 
 
 def load_kbpath(kbpath, bias_filename):
