@@ -19,28 +19,15 @@ namespace PDAI
         {
             Settings.Current = new Settings(args);
 
-            string inputFolderPath = _settings.DomainFolder;
             string outputFolderPath = _settings.TargetFolder;
             int maxProblems = _settings.MaxProblems;
             double splitPercent = _settings.SplitPercent;
             int numOfChunks = _settings.NumChunks;
-            bool runInfinite = _settings.RunInfinite;
-            int maxRuntime = _settings.MaxRuntime;
-            int beta = _settings.Beta;
 
-            var folders = Directory.GetDirectories(_settings.DomainFolder).Where(x => !new FileInfo(x).Name.Equals(".git")).ToList();
-            Domain domain = null;
-            foreach (var domainFolder in folders)
-            {
-                string name = Path.GetFileName(domainFolder);
-                Console.WriteLine("Domain.Name: " + name);
-                domain = Parse(domainFolder, maxProblems);
-                domain.Name = name;
-                Write(outputFolderPath, domain, splitPercent, numOfChunks);
-            }
-
-            if (runInfinite)
-                new InifiniteDataGenerator().GenerateData();
+            if(_settings.Program == 3)
+                Console.WriteLine();
+            else
+                GenerateDomainfilesFolder(outputFolderPath, maxProblems, splitPercent, numOfChunks);
 
             switch (_settings.Program)
             {
@@ -50,9 +37,29 @@ namespace PDAI
                 case 1:
                     new DataSetStatisticsGenerator(_settings);
                     break;
+                case 2:
+                    new InifiniteDataGenerator().GenerateData();
+                    break;
+                case 3:
+                    new TrainingDataSplitDataGenerator(_settings);
+                    break;
                 default:
                     Console.WriteLine("I do not know what program that is: " + _settings.Program);
                     break;
+            }
+        }
+
+        private static void GenerateDomainfilesFolder(string outputFolderPath, int maxProblems, double splitPercent, int numOfChunks)
+        {
+            var folders = Directory.GetDirectories(_settings.DomainFolder).Where(x => !new FileInfo(x).Name.Equals(".git")).ToList();
+            Domain domain = null;
+            foreach (var domainFolder in folders)
+            {
+                string name = Path.GetFileName(domainFolder);
+                Console.WriteLine("Domain.Name: " + name);
+                domain = Parse(domainFolder, maxProblems);
+                domain.Name = name;
+                Write(outputFolderPath, domain, splitPercent, numOfChunks);
             }
         }
 

@@ -19,7 +19,6 @@ namespace Shared
         public int MaxProblems { get; set; } = int.MaxValue;
         public double SplitPercent { get; set; } = 0.2;
         public int NumChunks { get; set; } = 1;
-        public bool RunInfinite { get; set; }
         public List<string> ActionsToRun { get; set; }
         public int MaxRuntime { get; set; } = 1 * 4 * 60 * 1000;
         public int Beta { get; set; } = 0;
@@ -57,7 +56,6 @@ namespace Shared
                 { "p|max-problems=", "Max number of ms each iteration can run for: " + MaxProblems, v => MaxProblems = int.Parse(v) },
                 { "s|split-percent=", "Percentage of problems used for testing: " + SplitPercent, v => SplitPercent = double.Parse(v) },
                 { "c|chunks=", "Number of chunks to split the training data into: " + NumChunks, v => NumChunks = int.Parse(v) },
-                { "r|run-infinite", "Should it run the 'Infinite' data generator", v => RunInfinite = true },
                 { "a|actions=", "Name of the actions to run (, seperated)", v => ActionsToRun = v.Split(",").ToList().ConvertAll(x => x.ToLower()) },
                 { "R|max-runtime=", "Max ms each iteration can run: " + MaxRuntime, v => MaxRuntime = int.Parse(v) },
                 { "b|beta=", "Value used in the F-Score, id set to 0 then it will become dynamic: " + Beta, v => Beta = int.Parse(v) },
