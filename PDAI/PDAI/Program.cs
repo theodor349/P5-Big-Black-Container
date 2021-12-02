@@ -46,7 +46,7 @@ namespace PDAI
             }
         }
 
-        private static void GenerateDomainfilesFolder(string outputFolderPath, int maxProblems, double splitPercent, int numOfChunks, bool cacheDomains = false)
+        public static void GenerateDomainfilesFolder(string outputFolderPath, int maxProblems, double splitPercent, int numOfChunks, bool randomSplit = false)
         {
             var folders = Directory.GetDirectories(_settings.DomainFolder).Where(x => !new FileInfo(x).Name.Equals(".git")).ToList();
             Domain domain = null;
@@ -56,18 +56,18 @@ namespace PDAI
                 Console.WriteLine("Domain.Name: " + name);
                 domain = Parse(domainFolder, maxProblems);
                 domain.Name = name;
-                Write(outputFolderPath, domain, splitPercent, numOfChunks);
+                Write(outputFolderPath, domain, splitPercent, numOfChunks, randomSplit);
             }
         }
 
-        private static void Write(string outputFolderPath, Domain domain, double splitPercent, int numOfChunks)
+        private static void Write(string outputFolderPath, Domain domain, double splitPercent, int numOfChunks, bool randomSplit)
         {
             outputFolderPath = Path.Combine(outputFolderPath, "domainfiles");
             outputFolderPath = Path.Combine(outputFolderPath, domain.Name);
             Console.WriteLine(outputFolderPath);
 
             var writer = new Popper();
-            writer.Write(domain, outputFolderPath, splitPercent, numOfChunks);
+            writer.Write(domain, outputFolderPath, splitPercent, numOfChunks, randomSplit);
         }
 
         private static Domain Parse(string inputFolderPath, int maxProblems)
