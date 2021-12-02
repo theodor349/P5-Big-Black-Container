@@ -56,8 +56,6 @@ namespace PDAI
                 Console.WriteLine("Domain.Name: " + name);
                 domain = Parse(domainFolder, maxProblems);
                 domain.Name = name;
-                if(cacheDomains)    
-                    _settings.Domains.Add(domain);
                 Write(outputFolderPath, domain, splitPercent, numOfChunks);
             }
         }
