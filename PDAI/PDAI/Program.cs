@@ -35,6 +35,9 @@ namespace PDAI
                 case 3:
                     new TrainingDataSplitDataGenerator(_settings);
                     break;
+                case 4:
+                    new BaselineDataGenerator(_settings);
+                    break;
                 default:
                     Console.WriteLine("I do not know what program that is: " + _settings.Program);
                     break;

@@ -13,6 +13,7 @@ namespace PDAI.Helpers
 
         internal bool runActionsInParallel = true;
         internal bool runSplitsInParallel = true;
+        internal bool randomSplits = false;
 
         internal bool isFirstIteration => iteration == 0;
         internal int iteration = 0;
@@ -21,11 +22,14 @@ namespace PDAI.Helpers
         {
             _settings = settings;
             _dataGenHelper = new DataGenerationHelper(_settings);
-
-            Run();
         }
 
         internal abstract void Run();
+
+        internal void GenerateDomainfilesFolder(bool randomSplit = false)
+        {
+            Program.GenerateDomainfilesFolder(randomSplit);
+        }
 
         internal void SetInput(string action)
         {
