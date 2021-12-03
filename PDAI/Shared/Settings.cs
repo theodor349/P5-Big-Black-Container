@@ -22,9 +22,10 @@ namespace Shared
         public int NumChunks { get; set; } = 1;
         public List<string> ActionsToRun { get; set; }
         public int MaxRuntime { get; set; } = 1 * 4 * 60 * 1000;
+        private int runtimeScaler = 1000;
         public int Beta { get; set; } = 2;
         public int Iterations { get; set; } = 1;
-        public int Program { get; set; }
+        public int Program { get; set; } = -1;
 
         // Dynamic
         public List<string> ActionFolders => Directory.GetDirectories(Path.Combine(TargetFolder, "domainfiles", Domain)).ToList();
@@ -58,7 +59,7 @@ namespace Shared
                 { "s|split-percent=", "Percentage of problems used for testing: " + SplitPercent, v => SplitPercent = double.Parse(v) },
                 { "c|chunks=", "Number of chunks to split the training data into: " + NumChunks, v => NumChunks = int.Parse(v) },
                 { "a|actions=", "Name of the actions to run (, seperated)", v => ActionsToRun = v.Split(",").ToList().ConvertAll(x => x.ToLower()) },
-                { "R|max-runtime=", "Max ms each iteration can run: " + MaxRuntime, v => MaxRuntime = int.Parse(v) },
+                { "R|max-runtime=", "Max seconds each iteration can run: " + (MaxRuntime/runtimeScaler), v => MaxRuntime = int.Parse(v) * runtimeScaler },
                 { "b|beta=", "Value used in the F-Score, id set to 0 then it will become dynamic: " + Beta, v => Beta = int.Parse(v) },
                 { "i|iterations=", "Number of iterations: " + Iterations, v => Iterations = int.Parse(v) },
                 { "P|program=", "The program to run: " + Program, v => Program = int.Parse(v) },
