@@ -10,8 +10,8 @@ namespace PDAI.Helpers
         {
             settings.NumChunks = 1;
             settings.SplitPercent = 0.5f;
-            runActionsInParallel = false;
-            runSplitsInParallel = true;
+            runActionsInParallel = true;
+            runSplitsInParallel = false;
 
             GenerateDomainfilesFolder(randomSplits);
             Run();

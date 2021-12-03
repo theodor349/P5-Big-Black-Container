@@ -31,15 +31,11 @@ namespace PDAI.Helpers
             Program.GenerateDomainfilesFolder(randomSplit);
         }
 
-        internal void SetInput(string action)
+        internal void SetInput(string trainingFolder)
         {
             ConstraintHelper ch = new ConstraintHelper();
-            List<string> trainingFolders = SystemExtensions.GetTrainingFolders(action);
 
-            foreach (var trainingFolder in trainingFolders)
-            {
-                ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 2);
-            }
+            ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 2);
         }
 
         internal void Train(string action)
