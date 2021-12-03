@@ -40,7 +40,7 @@ def parse_args():
 
 def timeout(func, args=(), kwargs={}, timeout_duration=1, default=None):
     print("########## platform: " + platform + " ##########")
-    if(True)#platform == "win32"):
+    if(True):#platform == "win32"):
         result = func(*args, **kwargs)
         return result
     else:
