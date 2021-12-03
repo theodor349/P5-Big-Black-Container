@@ -35,7 +35,7 @@ namespace PDAI.Helpers
         {
             ConstraintHelper ch = new ConstraintHelper();
 
-            ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 2);
+            ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 3);
         }
 
         internal void Train(string action)
