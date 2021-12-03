@@ -40,6 +40,7 @@ namespace PDAI.Helpers
 
         internal void Train(string action)
         {
+            Logger.Log("Running Action: " + new FileInfo(action).Name);
             var trainingFolders = SystemExtensions.GetTrainingFolders(action);
             SystemExtensions.RunnInParallel(trainingFolders, x => SetInput(x), _settings.Cores, false);
             SystemExtensions.RunnInParallel(trainingFolders, x => RunPopper(x), _settings.Cores, runSplitsInParallel);
