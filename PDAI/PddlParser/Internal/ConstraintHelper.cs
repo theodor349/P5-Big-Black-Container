@@ -21,7 +21,11 @@ namespace PddlParser.Internal
         {
             var lines = File.ReadLines(filepath).ToList();
 
-            var oldMaxClauses = new string(lines[0].SkipWhile(c => !char.IsDigit(c))
+            int lineIndex = 0;
+            if (lines[0].ToLower().Equals("enable_pi."))
+                lineIndex = 1;
+
+            var oldMaxClauses = new string(lines[lineIndex].SkipWhile(c => !char.IsDigit(c))
                          .TakeWhile(c => char.IsDigit(c))
                          .ToArray());
             var oldMaxBody = new string(lines[1].SkipWhile(c => !char.IsDigit(c))
@@ -31,9 +35,9 @@ namespace PddlParser.Internal
                          .TakeWhile(c => char.IsDigit(c))
                          .ToArray());
 
-            int incremented_Clauses = Int32.Parse(oldMaxClauses) + increment_max_clauses;
-            int incremented_Body = Int32.Parse(oldMaxBody) + increment_max_body;
-            int incremented_Vars = Int32.Parse(oldMaxVars) + increment_max_vars;
+            int incremented_Clauses = int.Parse(oldMaxClauses) + increment_max_clauses;
+            int incremented_Body = int.Parse(oldMaxBody) + increment_max_body;
+            int incremented_Vars = int.Parse(oldMaxVars) + increment_max_vars;
 
             lines[0] = "max_clauses(" + incremented_Clauses + ").";
             lines[1] = "max_body(" + incremented_Body + ").";

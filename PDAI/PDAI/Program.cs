@@ -19,7 +19,7 @@ namespace PDAI
         {
             Settings.Current = new Settings(args);
 
-            GenerateDomainfilesFolder();
+            //GenerateDomainfilesFolder();
 
             switch (_settings.Program)
             {

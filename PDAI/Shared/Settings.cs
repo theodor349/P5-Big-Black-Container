@@ -26,6 +26,7 @@ namespace Shared
         public int Beta { get; set; } = 2;
         public int Iterations { get; set; } = 1;
         public int Program { get; set; } = -1;
+        public bool UsePredicateInvention { get; set; }
 
         // Dynamic
         public List<string> ActionFolders => Directory.GetDirectories(Path.Combine(TargetFolder, "domainfiles", Domain)).ToList();
@@ -42,6 +43,7 @@ namespace Shared
         }
         public List<string> OutputDomainFolderss => Directory.GetDirectories(Path.Combine(TargetFolder, "domainfiles")).ToList();
 
+
         public Settings(string[] args)
         {
             Cores = Environment.ProcessorCount;
@@ -55,7 +57,7 @@ namespace Shared
                 { "h|help", "Prints help to the console", v => ShowHelp = true },
                 { "d|domain-folder=", "Path to the input domain folder", v => DomainFolder = v },
                 { "t|target-folder=", "Path to the output folder", v => TargetFolder = v },
-                { "p|max-problems=", "Max number of ms each iteration can run for: " + MaxProblems, v => MaxProblems = int.Parse(v) },
+                { "p|predicate-invention", "Use predicate invention: " + UsePredicateInvention, v => UsePredicateInvention = true},
                 { "s|split-percent=", "Percentage of problems used for testing: " + SplitPercent, v => SplitPercent = double.Parse(v) },
                 { "c|chunks=", "Number of chunks to split the training data into: " + NumChunks, v => NumChunks = int.Parse(v) },
                 { "a|actions=", "Name of the actions to run (, seperated)", v => ActionsToRun = v.Split(",").ToList().ConvertAll(x => x.ToLower()) },
