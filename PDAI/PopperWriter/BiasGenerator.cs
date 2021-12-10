@@ -42,7 +42,7 @@ namespace PopperWriter
             if (Settings.Current.UsePredicateInvention)
             {
                 lines.Add("enable_pi.");
-                Console.WriteLine("added enable_pi")
+                Console.WriteLine("added enable_pi");
             }
             if (Settings.Current.UseAllowSingletons)
             {
