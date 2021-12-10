@@ -45,9 +45,9 @@ namespace PddlParser.Internal
             int incremented_Body = int.Parse(oldMaxBody) + increment_max_body;
             int incremented_Vars = int.Parse(oldMaxVars) + increment_max_vars;
 
-            lines[0] = "max_clauses(" + incremented_Clauses + ").";
-            lines[1] = "max_body(" + incremented_Body + ").";
-            lines[2] = "max_vars(" + incremented_Vars + ").";
+            lines[maxClauseIndex] = "max_clauses(" + incremented_Clauses + ").";
+            lines[maxClauseIndex + 1] = "max_body(" + incremented_Body + ").";
+            lines[maxClauseIndex + 2] = "max_vars(" + incremented_Vars + ").";
 
             File.WriteAllLines(filepath, lines);
         }
