@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using PddlParser.Internal;
 using Shared;
@@ -14,6 +15,9 @@ namespace PDAI.Helpers
             settings.SplitPercent = 0.5f;
             runActionsInParallel = true;
             runSplitsInParallel = false;
+
+            Console.WriteLine(settings.UseAllowSingletons);
+            Console.WriteLine(settings.UseNonDatalog);
 
             GenerateDomainfilesFolder(randomSplits);
             Run();
