@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using PddlParser.Internal;
 using Shared;
 using Shared.ExtensionMethods;
 
@@ -27,6 +29,13 @@ namespace PDAI.Helpers
                 Test(action);
                 SaveResults(action);
             }
+        }
+
+        internal override void SetInput(string trainingFolder)
+        {
+            ConstraintHelper ch = new ConstraintHelper();
+
+            ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 3);
         }
     }
 }

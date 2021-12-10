@@ -1,4 +1,5 @@
-﻿using Shared.ExtensionMethods;
+﻿using Shared;
+using Shared.ExtensionMethods;
 using Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,8 @@ namespace PopperWriter
                 allClausesPre.Add("goal_");
             }
 
+            if (Settings.Current.UsePredicateInvention)
+                lines.Add("enable_pi.");
             lines.AddRange(GetConstraints(maxVars));
             lines.AddRange(GetClauseDeclarations(action, usedInitPreds, usedGoalPreds));
             lines.AddRange(GetTypeDeclerations(allClauses, allClausesPre).Distinct().ToList());

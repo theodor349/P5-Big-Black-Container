@@ -26,19 +26,19 @@ namespace PDAI.Helpers
 
         internal abstract void Run();
 
-        internal void GenerateDomainfilesFolder(bool randomSplit = false)
+        internal virtual void GenerateDomainfilesFolder(bool randomSplit = false)
         {
             Program.GenerateDomainfilesFolder(randomSplit);
         }
 
-        internal void SetInput(string trainingFolder)
+        internal virtual void SetInput(string trainingFolder)
         {
             ConstraintHelper ch = new ConstraintHelper();
 
-            ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 3);
+            ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 1);
         }
 
-        internal void Train(string action)
+        internal virtual void Train(string action)
         {
             Logger.Log("Running Action: " + new FileInfo(action).Name);
             var trainingFolders = SystemExtensions.GetTrainingFolders(action);
@@ -46,13 +46,13 @@ namespace PDAI.Helpers
             SystemExtensions.RunnInParallel(trainingFolders, x => RunPopper(x), _settings.Cores, runSplitsInParallel);
         }
 
-        internal void Test(string action)
+        internal virtual void Test(string action)
         {
             var trainingFolders = SystemExtensions.GetTrainingFolders(action);
             SystemExtensions.RunnInParallel(trainingFolders, x => _dataGenHelper.RunTest(x), _settings.Cores);
         }
 
-        internal void SaveResults(string action)
+        internal virtual void SaveResults(string action)
         {
             var trainingFolders = SystemExtensions.GetTrainingFolders(action);
             foreach (var trainingFolder in trainingFolders)

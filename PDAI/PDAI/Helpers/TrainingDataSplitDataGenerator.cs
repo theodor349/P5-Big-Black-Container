@@ -21,10 +21,10 @@ namespace PDAI.Helpers
 
         internal override void Run()
         {
-            var actions = SystemExtensions.GetAllActions();
             while (true)
             {
                 Program.GenerateDomainfilesFolder(true);
+                var actions = SystemExtensions.GetAllActions();
                 RunIteration(actions);
                 iteration++;
             }
