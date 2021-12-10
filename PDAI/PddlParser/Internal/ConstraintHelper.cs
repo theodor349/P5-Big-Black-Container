@@ -51,5 +51,15 @@ namespace PddlParser.Internal
         {
             File.AppendAllText(filepath, "enable_pi." + Environment.NewLine);
         }
+
+        public void AddNonDatalog(string filepath)
+        {
+            File.AppendAllText(filepath, "non_datalog." + Environment.NewLine);
+        }
+
+        public void AddAllowSingletons(string filepath)
+        {
+            File.AppendAllText(filepath, "allow_singletons." + Environment.NewLine);
+        }
     }
 }
