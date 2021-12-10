@@ -36,6 +36,8 @@ namespace PDAI.Helpers
             ConstraintHelper ch = new ConstraintHelper();
 
             ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 3);
+            //ch.AddNonDatalog(Path.Combine(trainingFolder, "bias.pl"));
+            //ch.AddAllowSingletons(Path.Combine(trainingFolder, "bias.pl"));
         }
     }
 }

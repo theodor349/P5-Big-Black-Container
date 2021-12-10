@@ -41,6 +41,10 @@ namespace PopperWriter
 
             if (Settings.Current.UsePredicateInvention)
                 lines.Add("enable_pi.");
+            if (Settings.Current.UseAllowSingletons)
+                lines.Add("allow_singletons.");
+            if (Settings.Current.UseNonDatalog)
+                lines.Add("non_datalog.");
             lines.AddRange(GetConstraints(maxVars));
             lines.AddRange(GetClauseDeclarations(action, usedInitPreds, usedGoalPreds));
             lines.AddRange(GetTypeDeclerations(allClauses, allClausesPre).Distinct().ToList());

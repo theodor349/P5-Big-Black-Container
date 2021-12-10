@@ -27,6 +27,8 @@ namespace Shared
         public int Iterations { get; set; } = 1;
         public int Program { get; set; } = -1;
         public bool UsePredicateInvention { get; set; }
+        public bool UseAllowSingletons { get; set; }
+        public bool UseNonDatalog { get; set; }
 
         // Dynamic
         public List<string> ActionFolders => Directory.GetDirectories(Path.Combine(TargetFolder, "domainfiles", Domain)).ToList();
@@ -58,6 +60,8 @@ namespace Shared
                 { "d|domain-folder=", "Path to the input domain folder", v => DomainFolder = v },
                 { "t|target-folder=", "Path to the output folder", v => TargetFolder = v },
                 { "p|predicate-invention", "Use predicate invention: " + UsePredicateInvention, v => UsePredicateInvention = true},
+                { "S|allow-singleton", "Allow singleton variables: " + UseAllowSingletons, v => UseAllowSingletons = true},
+                { "D|non-datalog", "Allow non-datalog hypotheses: " + UseNonDatalog, v => UseNonDatalog = true},
                 { "s|split-percent=", "Percentage of problems used for testing: " + SplitPercent, v => SplitPercent = double.Parse(v) },
                 { "c|chunks=", "Number of chunks to split the training data into: " + NumChunks, v => NumChunks = int.Parse(v) },
                 { "a|actions=", "Name of the actions to run (, seperated)", v => ActionsToRun = v.Split(",").ToList().ConvertAll(x => x.ToLower()) },
