@@ -2,6 +2,7 @@
 using Shared.ExtensionMethods;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,13 +22,15 @@ namespace PDAI.Helpers
 
             foreach (var action in actions)
             {
+                Logger.Log("Saving action: " + new FileInfo(action).Name);
                 try
                 {
+                    Test(action);
                     SaveResults(action);
                 }
                 catch (Exception)
                 {
-                    Logger.Log("-- Unable to save: " + action);
+                    Logger.Log("-- Unable to save: " + new FileInfo(action).Name);
                 }
             }
         }

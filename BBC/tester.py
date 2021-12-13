@@ -69,7 +69,11 @@ def stringToBool(s):
 
 def getConstraints(path):
     f = open(path + "/bias.pl", "r")
-    max_clauses = getNumFromConstraint(f.readline())
+    containsMaxClause = False
+    while not containsMaxClause:
+        line = f.readline()
+        containsMaxClause = "max_clauses" in line
+    max_clauses = getNumFromConstraint(line)
     max_body = getNumFromConstraint(f.readline())
     max_vars = getNumFromConstraint(f.readline())
     return max_clauses, max_body, max_vars
