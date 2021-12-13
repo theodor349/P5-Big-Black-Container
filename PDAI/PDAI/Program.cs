@@ -38,6 +38,9 @@ namespace PDAI
                 case 4:
                     new BaselineDataGenerator(_settings);
                     break;
+                case 5:
+                    new SaveDataHelper(_settings);
+                    break;
                 default:
                     Console.WriteLine("I do not know what program that is: " + _settings.Program);
                     break;
