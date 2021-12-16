@@ -44,7 +44,11 @@ namespace Parser.Pddl.Internal
             string problemPath = folderPath + "/" + problemFile;
 
             var lines = File.ReadAllLines(problemPath);
-            var line = string.Join(' ', lines).Replace("\t", "").ToLower();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                lines[i] = lines[i].ToLower();
+            }
+            var line = string.Join(' ', lines).Replace("\t", "");
             var stateLine = TrimStateLine(regex.Match(line).Value);
 
             foreach (Match match in opReg.Matches(stateLine))
@@ -85,6 +89,10 @@ namespace Parser.Pddl.Internal
             var res = new List<ActionOperator>();
 
             var lines = File.ReadAllLines(path);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                lines[i] = lines[i].ToLower();
+            }
             foreach(string line in lines) 
             {
                 ActionOperator action = new ActionOperator(line.ToLower());
