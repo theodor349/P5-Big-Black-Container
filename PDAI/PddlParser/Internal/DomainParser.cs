@@ -22,6 +22,10 @@ namespace Parser.Pddl.Internal
         {
             Logger.Log("Loading Predicated");
             List<string> lines = File.ReadAllLines(filePath).ToList();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                lines[i] = lines[i].ToLower();
+            }
             return PredicatesParser.Parse(lines, entities);
         }
 
@@ -29,6 +33,10 @@ namespace Parser.Pddl.Internal
         {
             Logger.Log("Loading Actions");
             List<string> lines = File.ReadAllLines(filePath).ToList();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                lines[i] = lines[i].ToLower();
+            }
             return ActionsParser.Parse(lines, entities);
         }
 
@@ -36,6 +44,10 @@ namespace Parser.Pddl.Internal
         {
             Logger.Log("Loading Types");
             List<string> lines = File.ReadAllLines(filePath).ToList();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                lines[i] = lines[i].ToLower();
+            }
             return TypesParser.Parse(lines);
         }
     }
