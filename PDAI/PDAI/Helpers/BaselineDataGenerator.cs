@@ -38,8 +38,12 @@ namespace PDAI.Helpers
         internal override void SetInput(string trainingFolder)
         {
             ConstraintHelper ch = new ConstraintHelper();
+            BalancingExamplesGenerator balancingExamplesGenerator = new BalancingExamplesGenerator();
 
             ch.IncrementConstraintValues(Path.Combine(trainingFolder, "bias.pl"), 0, 0, 3);
+            balancingExamplesGenerator.GenerateBalanceExampleFile(trainingFolder);
+            //ch.AddNonDatalog(Path.Combine(trainingFolder, "bias.pl"));
+            //ch.AddAllowSingletons(Path.Combine(trainingFolder, "bias.pl"));
         }
     }
 }
